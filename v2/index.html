@@ -779,11 +779,17 @@
         .live-weather-place { width:110px; flex-basis:110px; padding:2px 4px; }
         .live-weather-place a { gap:2px; font-size:10px; line-height:1.2; }
         .live-weather-place img { width:100px; height:50px; }
-        .app-container { --section-gap:24px; }
+        .app-container { --section-gap:12px; }
         .live-panel { margin:var(--section-gap) 0; }
         .indicator-status { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
-        @media (max-width:1100px) { .app-container { --section-gap:18px; } }
-        @media (max-width:700px) { .app-container { --section-gap:12px; } }
+        @media (max-width:1100px) { .app-container { --section-gap:9px; } }
+        @media (max-width:700px) { .app-container { --section-gap:6px; } }
+
+
+        .brand-edit-field { display:block; width:100%; min-width:0; border:1px solid #8dc6c8; border-radius:5px; padding:4px 8px; background:#f4fbfb; color:var(--ink); font-family:inherit; }
+        .brand-edit-field:focus { outline:2px solid #008c9533; outline-offset:2px; }
+        .header-label-input { font-size:10px; letter-spacing:1px; margin-bottom:5px; }
+        .header-description-input { font-size:12px; margin-top:6px; }
 
     </style>
 </head>
@@ -793,9 +799,9 @@
     <div class="header-premium">
         <div class="logo-area">
             <div class="logo-icon"><i class="fas fa-chart-line" style="color: white;"></i></div>
-            <div class="brand-text"><span class="version-label">СПРАВОЧНИК · НОВАЯ ВЕРСИЯ</span>
+            <div class="brand-text"><span id="headerLabel" class="version-label">СПРАВОЧНИК · НОВАЯ ВЕРСИЯ</span><input id="headerLabelInput" class="brand-edit-field header-label-input" aria-label="Верхняя подпись в шапке" maxlength="120" placeholder="Верхняя подпись" hidden>
                 <h1 class="brand-line"><span class="sibur-wordmark">СИБУР</span><span class="brand-divider" aria-hidden="true"></span><span id="departmentName">БиФК НКНХ</span><input id="departmentInput" class="department-input" aria-label="Название подразделения после СИБУР" maxlength="80" value="БиФК НКНХ" hidden></h1>
-                <p>Бюджетный и финансовый контроль | СЦ & ПЭ</p>
+                <p id="headerDescription">Бюджетный и финансовый контроль | СЦ &amp; ПЭ</p><input id="headerDescriptionInput" class="brand-edit-field header-description-input" aria-label="Расшифровка названия в шапке" maxlength="240" placeholder="Расшифровка названия" hidden>
             </div>
         </div>
         <div class="search-premium">
@@ -889,6 +895,9 @@
     function validateData(data) {
         if (!data || !Array.isArray(data.menuItems) || !data.subsections || typeof data.subsections !== 'object' || Array.isArray(data.subsections) || !data.contentData || typeof data.contentData !== 'object' || Array.isArray(data.contentData)) throw new Error('В bifk-data.txt нужны menuItems, subsections и contentData.');
         if (data.branding !== undefined && (!data.branding || typeof data.branding.department !== 'string' || !data.branding.department.trim() || data.branding.department.length > 80)) throw new Error('Название подразделения должно содержать от 1 до 80 символов.');
+        for (const [field, limit] of [['label', 120], ['description', 240]]) {
+            if (data.branding?.[field] !== undefined && (typeof data.branding[field] !== 'string' || data.branding[field].length > limit)) throw new Error(`Проверьте текст шапки: ${field === 'label' ? 'верхняя подпись' : 'расшифровка'}.`);
+        }
         const sections = new Set();
         const subs = new Set();
         for (const section of data.menuItems) {
@@ -1037,6 +1046,10 @@
     let originalContent = {};
     let departmentName = 'БиФК НКНХ';
     let originalDepartmentName = departmentName;
+    let headerLabel = 'СПРАВОЧНИК · НОВАЯ ВЕРСИЯ';
+    let headerDescription = 'Бюджетный и финансовый контроль | СЦ & ПЭ';
+    let originalHeaderLabel = headerLabel;
+    let originalHeaderDescription = headerDescription;
     let isEditMode = false;
     let activeSection = null;
     let activeSub = null;
@@ -1313,6 +1326,8 @@
     function loadFromJSON(data) {
         validateData(data);
         departmentName = data.branding?.department.trim() || 'БиФК НКНХ';
+        headerLabel = data.branding?.label ?? 'СПРАВОЧНИК · НОВАЯ ВЕРСИЯ';
+        headerDescription = data.branding?.description ?? 'Бюджетный и финансовый контроль | СЦ & ПЭ';
         renderBrand();
         menuItems = JSON.parse(JSON.stringify(data.menuItems || []));
         subsections = JSON.parse(JSON.stringify(data.subsections || {}));
@@ -1367,7 +1382,7 @@
         setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
     function saveToDownloads() {
-        downloadJSON({menuItems, subsections, contentData, branding: {department: departmentName}}, 'bifk-data.txt');
+        downloadJSON({menuItems, subsections, contentData, branding: {department: departmentName, label: headerLabel, description: headerDescription}}, 'bifk-data.txt');
         showToast('Файл скачан. Разместите его на SharePoint вручную.');
     }
 
@@ -1460,17 +1475,27 @@
         const input = document.getElementById('departmentInput');
         input.hidden = !isEditMode;
         input.value = departmentName;
+        for (const [id, value] of [['headerLabel', headerLabel], ['headerDescription', headerDescription]]) {
+            const text = document.getElementById(id);
+            text.textContent = value;
+            text.hidden = isEditMode || !value.trim();
+            const field = document.getElementById(id + 'Input');
+            field.hidden = !isEditMode;
+            field.value = value;
+        }
         document.querySelector('.dashboard-premium').classList.toggle('editing-directory', isEditMode);
     }
 
-    function enableEditMode() { originalDepartmentName = departmentName; originalMenu = structuredClone(menuItems); originalSubs = structuredClone(subsections); originalContent = structuredClone(contentData); document.getElementById('searchInput').value = ''; isEditMode = true; renderBrand(); document.getElementById('editPanel').classList.add('active'); document.getElementById('editBtn').classList.add('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-check"></i> Завершить редактирование'; document.getElementById('addSectionBtn').classList.remove('hidden'); renderMenu(); renderContent(); showToast('Режим редактирования включён'); }
-    function disableEditMode(cancel=false) { if(cancel) { departmentName = originalDepartmentName; menuItems = JSON.parse(JSON.stringify(originalMenu)); subsections = JSON.parse(JSON.stringify(originalSubs)); contentData = JSON.parse(JSON.stringify(originalContent)); showToast('Изменения отменены'); } isEditMode = false; renderBrand(); document.getElementById('editPanel').classList.remove('active'); document.getElementById('editBtn').classList.remove('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-pen"></i> Редактировать справочник'; document.getElementById('addSectionBtn').classList.add('hidden'); renderMenu(); renderContent(); if(activeSection) activateSection(activeSection); }
+    function enableEditMode() { originalDepartmentName = departmentName; originalHeaderLabel = headerLabel; originalHeaderDescription = headerDescription; originalMenu = structuredClone(menuItems); originalSubs = structuredClone(subsections); originalContent = structuredClone(contentData); document.getElementById('searchInput').value = ''; isEditMode = true; renderBrand(); document.getElementById('editPanel').classList.add('active'); document.getElementById('editBtn').classList.add('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-check"></i> Завершить редактирование'; document.getElementById('addSectionBtn').classList.remove('hidden'); renderMenu(); renderContent(); showToast('Режим редактирования включён'); }
+    function disableEditMode(cancel=false) { if(cancel) { departmentName = originalDepartmentName; headerLabel = originalHeaderLabel; headerDescription = originalHeaderDescription; menuItems = JSON.parse(JSON.stringify(originalMenu)); subsections = JSON.parse(JSON.stringify(originalSubs)); contentData = JSON.parse(JSON.stringify(originalContent)); showToast('Изменения отменены'); } isEditMode = false; renderBrand(); document.getElementById('editPanel').classList.remove('active'); document.getElementById('editBtn').classList.remove('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-pen"></i> Редактировать справочник'; document.getElementById('addSectionBtn').classList.add('hidden'); renderMenu(); renderContent(); if(activeSection) activateSection(activeSection); }
     
     // Кнопка сохранения запускает скачивание текстового файла.
     async function saveChanges() {
         const input = document.getElementById('departmentInput');
         if (!input.value.trim()) { showToast('Укажите название подразделения.', true); input.focus(); return; }
         departmentName = input.value.trim();
+        headerLabel = document.getElementById('headerLabelInput').value.trim();
+        headerDescription = document.getElementById('headerDescriptionInput').value.trim();
         saveToDownloads();
         disableEditMode(false);
     }
@@ -1510,6 +1535,8 @@
         });
         adminDialog.addEventListener('pointercancel', () => { backdropPointer = null; });
         document.getElementById('departmentInput').addEventListener('input', event => { if (isEditMode) departmentName = event.target.value; });
+        document.getElementById('headerLabelInput').addEventListener('input', event => { if (isEditMode) headerLabel = event.target.value; });
+        document.getElementById('headerDescriptionInput').addEventListener('input', event => { if (isEditMode) headerDescription = event.target.value; });
         document.getElementById('adminForm').onsubmit = applyAdministration;
         document.getElementById('downloadConfigBtn').onclick = () => downloadJSON(appConfig, 'config.json');
         document.getElementById('importConfigBtn').onclick = () => document.getElementById('configFile').click();

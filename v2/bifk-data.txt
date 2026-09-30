@@ -1,0 +1,898 @@
+{
+  "menuItems": [
+    {
+      "id": "box_1",
+      "name": "Бюджетный контроль",
+      "icon": "fas fa-chart-line",
+      "active": true
+    },
+    {
+      "id": "box_3",
+      "name": "Финансовый контроль",
+      "icon": "fas fa-money-bill-wave",
+      "active": true
+    },
+    {
+      "id": "box_4",
+      "name": "Финансово-экономический контроль",
+      "icon": "fas fa-calculator",
+      "active": true
+    },
+    {
+      "id": "box_5",
+      "name": "Ценообразование",
+      "icon": "fas fa-tags",
+      "active": true
+    },
+    {
+      "id": "box_12",
+      "name": "БД КФО",
+      "icon": "fas fa-database",
+      "active": true
+    },
+    {
+      "id": "box_9",
+      "name": "Тендеры",
+      "icon": "fas fa-gavel",
+      "active": true
+    },
+    {
+      "id": "box_6",
+      "name": "Договоры",
+      "icon": "fas fa-file-contract",
+      "active": true
+    },
+    {
+      "id": "box_11",
+      "name": "БиФК",
+      "icon": "fas fa-users",
+      "active": true
+    },
+    {
+      "id": "box_8",
+      "name": "Справочный материал",
+      "icon": "fas fa-book",
+      "active": true
+    },
+    {
+      "id": "box_1780987076310",
+      "name": "Сервис",
+      "icon": "fas fa-database",
+      "active": true
+    },
+    {
+      "id": "section_1788259461646",
+      "name": "Среда разработки агентов",
+      "icon": "fas fa-cloud-upload-alt"
+    }
+  ],
+  "subsections": {
+    "box_1": [
+      {
+        "id": "box_1_sc",
+        "name": "СЦ",
+        "icon": "fas fa-chart-line"
+      },
+      {
+        "id": "box_1_pe",
+        "name": "ПЭ (Полиэтилен)",
+        "icon": "fas fa-chart-bar"
+      },
+      {
+        "id": "box_1_other",
+        "name": "Прочие проекты",
+        "icon": "fas fa-project-diagram"
+      }
+    ],
+    "box_3": [
+      {
+        "id": "box_3",
+        "name": "Основное",
+        "icon": "fas fa-money-bill-wave"
+      },
+      {
+        "id": "box_3_sub_1780925118859",
+        "name": "Справочные ресурсы",
+        "icon": "fas fa-folder-open"
+      }
+    ],
+    "box_4": [
+      {
+        "id": "box_4",
+        "name": "Подрядчики",
+        "icon": "fas fa-calculator"
+      },
+      {
+        "id": "box_4_sub_1780925409199",
+        "name": "Прочие разделы",
+        "icon": "fas fa-folder-open"
+      }
+    ],
+    "box_5": [
+      {
+        "id": "box_5",
+        "name": "Основное",
+        "icon": "fas fa-tags"
+      }
+    ],
+    "box_6": [
+      {
+        "id": "box_6",
+        "name": "Основное",
+        "icon": "fas fa-file-contract"
+      }
+    ],
+    "box_8": [
+      {
+        "id": "box_8",
+        "name": "Основное",
+        "icon": "fas fa-book"
+      }
+    ],
+    "box_9": [
+      {
+        "id": "box_9",
+        "name": "Основное",
+        "icon": "fas fa-gavel"
+      }
+    ],
+    "box_11": [
+      {
+        "id": "box_11",
+        "name": "Основное",
+        "icon": "fas fa-users"
+      }
+    ],
+    "box_12": [
+      {
+        "id": "box_12",
+        "name": "БД СЦ",
+        "icon": "fas fa-database"
+      },
+      {
+        "id": "box_12_sub_1785253190860",
+        "name": "БД мПЭ",
+        "icon": "fas fa-database"
+      }
+    ],
+    "box_1780987076310": [
+      {
+        "id": "box_1780987076310_main",
+        "name": "Внутренние сервисы",
+        "icon": "fas fa-folder-open"
+      },
+      {
+        "id": "box_1780987076310_sub_1780987640848",
+        "name": "ИИ-агенты",
+        "icon": "fas fa-folder-open"
+      }
+    ],
+    "section_1788259461646": [
+      {
+        "id": "section_1788259461646_main",
+        "name": "Основное",
+        "icon": "fas fa-folder-open"
+      }
+    ]
+  },
+  "contentData": {
+    "box_1_sc": [
+      [
+        "Бизнес-план",
+        "https://sp.sibur.local/sites/ps250/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x0120000E047C3CE8CF3D4BBB051FF0DC18BA1E&id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2F%D0%91%D0%B8%D0%B7%D0%BD%D0%B5%D1%81%2D%D0%BF%D0%BB%D0%B0%D0%BD%2F2025%2D2026%2F%D0%91%D0%9F%202026%2F%D0%A1%D0%A6",
+        "Стратегическое планирование",
+        "Активно"
+      ],
+      [
+        "KPI",
+        "https://sp.sibur.local/sites/ps250/Shared Documents/Forms/AllItems.aspx?FolderCTID=0x0120000E047C3CE8CF3D4BBB051FF0DC18BA1E&id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2FKPI",
+        "Ключевые показатели эффективности",
+        "Активно"
+      ],
+      [
+        "Контрактная стратегия",
+        "https://sp.sibur.local/sites/ps250/Shared Documents/Forms/AllItems.aspx?FolderCTID=0x0120000E047C3CE8CF3D4BBB051FF0DC18BA1E&id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2F%D0%9A%D0%BE%D0%BD%D1%82%D1%80%D0%B0%D0%BA%D1%82%D0%BD%D0%B0%D1%8F%20%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B5%D0%B3%D0%B8%D1%8F",
+        "Стратегия контрактации",
+        "Активно"
+      ],
+      [
+        "Проектный офис",
+        "https://sp.sibur.local/sites/ps250/Shared Documents/Forms/AllItems.aspx?FolderCTID=0x0120000E047C3CE8CF3D4BBB051FF0DC18BA1E&id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2FHR",
+        "ФОТ, командировки",
+        "Активно"
+      ],
+      [
+        "Материалы к ИК",
+        "https://sp.sibur.local/sites/ps250/Shared%20Documents/Forms/AllItems.aspx?id=/sites/ps250/Shared%20Documents/35%20-%20%D0%91%D0%B8%D0%A4%D0%9A/%D0%98%D0%9A",
+        "Инвестиционный комитет",
+        "Активно"
+      ],
+      [
+        "Отчетные материалы",
+        "https://sp.sibur.local/sites/ps250/Shared Documents/Forms/AllItems.aspx?FolderCTID=0x0120000E047C3CE8CF3D4BBB051FF0DC18BA1E&id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2F%3D%D0%A1%D0%BB%D0%B0%D0%B9%D0%B4%D1%8B",
+        "Материалы бюджетного комитета",
+        "Активно"
+      ],
+      [
+        "Бюджет ИК",
+        "https://sp.sibur.local/sites/ps250/Shared Documents/35 - %D0%91%D0%B8%D0%A4%D0%9A/%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82 %D0%B8 %D0%9B%D0%9F%D0%9E/%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82 %D0%A1%D0%A6 240327 (1983mUSD) %D0%B4%D0%BB%D1%8F %D0%B7%D0%B0%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D1%8F %D0%9A%D0%92%D0%98%D0%9F (%D0%B2 %D0%B7%D0%B0%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B8 %D0%9A%D0%92%D0%98%D0%9F).xlsx?d=w3adb6a46bab946029c98df0da15c0355",
+        "Бюджет инвестиционного комитета",
+        "Активно"
+      ],
+      [
+        "Материалы ИК",
+        "\\\\sibur.local\\storage\\Сибур\\Инвестиционные проекты\\Управление инвестиционным портфелем\\ФЭ Проектов ИП\\127000216_Стирольная цепочка\\",
+        "Протоколы ИК, презентации, экспертизы",
+        "Активно"
+      ],
+      [
+        "Материалы к штабу А3",
+        "https://sp.sibur.local/sites/ps250/Shared Documents/Forms/AllItems.aspx?id=%2Fsites%2Fps250%2FShared%20Documents%2F16%20%2D%20%D0%9A%D0%A1%D0%9F%2F%D0%9E%D1%82%D1%87%D0%B5%D1%82%D1%8B%2F%D0%9E%D1%82%D1%87%D0%B5%D1%82%D1%8B%20%D0%903",
+        "Материалы для штаба А3",
+        "Активно"
+      ],
+      [
+        "📊 Бюджет проекта (дашборд)",
+        "\\\\sibur.local\\share\\БиФК\\2026.02_Слайды БиФК final.pptx",
+        "Интерактивный дашборд бюджета Стирольной цепочки",
+        "Активно"
+      ]
+    ],
+    "box_1_pe": [
+      [
+        "Прогнозный бюджет",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\4. Бюджет\\3. ИК промежуточный\\1. Бюджет",
+        "Прогнозный бюджет проекта",
+        "Активно"
+      ],
+      [
+        "KPI",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\4. Бюджет\\3. ИК промежуточный\\1. Бюджет\\6. KPI",
+        "Ключевые показатели эффективности",
+        "Активно"
+      ],
+      [
+        "Бизнес-план",
+        "https://sp.sibur.local/sites/ps250/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x0120000E047C3CE8CF3D4BBB051FF0DC18BA1E&id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2F%D0%91%D0%B8%D0%B7%D0%BD%D0%B5%D1%81%2D%D0%BF%D0%BB%D0%B0%D0%BD%2F2025%2D2026%2F%D0%91%D0%9F%202026%2F%D0%BC%D0%9F%D0%AD",
+        "Стратегическое планирование",
+        "Активно"
+      ],
+      [
+        "Контрактная стратегия",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\4. Бюджет\\3. ИК промежуточный\\7. Контрактная стратегия",
+        "Стратегия контрактации",
+        "Активно"
+      ],
+      [
+        "Материалы к штабу",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\Отчетность\\1_Материалы к Штабу мПЭ\\D",
+        "Материалы для штаба проекта",
+        "Активно"
+      ],
+      [
+        "Материалы к ИК",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\4. Бюджет\\3. ИК промежуточный\\12. Материалы к ИК",
+        "Инвестиционный комитет",
+        "Активно"
+      ],
+      [
+        "Проектный офис",
+        "https://sp.sibur.local/sites/ps250/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2FHR",
+        "ФОТ, командировки",
+        "Активно"
+      ],
+      [
+        "Бюджет ИК",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\4. Бюджет\\2. ИК 1.1\\6. Бюджет v1\\6. Бюджет v1\\25. ИК\\Документы",
+        "Бюджет инвестиционного комитета",
+        "Активно"
+      ],
+      [
+        "Материалы ИК (Реализация)",
+        "file://sibur.local/NKNH/%D0%A1%D0%97%207600/05-%D0%94%D1%80%D1%83%D0%B3%D0%B8%D0%B5%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D1%8B/%D0%9F%D0%AD/%D0%9F%D0%AD%20Daelim/01-%D0%9E%D0%B1%D1%89%D0%B0%D1%8F/%D0%98%D0%9A/%D0%98%D0%9A%2024.05.2024%20%D0%BC%D0%9F%D0%AD-300%20%D0%BD%D0%B0%20%D0%A0%D0%B5%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8E/",
+        "Материалы по реализации проекта",
+        "Активно"
+      ],
+      [
+        "Протокол ИК",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\4. Бюджет\\2. ИК 1.1\\6. Бюджет v1\\25. ИК\\Документы",
+        "Протоколы инвестиционного комитета",
+        "Активно"
+      ],
+      [
+        "Дежурный презентационный материал",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\Отчетность\\3_Презентационные материалы по БиФК",
+        "Основные презентации",
+        "Активно"
+      ],
+      [
+        "Бюджетный комитет",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\Отчетность\\2_Презентация к БК мПЭ-300",
+        "Материалы бюджетного комитета",
+        "Активно"
+      ],
+      [
+        "Протокола",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\4. Бюджет\\3. ИК промежуточный\\8. MOM",
+        "Протоколы совещаний",
+        "Активно"
+      ],
+      [
+        "Архив данных БК (ОБМЕН)",
+        "https://sp.sibur.local/sites/ps250/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2fsites%2fps250%2fShared%20Documents%2f35%20%2d%20%d0%91%d0%b8%d0%a4%d0%9a%2f%21%d0%9e%d0%91%d0%9c%d0%95%d0%9d%2f%d0%bc%d0%9f%d0%ad%2d300%20%d0%be%d1%82%20%d0%9a%d0%90%d0%90&FolderCTID=0x0120000E047C3CE8CF3D4BBB051FF0DC18BA1E",
+        "Архивные данные бюджетного контроля",
+        "Активно"
+      ]
+    ],
+    "box_1_other": [
+      [
+        "Цех префабрикации",
+        "https://sp.sibur.local/sites/ps250/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x0120000E047C3CE8CF3D4BBB051FF0DC18BA1E&id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2F%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%20%D0%B8%20%D0%9B%D0%9F%D0%9E%20%D0%9F%D1%80%D0%B5%D0%A4%D0%B0%D0%B1",
+        "Проект цеха префабрикации",
+        "Активно"
+      ],
+      [
+        "Алабуга",
+        "https://sp.sibur.local/sites/ps250/Shared Documents/Forms/AllItems.aspx?FolderCTID=0x0120000E047C3CE8CF3D4BBB051FF0DC18BA1E&id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2F%D0%90%D0%BB%D0%B0%D0%B1%D1%83%D0%B3%D0%B0",
+        "Проект в Алабуге",
+        "Активно"
+      ],
+      [
+        "Вахтовый городок (ВВПС)",
+        "https://sp.sibur.local/sites/ps250/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x0120000E047C3CE8CF3D4BBB051FF0DC18BA1E&id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2F%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%20%D0%B8%20%D0%9B%D0%9F%D0%9E%20%D0%92%D0%92%D0%9F%D0%A1",
+        "Проект вахтового городка",
+        "Активно"
+      ]
+    ],
+    "box_3": [
+      [
+        "Баланс взаиморасчетов",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared%20Documents/Forms/AllItems.aspx?id=/sites/nkncderivatives/Shared%20Documents/%D0%A4%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D1%8C/509-%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/%D0%91%D0%B0%D0%BB%D0%B0%D0%BD%D1%81%20%D0%B2%D0%B7%D0%B0%D0%B8%D0%BC%D0%BE%D1%80%D0%B0%D1%81%D1%87%D0%B5%D1%82%D0%BE%D0%B2",
+        "Баланс взаиморасчетов по проектам",
+        "Активно"
+      ],
+      [
+        "АПГФ, платежные митинги",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2Fnkncderivatives%2FShared%20Documents%2F%D0%A4%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D1%8C%2F509%2D%D0%9E%D0%B1%D1%89%D0%B5%D0%B5%2F%D0%9F%D0%BB%D0%B0%D1%82%D0%B5%D0%B6%D0%BD%D1%8B%D0%B9%20%D0%BC%D0%B8%D1%82%D0%B8%D0%BD%D0%B3%2F2025",
+        "Платежные митинги и АПГФ",
+        "Активно"
+      ],
+      [
+        "Кредитные лимиты",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2Fnkncderivatives%2FShared%20Documents%2F%D0%A4%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D1%8C%2F509%2D%D0%9E%D0%B1%D1%89%D0%B5%D0%B5%2F%D0%9A%D1%80%D0%B5%D0%B4%D0%B8%D1%82%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%B8%D0%BC%D0%B8%D1%82%D1%8B%20%28%D1%81%D0%BE%D0%B3%D0%BB%D0%B0%D1%81%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%29",
+        "Согласование кредитных лимитов",
+        "Активно"
+      ],
+      [
+        "Расчеты дисконтирования",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared Documents/Forms/AllItems.aspx?id=%2Fsites%2Fnkncderivatives%2FShared%20Documents%2F%D0%A4%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D1%8C%2F509%2D%D0%9E%D0%B1%D1%89%D0%B5%D0%B5%2F%D0%A0%D0%B0%D1%81%D1%87%D0%B5%D1%82%D1%8B%20%D0%B4%D0%B8%D1%81%D0%BA%D0%BE%D0%BD%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F",
+        "Расчеты дисконтирования денежных потоков",
+        "Активно"
+      ],
+      [
+        "Банковские гарантии",
+        "https://sp.sibur.local/sites/ps250/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2F%D0%91%D0%B0%D0%BD%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B5%20%D0%B3%D0%B0%D1%80%D0%B0%D0%BD%D1%82%D0%B8%D0%B8",
+        "Управление банковскими гарантиями",
+        "Активно"
+      ],
+      [
+        "Реестр платежей",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared%20Documents/Forms/AllItems.aspx?id=/sites/nkncderivatives/Shared%20Documents/%D0%A4%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D1%8C/509-%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/%D0%95%D0%B6%D0%B5%D0%BD%D0%B5%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5%20%D0%BF%D0%BB%D0%B0%D1%82%D0%B5%D0%B6%D0%B8",
+        "Информация по плановым платежам",
+        "Активно"
+      ],
+      [
+        "Факторинг",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared%20Documents/%D0%A4%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D1%8C/509-%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/%D0%A4%D0%B0%D0%BA%D1%82%D0%BE%D1%80%D0%B8%D0%BD%D0%B3%202026",
+        "Факторинговые материалы (план, лимиты, прогнозы)",
+        "Активно"
+      ],
+      [
+        "Организационная структура блока",
+        "https://sp.sibur.local/sites/nkncderivatives/_layouts/15/WopiFrame.aspx?sourcedoc=%7B0A5CC4D5-1E49-4C10-9324-1063BD0A990C%7D&file=%D0%9E%D1%80%D0%B3.%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%82%D1%83%D1%80%D0%B0%20%D0%A4%D0%9A-%D0%A4%D0%98%D0%9D%D0%AD%D0%9A%20v2_.pptx&action=default&IsList=1&ListId=%7BC7BB800E-AA42-4BA0-870C-367DD7BBDE77%7D&ListItemId=28839",
+        "Структура финансового блока",
+        "Активно"
+      ]
+    ],
+    "box_4": [
+      [
+        "Эста",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\12. ФЭК\\1. Контроль подрядчиков\\12. Эста",
+        "Петров М.С.",
+        "Активно"
+      ],
+      [
+        "Ямата",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\12. ФЭК\\1. Контроль подрядчиков\\11. Ямата",
+        "Смирнов Б.Ю.",
+        "Активно"
+      ],
+      [
+        "Пондера",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\12. ФЭК\\1. Контроль подрядчиков\\13. Pondera",
+        "Петров М.С.",
+        "Активно"
+      ],
+      [
+        "Нова",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\12. ФЭК\\1. Контроль подрядчиков\\14. Нова",
+        "н/а",
+        "Активно"
+      ],
+      [
+        "Юнитрак",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\12. ФЭК\\1. Контроль подрядчиков\\2. Юнитрак",
+        "Петров М.С.",
+        "Активно"
+      ],
+      [
+        "ТекСтрой",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\12. ФЭК\\1. Контроль подрядчиков\\1. ТекСтрой",
+        "Петров М.С.",
+        "Активно"
+      ],
+      [
+        "СТМ",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\12. ФЭК\\1. Контроль подрядчиков\\20. СТМ (Свартехмонтаж)",
+        "Смирнов Б.Ю.",
+        "Активно"
+      ]
+    ],
+    "box_5": [
+      [
+        "ITB-пакеты",
+        "https://sp.sibur.local/sites/ccpurchases/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x0120009960FE0D28FFEE4D86FC4DBD379E543D",
+        "Пакеты документов для тендеров",
+        "Активно"
+      ],
+      [
+        "Дерево данных по КА",
+        "https://sp.sibur.local/sites/ccpurchases/Shared Documents/Forms/AllItems.aspx?id=%2Fsites%2Fccpurchases%2FShared%20Documents%2F%D0%A6%D0%B5%D0%BD%D0%BE%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5",
+        "Перечень контрагентов, договора, выполнения",
+        "Активно"
+      ],
+      [
+        "Расчет НЗП",
+        "https://sp.sibur.local/sites/ccpurchases/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2Fccpurchases%2FShared%20Documents%2F%D0%A6%D0%B5%D0%BD%D0%BE%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%2F%D0%A0%D0%90%D0%A1%D0%A7%D0%95%D0%A2%20%D0%9D%D0%97%D0%9F",
+        "Расчет незавершенного строительства по месяцам",
+        "Активно"
+      ],
+      [
+        "Презентационный материал по НЗП",
+        "https://sp.sibur.local/sites/ccpurchases/Shared%20Documents/%D0%A6%D0%B5%D0%BD%D0%BE%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5/%D0%A0%D0%90%D0%A1%D0%A7%D0%95%D0%A2%20%D0%9D%D0%97%D0%9F/%D0%9F%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F%20%D0%BF%D0%BE%20%D0%9D%D0%97%D0%9F/%D0%9E%D1%82%D1%87%D0%B5%D1%82%20%D0%BF%D0%BE%20%D0%9F%D0%BE%D0%B4%D1%80%D1%8F%D0%B4%D1%87%D0%B8%D0%BA%D0%B0%D0%BC.pptx?d=web489b164b31471fbf479101fb2403ee",
+        "Презентационный материал Руководителям по Подрядчикам",
+        "Активно"
+      ],
+      [
+        "Реестр ЗВИ",
+        "https://sp.sibur.local/sites/ccpurchases/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2fsites%2fccpurchases%2fShared%20Documents%2f%d0%a6%d0%b5%d0%bd%d0%be%d0%be%d0%b1%d1%80%d0%b0%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5%2f00%5f%d0%a0%d0%b5%d0%b5%d1%81%d1%82%d1%80%20%d0%97%d0%92%d0%98%20v1&FolderCTID=0x0120009960FE0D28FFEE4D86FC4DBD379E543D",
+        "Материалы по стоимостным контрактным изменениям",
+        "Активно"
+      ],
+      [
+        "Статус КС-2",
+        "https://sp.sibur.local/sites/ccpurchases/Shared Documents/Forms/AllItems.aspx?RootFolder=%2fsites%2fccpurchases%2fShared%20Documents%2f%d0%a6%d0%b5%d0%bd%d0%be%d0%be%d0%b1%d1%80%d0%b0%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5%2f00%5f1%5f%d0%a1%d1%82%d0%b0%d1%82%d1%83%d1%81%20%d0%bf%d0%be%d0%b4%d0%bf%d0%b8%d1%81%d0%b0%d0%bd%d0%b8%d1%8f%20%d0%b0%d0%ba%d1%82%d0%be%d0%b2%20%d0%b2%d1%8b%d0%bf%d0%be%d0%bb%d0%bd%d0%b5%d0%bd%d0%bd%d1%8b%d1%85%20%d1%80%d0%b0%d0%b1%d0%be%d1%82&FolderCTID=0x0120009960FE0D28FFEE4D86FC4DBD379E543D",
+        "Статус согласования актов КС-2",
+        "Активно"
+      ],
+      [
+        "База ценообразования КЦ",
+        "https://confluence.sibur.local/pages/viewpage.action?pageId=235428602",
+        "Тарифы по специальностям, технике",
+        "Активно"
+      ],
+      [
+        "ЕР СМР",
+        "https://rssmr.sibur.local/login",
+        "Портал ценообразования",
+        "Активно"
+      ]
+    ],
+    "box_6": [
+      [
+        "Договоры СЦ",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\03-Договора",
+        "Договоры по стирольной цепочке",
+        "Активно"
+      ],
+      [
+        "Договоры ПЭ",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\03-Договора\\08-Другие проекты\\ПЭ",
+        "Договоры по полиэтилену",
+        "Активно"
+      ],
+      [
+        "План закупок",
+        "https://sp.sibur.local/sites/ps250/Shared Documents/Forms/AllItems.aspx?FolderCTID=0x0120000E047C3CE8CF3D4BBB051FF0DC18BA1E&id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2F%D0%9F%D0%BB%D0%B0%D0%BD%D1%8B%20%D0%B7%D0%B0%D0%BA%D1%83%D0%BF%D0%BE%D0%BA",
+        "Планы закупочных мероприятий",
+        "Активно"
+      ]
+    ],
+    "box_8": [
+      [
+        "База кураторов от КВИП",
+        "https://confluence.sibur.local/pages/viewpage.action?pageId=352772850",
+        "База данных кураторов от КВИП",
+        "Активно"
+      ],
+      [
+        "Процедуры, СТП, инструкции",
+        "https://sp.sibur.local/sites/ps250/Shared Documents/Forms/AllItems.aspx?FolderCTID=0x0120000E047C3CE8CF3D4BBB051FF0DC18BA1E&id=%2Fsites%2Fps250%2FShared%20Documents%2F35%20%2D%20%D0%91%D0%B8%D0%A4%D0%9A%2F%D0%9F%D1%80%D0%BE%D1%86%D0%B5%D0%B4%D1%83%D1%80%D1%8B%2C%20%D0%A1%D0%A2%D0%9F",
+        "Процедуры, стандарты и инструкции",
+        "Активно"
+      ],
+      [
+        "Confluence КВИП",
+        "https://confluence.sibur.local/pages/viewpage.action?pageId=66893649",
+        "База знаний КВИП",
+        "Активно"
+      ],
+      [
+        "Отзывы по компаниям ПОФ",
+        "https://sp.sibur.local/sites/tenderexch/_layouts/15/start.aspx#/Lists/feedback/AllItems.aspx#InplviewHasha8491a8b-c5b3-4e2f-983e-97620518bb53=Paged%3DTRUE-p_ID%3D517-FolderCTID%3D0x012001-PageFirstRow%3D31",
+        "База отзывов по компаниям от участников подразделения поддержания основных фондов",
+        "Активно"
+      ],
+      [
+        "SharePoint ПЭ",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x0120008517C188A6F59147BF4D3712B9849BFA&id=%2Fsites%2Fnkncderivatives%2FShared%20Documents%2F%D0%9F%D1%80%D0%BE%D0%B5%D0%BA%D1%82%20%D0%9F%D0%AD%20%28%D0%9F%D0%BE%D0%BB%D0%B8%D1%8D%D1%82%D0%B8%D0%BB%D0%B5%D0%BD%29",
+        "SharePoint проекта ПЭ",
+        "Активно"
+      ],
+      [
+        "SharePoint СЦ",
+        "https://sp.sibur.local/sites/ps250/Shared Documents/Forms/AllItems.aspx",
+        "SharePoint проекта СЦ",
+        "Активно"
+      ]
+    ],
+    "box_9": [
+      [
+        "План закупок",
+        "https://sp.sibur.local/sites/ccpurchases/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2fsites%2fccpurchases%2fShared%20Documents%2f%d0%91%d0%b8%d0%a4%d0%9a%2f%d0%9f%d0%bb%d0%b0%d0%bd%20%d0%b7%d0%b0%d0%ba%d1%83%d0%bf%d0%be%d0%ba&FolderCTID=0x0120009960FE0D28FFEE4D86FC4DBD379E543D",
+        "План закупочных мероприятий",
+        "Активно"
+      ],
+      [
+        "График контрактации",
+        "https://sp.sibur.local/sites/ccpurchases/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x0120009960FE0D28FFEE4D86FC4DBD379E543D&id=%2Fsites%2Fccpurchases%2FShared%20Documents%2F%D0%91%D0%B8%D0%A4%D0%9A%2F%D0%93%D1%80%D0%B0%D1%84%D0%B8%D0%BA%20%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%B0%D0%BA%D1%82%D0%B0%D1%86%D0%B8%D0%B8",
+        "График заключения контрактов",
+        "Активно"
+      ],
+      [
+        "Протоколы встреч",
+        "https://sp.sibur.local/sites/ccpurchases/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2fsites%2fccpurchases%2fShared%20Documents%2f%d0%91%d0%b8%d0%a4%d0%9a%2f%d0%bf%d1%80%d0%be%d1%82%d0%be%d0%ba%d0%be%d0%bb%d1%8b%20%d0%b2%d1%81%d1%82%d1%80%d0%b5%d1%87%20%d0%b8%20%d0%bf%d0%b5%d1%80%d0%b5%d0%b3%d0%be%d0%b2%d0%be%d1%80%d0%be%d0%b2&FolderCTID=0x0120009960FE0D28FFEE4D86FC4DBD379E543D",
+        "Протоколы встреч и переговоров",
+        "Активно"
+      ],
+      [
+        "Стирольная цепочка",
+        "https://sp.sibur.local/sites/ccpurchases/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2fsites%2fccpurchases%2fShared%20Documents%2f%d0%9f%d1%80%d0%be%d0%b5%d0%ba%d1%82%20%d0%a1%d1%82%d0%b8%d1%80%d0%be%d0%bb%d1%8c%d0%bd%d0%b0%d1%8f%20%d1%86%d0%b5%d0%bf%d0%be%d1%87%d0%ba%d0%b0&FolderCTID=0x0120009960FE0D28FFEE4D86FC4DBD379E543D",
+        "Тендеры по стирольной цепочке",
+        "Активно"
+      ],
+      [
+        "Полиэтилен",
+        "https://sp.sibur.local/sites/ccpurchases/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2fsites%2fccpurchases%2fShared%20Documents%2f%d0%9f%d1%80%d0%be%d0%b5%d0%ba%d1%82%20%d0%9f%d0%be%d0%bb%d0%b8%d1%8d%d1%82%d0%b8%d0%bb%d0%b5%d0%bd&FolderCTID=0x0120009960FE0D28FFEE4D86FC4DBD379E543D",
+        "Тендеры по полиэтилену",
+        "Активно"
+      ]
+    ],
+    "box_11": [
+      [
+        "Должностные инструкции",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x0120008517C188A6F59147BF4D3712B9849BFA&id=%2Fsites%2Fnkncderivatives%2FShared%20Documents%2F%D0%9F%D1%80%D0%BE%D0%B5%D0%BA%D1%82%20%D0%9F%D0%AD%20%28%D0%9F%D0%BE%D0%BB%D0%B8%D1%8D%D1%82%D0%B8%D0%BB%D0%B5%D0%BD%29%2F%D0%91%D0%B8%D0%A4%D0%9A%2F1%2E%20%D0%9F%D1%80%D0%BE%D1%87%D0%B5%D0%B5%2F3%2E%20%D0%94%D0%BE%D0%BB%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D0%BD%D1%8B%D0%B5%20%D0%B8%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D0%B8%20%D0%91%D0%B8%D0%A4%D0%9A",
+        "-",
+        "Активно"
+      ],
+      [
+        "График отпусков",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared%20Documents/Forms/AllItems.aspx?id=/sites/nkncderivatives/Shared%20Documents/%D0%9F%D1%80%D0%BE%D1%87%D0%B5%D0%B5/%D0%9E%D1%82%D0%BF%D1%83%D1%81%D0%BA%D0%B0%20%D0%B8%20%D0%BE%D1%82%D1%81%D1%83%D1%82%D1%81%D1%82%D0%B2%D0%B8%D1%8F",
+        "-",
+        "Активно"
+      ],
+      [
+        "Анкеты рисков",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x0120008517C188A6F59147BF4D3712B9849BFA&id=%2Fsites%2Fnkncderivatives%2FShared%20Documents%2F%D0%9F%D1%80%D0%BE%D0%B5%D0%BA%D1%82%20%D0%9F%D0%AD%20%28%D0%9F%D0%BE%D0%BB%D0%B8%D1%8D%D1%82%D0%B8%D0%BB%D0%B5%D0%BD%29%2F%D0%91%D0%B8%D0%A4%D0%9A%2F1%2E%20%D0%9F%D1%80%D0%BE%D1%87%D0%B5%D0%B5%2F6%2E%20%D0%90%D0%BD%D0%BA%D0%B5%D1%82%D1%8B%20%D1%80%D0%B8%D1%81%D0%BA%D0%BE%D0%B2%20%D0%BF%D0%BE%20%D0%9E%D0%A2%20%D0%B8%20%D0%9F%D0%91",
+        "-",
+        "Активно"
+      ]
+    ],
+    "box_12": [
+      [
+        "БД КФО СЦ",
+        "https://sp.sibur.local/sites/db_boq/Shared%20Documents/Forms/AllItems.aspx",
+        "База данных КФО для СЦ",
+        "Активно"
+      ],
+      [
+        "БД КФО СЦ ТТ",
+        "Z:\\НКНХ\\СЦ\\БД ТТ\\",
+        "аза данных КФО для СЦ на ТТ",
+        "Активно"
+      ],
+      [
+        "Титульный список",
+        "https://sp.sibur.local/sites/nkncderivatives/Lists/List2/view.aspx",
+        "-",
+        "Активно"
+      ],
+      [
+        "Калькулятор КФО",
+        "https://sp.sibur.local/sites/ps250/Shared%20Documents/35%20-%20%D0%91%D0%B8%D0%A4%D0%9A/Portal%20NZP/index.aspx",
+        "Портал оценки КФО",
+        "Активно"
+      ]
+    ],
+    "box_3_sub_1780925118859": [
+      [
+        "Портал ",
+        "https://checko.ru/",
+        "Сервис проверки контрагентов",
+        "Активно"
+      ],
+      [
+        "Курсы валют",
+        "https://cbr.ru/currency_base/daily",
+        "Курсы валют ЦБР",
+        "Активно"
+      ],
+      [
+        "Курсы валют Китая",
+        "https://www.chinamoney.com.cn/english/",
+        "CFETS - China Foreign Exchange Trade System",
+        "Активно"
+      ],
+      [
+        "Ресурс БФО",
+        "https://bo.nalog.ru/",
+        "Мониторинг бух.отчетности в налоговых органах",
+        "Активно"
+      ],
+      [
+        "ФНС: Проверка инос.филиалов",
+        "https://service.nalog.ru/rafp/#details",
+        "Госреестр аккредитованных филиалов иностранных юрлиц",
+        "Активно"
+      ],
+      [
+        "ФНС: ЕГРЮЛ",
+        "https://egrul.nalog.ru/index.html",
+        "Предоставление сведений из ЕГРЮЛ/ЕГРИП",
+        "Активно"
+      ],
+      [
+        "ФНС: Проверка счетов",
+        "https://service.nalog.ru/bi.do#result",
+        "Проверка состояния работы расчетных счетов",
+        "Активно"
+      ]
+    ],
+    "box_4_sub_1780925409199": [
+      [
+        "Расчеты EPSS-контракта СЦ",
+        "https://sp.sibur.local/sites/ps250/Shared Documents/35 - %D0%91%D0%B8%D0%A4%D0%9A/%D0%94%D0%BE%D0%B3%D0%BE%D0%B2%D0%BE%D1%80%D1%8B/%D0%A0%D0%B5%D0%B5%D1%81%D1%82%D1%80%D1%8B/SSEC EPSS.xlsx?d=wb7e8bc4faf7d49b79a72fd2e0fed6920",
+        "",
+        "Активно"
+      ],
+      [
+        "Расчеты EPSS-контракта ПЭ",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared Documents/%D0%A4%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D1%8B%D0%B9 %D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D1%8C/509-%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B %D0%9C%D0%B8%D0%BD%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2%D0%B0/EPSS %D0%93%D0%9A %D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%88%D0%BD%D0%BB.xlsb?d=w0faaefa7691a4aff95893f14250dd971",
+        "",
+        "Активно"
+      ],
+      [
+        "Расчет договора с Sinopec",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared Documents/%D0%A4%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D1%8B%D0%B9 %D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D1%8C/509-%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B %D0%9C%D0%B8%D0%BD%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2%D0%B0/%D0%91%D0%B0%D0%BB%D0%B0%D0%BD%D1%81 %D0%B2%D0%B7%D0%B0%D0%B8%D0%BC%D0%BE%D1%80%D0%B0%D1%81%D1%87%D0%B5%D1%82%D0%BE%D0%B2 %D0%9F%D0%9C%D0%9F %D1%81%D1%83%D0%B1%D0%BF%D0%BE%D0%B4%D1%80%D1%8F%D0%B4_.xlsx?d=wc21b42f0f9e142f2ac071e32783dc597",
+        "",
+        "Активно"
+      ],
+      [
+        "Оценка РК",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\12. ФЭК\\3. Калькулятор РК",
+        "Оценка рисков и контроля",
+        "Активно"
+      ],
+      [
+        "Презентационный материал",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\12. ФЭК\\4. Общая презентация",
+        "Общий презентационный материал",
+        "Активно"
+      ],
+      [
+        "Организационная структура блока",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\12. ФЭК",
+        "Структура финансово-экономического контроля",
+        "Активно"
+      ],
+      [
+        "ЛК БСК",
+        "http://lkbsk.ru/",
+        "Портал ГПБ для контроля ОБС",
+        "Активно"
+      ],
+      [
+        "Методология",
+        "\\\\sibur.local\\NKNH\\СЗ 7600\\06-БФКиСН\\04-ПП-400\\БиФК\\12. ФЭК\\0. Методология ФЭКП",
+        "Методология ФЭКП",
+        "Активно"
+      ],
+      [
+        "Анализ фин устойчивости",
+        "https://sp.sibur.local/sites/nkncderivatives/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2Fnkncderivatives%2FShared%20Documents%2F%D0%A4%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D1%8C%2F509%2D%D0%9E%D0%B1%D1%89%D0%B5%D0%B5%2F%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B%20%D0%9C%D0%B8%D0%BD%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2%D0%B0%2F%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D0%B7%20%D1%84%D0%B8%D0%BD%2E%D1%83%D1%81%D1%82%D0%BE%D0%B9%D1%87%D0%B8%D0%B2%D0%BE%D1%81%D1%82%D0%B8",
+        "н/а",
+        "Остановлено"
+      ]
+    ],
+    "box_1780987076310_main": [
+      [
+        "КИС ЕСМ",
+        "http://s001cl-ecmlb01.sibur.local/ecm",
+        "Програмный комплекс НТД, ОРД, НПА",
+        "Активно"
+      ],
+      [
+        "СЭД",
+        "https://dms.tdms.sibur.ru/DMS21/#application/io_user_tasks_approve",
+        "Система электронного документооборота",
+        "Активно"
+      ],
+      [
+        "ВКУС",
+        "https://vkus.sibur.local/",
+        "Ресурс технической поддержки пользователя",
+        "Активно"
+      ],
+      [
+        "СТДО",
+        "https://cp.tdms.sibur.ru/cp/component/main?entrySection=task_summary",
+        "Система технического документооборота (Capital Project)",
+        "Активно"
+      ],
+      [
+        "Личный кабинет",
+        "https://my.sibur.local/sap/bc/ui5_ui5/sap/zhcm_bs_ser/personal_area/profile",
+        "Оформление отпуска, заявления, сведения",
+        "Активно"
+      ],
+      [
+        "КЛИК",
+        "https://social.sibur.ru/stream",
+        "Внутренний форум СИБУР",
+        "Активно"
+      ],
+      [
+        "Система тикетов",
+        "https://pmaker.sibur.local/",
+        "Внутренний сервис заявок",
+        "Активно"
+      ],
+      [
+        "BPM-сервис",
+        "https://it-zakaz.sibur.local/0/Nui/ViewModule.aspx#SectionModuleV2/TripPortalApplicationsSection",
+        "Портал командирования, рассмотрение актов",
+        "Активно"
+      ],
+      [
+        "SAP GRC",
+        "http://sapgap0.sibur.local:8000/nwbc/?sap-client=100&sap-language=RU&sap-nwbc-node=root&sap-theme=sap_corbu",
+        "Управление рисками и соответствием",
+        "Активно"
+      ],
+      [
+        "ИСУП",
+        "https://msk01ihp.sibur.ru/isup?type=logon",
+        "Информационная система управления проектами",
+        "Активно"
+      ],
+      [
+        "ЕСУИД",
+        "https://idmoam.sibur.local/identity/faces/home?_afrLoop=22977038386984022&_adf.ctrl-state=1b2kkbfpc9_13",
+        "Портал самообслуживания",
+        "Активно"
+      ],
+      [
+        "Aeroclub Time",
+        "https://app.time.aero",
+        "Портал заказов билетов",
+        "Активно"
+      ],
+      [
+        "Сибур автобусы",
+        "https://nk.glonass24.com/",
+        "Портал мониторинга автобусов Сибур",
+        "Активно"
+      ],
+      [
+        "Промт",
+        "https://s001as-app-pnts.sibur.local/AS/Translation/TranslateText.aspx?show_sp=true",
+        "Портал перевода текста",
+        "Активно"
+      ],
+      [
+        "Файлообменник Сибур",
+        "https://sharefile.sibur.ru/",
+        "Файлообменник с внешними контрагентами",
+        "Активно"
+      ],
+      [
+        "ПАБ",
+        "https://sp.sibur.local/orgunits/otpb/Lists/PAB/allitems.aspx",
+        "Поведенческие аудиты безопасности",
+        "Активно"
+      ]
+    ],
+    "box_1780987076310_sub_1780987640848": [
+      [
+        "DeepSeek",
+        "https://chat.deepseek.com/",
+        "Искусственный интеллект",
+        "Активно"
+      ],
+      [
+        "Корпоративный AiChat",
+        "https://aichat.sibur.local/",
+        "Искусственный интеллект",
+        "Активно"
+      ],
+      [
+        "AI-Алиса",
+        "https://alice.yandex.ru/",
+        "Искусственный интеллект",
+        "Активно"
+      ],
+      [
+        "GPT",
+        "https://openai.com/ru-RU/gpt-5/",
+        "Искусственный интеллект",
+        "Активно"
+      ],
+      [
+        "GPT РФ",
+        "https://gpt-one.ru/chats",
+        "Искусственный интеллект",
+        "Активно"
+      ],
+      [
+        "Вайбкрафт",
+        "https://sourcecraft.dev/",
+        "ИИ-агент для разработки веб-интерфейсов",
+        "Активно"
+      ],
+      [
+        "Маскирование документов",
+        "https://masking.sibur.local/login?from=%2Fupload",
+        "Инструмент для маскировки документов",
+        "Активно"
+      ]
+    ],
+    "box_12_sub_1785253190860": [
+      [
+        "БД КФО мПЭ",
+        "https://sp.sibur.local/sites/db_boq_mpe/Shared Documents",
+        "База данных КФО для мПЭ",
+        "Активно"
+      ],
+      [
+        "БД КФО мПЭ ТТ",
+        "Z:\\НКНХ\\мПЭ300\\БД мПЭ ТТ\\",
+        "База данных КФО для мПЭ на ТТ",
+        "Активно"
+      ],
+      [
+        "Калькулятор КФО ПЭ",
+        "https://sp.sibur.local/sites/ps250/Shared%20Documents/35%20-%20%D0%91%D0%B8%D0%A4%D0%9A/Portal%20NZP/indexPE.aspx",
+        "Портал оценки КФО",
+        "Активно"
+      ]
+    ],
+    "section_1788259461646_main": [
+      [
+        "Тестовая модель",
+        "https://sp.sibur.local/sites/ps250/Shared%20Documents/35%20-%20%D0%91%D0%B8%D0%A4%D0%9A/Models/Test/Index.aspx",
+        "Модель в разработке",
+        "Остановлено"
+      ]
+    ]
+  }
+}

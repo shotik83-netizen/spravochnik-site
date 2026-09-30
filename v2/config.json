@@ -8,9 +8,9 @@
   },
   "rate": {
     "enabled": true,
-    "sourceUrl": "https://www.cbr.ru/statistics/idkp_br/refinancing_rates1/",
-    "value": null,
-    "verifiedOn": ""
+    "sourceUrl": "https://www.cbr.ru/hd_base/KeyRate/",
+    "value": 14,
+    "verifiedOn": "2026-09-30"
   },
   "weather": {
     "enabled": true,
@@ -18,12 +18,12 @@
       {
         "name": "Нижнекамск",
         "sourceUrl": "https://rp5.ru/5770/ru",
-        "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=16&id=5770&lang=ru&um=00000"
+        "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=21&id=5770&lang=ru&um=00000"
       },
       {
         "name": "Москва",
         "sourceUrl": "https://rp5.ru/5483/ru",
-        "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=16&id=5483&lang=ru&um=00000"
+        "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=21&id=5483&lang=ru&um=00000"
       }
     ]
   }

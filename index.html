@@ -490,7 +490,7 @@
 
 <script>
     // ========== КОНФИГУРАЦИЯ ==========
-    const DATA_PATH = '';
+    const DATA_PATH = './bifk-data.txt';
     // Только источники .ru. Данные справочника и экспорт в загрузки от этих запросов не зависят.
     const CURRENCY_API = 'https://www.cbr-xml-daily.ru/daily_json.js';
     const CURRENCY_JSONP = 'https://www.cbr-xml-daily.ru/daily_jsonp.js';
@@ -838,7 +838,7 @@
                     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
                     return resp.text();
                 })(),
-                new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new Error('Время ожидания SharePoint истекло')); }, 10000); })
+                new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new Error('Время ожидания файла данных истекло')); }, 10000); })
             ]);
             let json = JSON.parse(text);
             loadFromJSON(json);
@@ -966,8 +966,8 @@
         setInterval(() => { if (document.visibilityState !== 'hidden') refreshLiveData(); }, LIVE_REFRESH_MS);
         document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshLiveData(); });
         window.addEventListener('online', refreshLiveData);
-        let loaded = isSharePoint ? await loadFromSharePoint() : false;
-        if (isSharePoint && !loaded) {
+        let loaded = await loadFromSharePoint();
+        if (!loaded) {
             document.getElementById('navMenu').innerHTML = '<li class="info-message">Данные недоступны</li>';
             document.getElementById('contentArea').innerHTML = `<div class="info-message"><h2>Не удалось загрузить справочник</h2><p>Проверьте доступ к <a href="${DATA_PATH}" target="_blank" rel="noopener noreferrer">файлу bifk-data.txt</a> и попробуйте ещё раз.</p><button type="button" id="retryDataBtn" class="refresh-premium">Повторить загрузку</button></div>`;
             document.getElementById('retryDataBtn').onclick = () => location.reload();

@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Справочник БиФК · Новая версия</title>
+    <meta name="description" content="Справочник документов и ссылок БиФК">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23008c95%27/%3E%3Cpath d=%27M8 8h16v16H8zM12 12h8M12 16h8M12 20h5%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27/%3E%3C/svg%3E">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 100%);
+            color: #1a2c3e; 
+            line-height: 1.5; 
+            min-height: 100vh;
+        }
+        
+        .app-container { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
+        
+        .header-premium {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            padding: 20px 32px;
+            margin-bottom: 32px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,140,149,0.15);
+        }
+        
+        .logo-area { display: flex; align-items: center; gap: 16px; }
+        .logo-icon {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, #006D74, #008C95);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 8px 16px rgba(0,140,149,0.2);
+        }
+        .brand-text h1 { 
+            font-size: 1.8rem; font-weight: 800; 
+            background: linear-gradient(135deg, #006D74, #00A0AA);
+            background-clip: text; -webkit-background-clip: text; color: transparent;
+        }
+        .brand-text p { font-size: 0.8rem; color: #6c86a3; font-weight: 500; }
+        
+        .search-premium { flex: 1; min-width: 280px; max-width: 380px; position: relative; }
+        .search-premium i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        .search-input-premium {
+            width: 100%; padding: 14px 18px 14px 48px;
+            border: 1px solid #e2e8f0; border-radius: 60px;
+            font-family: 'Inter', sans-serif; font-size: 0.9rem;
+            background: #f8fafc; transition: all 0.2s;
+        }
+        .search-input-premium:focus { outline: none; border-color: #008C95; background: white; box-shadow: 0 0 0 3px rgba(0,140,149,0.1); }
+        
+        .refresh-premium {
+            background: #008C95; color: white; border: none; border-radius: 60px;
+            padding: 12px 24px; cursor: pointer; display: flex; align-items: center; gap: 10px;
+            font-weight: 600; transition: all 0.2s;
+        }
+        .refresh-premium:hover { background: #006D74; transform: translateY(-2px); }
+        .refresh-premium:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .live-panel { width: 100%; margin: -8px 0 20px; }
+        .live-heading { position: relative; display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-bottom: 7px; text-align: left; }
+        .live-heading h2 { font-size: .94rem; color: #006D74; }
+        .live-update { position: absolute; right: 0; color: #64748b; font-size: .69rem; white-space: nowrap; }
+        .live-scroll { overflow-x: auto; }
+        .live-grid { display: grid; grid-template-columns: minmax(300px, 1.2fr) minmax(210px, .85fr) minmax(280px, 1fr); min-width: 790px; background: #fff; border: 1px solid #D6E9EA; border-radius: 12px; overflow: hidden; }
+        .live-card { padding: 9px 14px; min-width: 0; min-height: 87px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .live-card + .live-card { border-left: 1px solid #E0EDEE; }
+        .live-card-top { display: flex; gap: 6px; align-items: center; justify-content: center; color: #64748b; font-size: .7rem; font-weight: 700; margin-bottom: 5px; }
+        .live-card-top i { color: #008C95; }
+        .live-card-top a { color: inherit; text-decoration: none; }
+        .live-card-top a:hover { text-decoration: underline; }
+        .live-row { display: flex; align-items: center; gap: 8px; }
+        .live-currencies { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+        .live-quote { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; padding: 0 7px; color: #17494D; text-decoration: none; white-space: nowrap; font-size: .94rem; font-weight: 750; font-variant-numeric: tabular-nums; }
+        .live-quote:first-child { padding-left: 0; }
+        .live-quote + .live-quote { border-left: 1px solid #E0EDEE; }
+        .live-quote:hover, .live-rate-link:hover { color: #00757D; text-decoration: underline; }
+        .live-quote small { color: #697d88; font-size: .65rem; font-weight: 700; }
+        .live-rate-link { display: inline-block; color: #17494D; font-size: 1.12rem; font-weight: 800; text-decoration: none; line-height: 1.4; font-variant-numeric: tabular-nums; }
+        .live-detail { color: #718293; font-size: .67rem; line-height: 1.25; }
+        .live-weather-widgets { display: flex; gap: 8px; align-items: flex-start; }
+        .live-weather-place { width: 120px; flex: 0 0 120px; }
+        .live-weather-place img { display: block; width: 120px; height: 60px; border-radius: 6px; filter: saturate(.68); }
+        .live-quote.live-stale, .live-rate-link.live-stale { color: #9b4b31; }
+        .search-results { display: grid; gap: 10px; margin-top: 16px; }
+        .search-result { width: 100%; text-align: left; display: grid; gap: 4px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px 18px; cursor: pointer; color: #243849; font: inherit; }
+        .search-result:hover, .search-result:focus-visible { border-color: #008C95; background: #F0F9FA; }
+        .search-result small { color: #006D74; }
+        .search-result span { color: #64748b; font-size: .82rem; }
+        
+        .dashboard-premium { display: grid; grid-template-columns: 300px 1fr; gap: 32px; }
+        
+        .sidebar-premium {
+            background: white; border-radius: 32px; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08);
+            overflow: hidden; border: 1px solid rgba(0,0,0,0.05);
+            position: sticky; top: 24px; height: fit-content;
+        }
+        .sidebar-header {
+            padding: 24px 24px 16px; border-bottom: 1px solid #edf2f7;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+        }
+        .sidebar-header h2 { font-size: 1rem; font-weight: 700; color: #006D74; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .add-section-btn {
+            background: #e2e8f0; border-radius: 40px; padding: 6px 14px; font-size: 0.75rem;
+            font-weight: 600; border: 1px dashed #94a3b8; cursor: pointer; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 6px; color: #334155;
+        }
+        .add-section-btn:hover { background: #cbd5e1; transform: translateY(-1px); }
+        .add-section-btn.hidden { display: none; }
+        
+        .nav-premium { list-style: none; padding: 8px 12px; }
+        .nav-premium li { margin-bottom: 4px; position: relative; }
+        .nav-premium a {
+            display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+            border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+            color: #4a5b6e; transition: all 0.25s; cursor: pointer;
+        }
+        .nav-premium a i { width: 24px; font-size: 1.2rem; color: #8ba0bc; }
+        .nav-premium a:hover { background: #F0F9FA; color: #006D74; transform: translateX(4px); }
+        .nav-premium a.active { background: linear-gradient(95deg, #E5F4F5, #ffffff); color: #006D74; border-left: 3px solid #008C95; }
+        .nav-premium a.active i { color: #008C95; }
+        
+        .menu-actions {
+            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+            display: none; gap: 3px; background: white; padding: 4px 6px;
+            border-radius: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .nav-premium li:hover .menu-actions { display: flex; }
+        .menu-actions button {
+            background: none; border: none; cursor: pointer; padding: 5px 10px;
+            border-radius: 20px; font-size: 0.7rem; transition: all 0.2s; font-weight: 600;
+        }
+        .edit-menu-btn { color: #3b82f6; background: #eff6ff; }
+        .edit-menu-btn:hover { background: #dbeafe; transform: scale(1.02); }
+        .delete-menu-btn { color: #ef4444; background: #fef2f2; }
+        .delete-menu-btn:hover { background: #fee2e2; transform: scale(1.02); }
+        
+        .content-premium {
+            background: white; border-radius: 32px; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08);
+            padding: 32px 36px; border: 1px solid rgba(0,0,0,0.05); min-height: 600px;
+        }
+        
+        .quick-links-premium { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 2px solid #eff3f8; }
+        
+        .pill-premium {
+            background: #f8fafc; border-radius: 60px; padding: 10px 24px; font-size: 0.85rem;
+            font-weight: 600; color: #2c3e50; text-decoration: none; display: inline-flex;
+            align-items: center; gap: 10px; border: 1px solid #e2e8f0; transition: all 0.2s; cursor: pointer;
+        }
+        .pill-premium i { font-size: 0.9rem; color: #8ba0bc; }
+        .pill-premium:hover, .pill-premium.active { background: #008C95; border-color: #008C95; color: white; transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,140,149,0.25); }
+        .pill-premium:hover i, .pill-premium.active i { color: white; }
+        
+        .add-subsection-btn {
+            background: #e2e8f0; border-radius: 60px; padding: 10px 20px; font-size: 0.85rem;
+            font-weight: 600; border: 1px dashed #94a3b8; cursor: pointer; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 8px; color: #334155;
+        }
+        .add-subsection-btn:hover { background: #cbd5e1; transform: translateY(-2px); }
+        .add-subsection-btn.hidden { display: none; }
+        
+        .table-premium { width: 100%; border-collapse: collapse; }
+        .table-premium th {
+            text-align: left; padding: 16px 20px; background: #fafcff;
+            font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;
+            color: #5b6e8c; border-bottom: 2px solid #eef2f8;
+        }
+        .table-premium td { padding: 14px 20px; border-bottom: 1px solid #f0f4fa; vertical-align: middle; font-size: 0.9rem; }
+        .table-premium tr:hover td { background: #fafefe; }
+        
+        .link-wrapper { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .link-wrapper a { 
+            text-decoration: none; color: #006D74; font-weight: 600; 
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .link-wrapper a:hover { text-decoration: underline; }
+        
+        .copy-link-btn {
+            background: none; border: none; cursor: pointer; padding: 6px 10px;
+            border-radius: 8px; transition: all 0.2s; color: #8ba0bc; font-size: 0.8rem;
+        }
+        .copy-link-btn:hover { background: #E5F4F5; color: #008C95; transform: scale(1.02); }
+        
+        .badge-premium {
+            display: inline-block; padding: 6px 14px; border-radius: 60px;
+            font-size: 0.7rem; font-weight: 700; background: #E5F4F5; color: #006D74;
+        }
+        .badge-premium.Остановлено { background: #fee2e2; color: #dc2626; }
+        .badge-premium.Отсутствует { background: #fef3c7; color: #d97706; }
+        
+        .edit-mode-row { background-color: #fffbeb !important; transition: background-color 0.2s; }
+        .edit-mode-row:hover { background-color: #fef3c7 !important; }
+        
+        .edit-input {
+            width: 100%; min-width: 160px; padding: 10px 12px;
+            border: 2px solid #fbbf24; border-radius: 12px;
+            font-family: 'Inter', sans-serif; font-size: 0.85rem;
+            background: #fffbeb; transition: all 0.2s;
+        }
+        .edit-input:focus { outline: none; border-color: #f59e0b; background: #ffffff; box-shadow: 0 0 0 3px rgba(245,158,11,0.1); }
+        
+        .edit-select {
+            width: 100%; min-width: 130px; padding: 10px 12px;
+            border: 2px solid #fbbf24; border-radius: 12px;
+            font-family: 'Inter', sans-serif; font-size: 0.85rem;
+            background: #fffbeb; cursor: pointer; transition: all 0.2s;
+        }
+        .edit-select:focus { outline: none; border-color: #f59e0b; background: #ffffff; }
+        
+        .row-actions { display: flex; gap: 6px; flex-wrap: nowrap; white-space: nowrap; }
+        .row-action-icon {
+            background: none; border: none; cursor: pointer; padding: 8px 14px;
+            border-radius: 10px; transition: all 0.2s; font-size: 0.85rem;
+            font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .row-action-icon.up { color: #3b82f6; background: #eff6ff; }
+        .row-action-icon.up:hover { background: #dbeafe; transform: scale(1.02); }
+        .row-action-icon.down { color: #3b82f6; background: #eff6ff; }
+        .row-action-icon.down:hover { background: #dbeafe; transform: scale(1.02); }
+        .row-action-icon.delete { color: #ef4444; background: #fef2f2; }
+        .row-action-icon.delete:hover { background: #fee2e2; transform: scale(1.02); }
+        
+        .add-row-btn {
+            width: 100%; background: linear-gradient(135deg, #008C95, #00A0AA);
+            color: white; border: none; padding: 12px; border-radius: 14px;
+            cursor: pointer; font-weight: 600; font-size: 0.85rem;
+            transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .add-row-btn:hover { background: linear-gradient(135deg, #006D74, #00757D); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,140,149,0.3); }
+        
+        .subsection-actions { display: flex; gap: 6px; float: right; }
+        .subsection-action-btn {
+            background: none; border: none; cursor: pointer; padding: 6px 14px;
+            border-radius: 20px; font-size: 0.75rem; font-weight: 600; transition: all 0.2s;
+        }
+        .subsection-action-btn.edit { background: #3b82f6; color: white; }
+        .subsection-action-btn.edit:hover { background: #2563eb; transform: scale(1.02); }
+        .subsection-action-btn.delete { background: #ef4444; color: white; }
+        .subsection-action-btn.delete:hover { background: #dc2626; transform: scale(1.02); }
+        
+        .footer-premium { margin-top: 48px; text-align: center; font-size: 0.75rem; color: #8ba0bc; padding: 28px; border-top: 1px solid #eef2f8; }
+        
+        .edit-trigger {
+            position: fixed; bottom: 32px; right: 32px;
+            background: #1e293b; color: white; border: none; border-radius: 60px;
+            padding: 14px 28px; cursor: pointer; display: flex; align-items: center; gap: 12px;
+            font-weight: 700; font-size: 0.9rem; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: all 0.2s; z-index: 100;
+        }
+        .edit-trigger:hover { transform: translateY(-2px); background: #008C95; }
+        .edit-trigger.edit-active { background: #f59e0b; color: #1e293b; }
+        
+        .edit-panel {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #1e293b; padding: 16px 32px; display: flex; justify-content: center; gap: 16px;
+            transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 99; box-shadow: 0 -8px 30px rgba(0,0,0,0.2);
+        }
+        .edit-panel.active { transform: translateY(0); }
+        .edit-panel button { padding: 12px 32px; border-radius: 60px; font-weight: 700; cursor: pointer; border: none; font-size: 0.9rem; transition: all 0.2s; }
+        .btn-save-premium { background: #008C95; color: white; }
+        .btn-save-premium:hover { background: #006D74; transform: scale(1.02); }
+        .btn-cancel-premium { background: #ef4444; color: white; }
+        .btn-cancel-premium:hover { background: #dc2626; transform: scale(1.02); }
+        
+        .modal-premium {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000;
+            justify-content: center; align-items: center;
+        }
+        .modal-premium.active { display: flex; }
+        .modal-content-premium {
+            background: white; border-radius: 32px; padding: 32px;
+            max-width: 500px; width: 90%; box-shadow: 0 40px 60px rgba(0,0,0,0.2);
+        }
+        .modal-content-premium h3 { margin-bottom: 24px; color: #006D74; font-size: 1.5rem; }
+        .modal-content-premium input, .modal-content-premium .custom-select {
+            width: 100%; margin-bottom: 20px;
+        }
+        .modal-content-premium input {
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0; border-radius: 16px;
+            font-family: 'Inter', sans-serif; font-size: 0.9rem;
+        }
+        
+        .icon-select-row { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
+        .icon-preview { font-size: 1.5rem; width: 50px; text-align: center; padding: 10px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; }
+        
+        /* Кастомный выпадающий список с иконками */
+        .custom-select {
+            position: relative;
+            width: 100%;
+            cursor: pointer;
+        }
+        .select-trigger {
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .select-trigger i { width: 24px; font-size: 1.1rem; color: #008C95; }
+        .select-trigger .arrow { margin-left: auto; transition: transform 0.2s; color: #94a3b8; }
+        .custom-select.open .select-trigger { border-color: #008C95; box-shadow: 0 0 0 2px rgba(0,140,149,0.1); }
+        .custom-select.open .select-trigger .arrow { transform: rotate(180deg); }
+        .select-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            z-index: 100;
+            max-height: 280px;
+            overflow-y: auto;
+            display: none;
+        }
+        .custom-select.open .select-dropdown { display: block; }
+        .select-option {
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-size: 0.9rem;
+        }
+        .select-option i { width: 24px; font-size: 1rem; color: #5b6e8c; }
+        .select-option:hover { background: #F0F9FA; }
+        .select-option.selected { background: #E5F4F5; color: #006D74; font-weight: 500; }
+        .select-option.selected i { color: #008C95; }
+        
+        .toast {
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+            background: #1e293b; color: white; padding: 12px 24px; border-radius: 60px;
+            font-size: 0.85rem; z-index: 200; animation: fadeOut 2.5s ease forwards; pointer-events: none;
+        }
+        .toast.error { background: #dc2626; }
+        @keyframes fadeOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            85% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+        
+        .scroll-top {
+            position: fixed; bottom: 100px; right: 32px; background: white;
+            width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1); cursor: pointer; opacity: 0; visibility: hidden;
+            transition: 0.2s; border: 1px solid #e2e8f0; color: #008C95; z-index: 99;
+        }
+        .scroll-top.show { opacity: 1; visibility: visible; }
+        
+        .mobile-toggle {
+            display: none; background: white; border: 1px solid #e2e8f0; border-radius: 60px;
+            padding: 12px 20px; font-weight: 600; margin-bottom: 20px; width: fit-content; cursor: pointer;
+        }
+        
+        .loading { text-align: center; padding: 60px; color: #8ba0bc; }
+        .info-message { text-align: center; padding: 60px; background: #f8fafc; border-radius: 24px; color: #5b6e8c; }
+        .info-message .refresh-premium { margin: 16px auto 0; }
+        .sidebar-premium .info-message { padding: 18px 10px; background: transparent; }
+        
+        @media (max-width: 900px) {
+            .app-container { padding: 16px; }
+            .live-heading { flex-direction: column; align-items: flex-start; gap: 2px; }
+            .live-update { position: static; }
+            .dashboard-premium { grid-template-columns: 1fr; }
+            .sidebar-premium { position: static; display: none; }
+            .sidebar-premium.mobile-open { display: block; margin-bottom: 20px; }
+            .content-premium { padding: 20px; }
+            .mobile-toggle { display: flex; align-items: center; gap: 10px; }
+            .scroll-top { bottom: 100px; right: 16px; }
+        }
+        @media (max-width: 540px) {
+            .header-premium { padding: 18px; }
+            .search-premium { min-width: 0; max-width: none; width: 100%; }
+        }
+        
+        .content-section { display: none; animation: fadeSlide 0.25s ease-out; }
+        .content-section.active { display: block; }
+        @keyframes fadeSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .hidden { display: none !important; }
+        .clearfix::after { content: ""; clear: both; display: table; }
+        /* V2: компактный интерфейс, нейтральный фон, единый акцент RGB(0,140,149). */
+        :root { --accent:#008c95; --ink:#243746; --muted:#71808b; --line:#e3e9ed; }
+        body { background:#f3f5f7; color:var(--ink); }
+        button, input, select { font:inherit; }
+        button:focus-visible, a:focus-visible { outline:3px solid #72c5ca; outline-offset:3px; }
+        [hidden] { display:none !important; }
+        .app-container { max-width:1600px; padding:22px 28px; }
+        .header-premium { border-radius:18px; padding:18px 24px; margin-bottom:22px; border:1px solid var(--line); box-shadow:0 4px 18px #24374605; gap:24px; }
+        .logo-icon { border-radius:13px; width:44px; height:44px; box-shadow:none; background:var(--accent); }
+        .version-label { display:block; font-size:10px; font-weight:700; color:var(--muted); letter-spacing:1.4px; margin-bottom:3px; }
+        .brand-text h1 { font-size:24px; color:var(--ink); background:none; font-weight:750; }
+        .brand-text p { color:var(--muted); font-size:12px; }
+        .search-premium { max-width:480px; }
+        .search-input-premium { border-radius:12px; padding-top:12px; padding-bottom:12px; }
+        .refresh-premium { border-radius:11px; padding:11px 18px; min-height:44px; }
+        .live-panel { margin:0 0 22px; }
+        .live-heading { margin-bottom:10px; }
+        .live-heading h2 { font-size:13px; color:var(--ink); }
+        .live-grid { grid-template-columns:repeat(var(--card-count,3),minmax(0,1fr)); min-width:0; border-color:var(--line); border-radius:14px; }
+        .live-card { padding:12px 16px; min-height:110px; }
+        .live-card-top { font-size:11px; font-weight:600; }
+        .live-quote { font-size:20px; color:var(--ink); font-weight:700; }
+        .live-quote small { font-size:10px; font-weight:500; }
+        .live-detail { font-size:10px; margin-top:5px; color:var(--muted); }
+        .live-detail a { color:inherit; }
+        .live-rate-link { font-size:17px; color:var(--ink); }
+        .live-weather-place { width:120px; flex-basis:120px; }
+        .live-weather-place a { display:grid; gap:2px; color:var(--ink); text-decoration:none; font-size:10px; }
+        .weather-fallback { padding:14px 0; }
+        .dashboard-premium { grid-template-columns:250px minmax(0,1fr); gap:22px; align-items:start; }
+        .sidebar-premium, .content-premium { border-radius:18px; border:1px solid var(--line); box-shadow:0 4px 18px #24374604; }
+        .sidebar-premium { top:18px; overflow:visible; }
+        .sidebar-header { padding:18px 18px 12px; }
+        .sidebar-header h2 { font-size:12px; color:var(--muted); letter-spacing:1px; }
+        .nav-premium { padding:10px; }
+        .nav-premium a { min-height:44px; padding:11px 12px; border-radius:10px; gap:10px; font-size:13px; font-weight:600; }
+        .nav-premium a i { width:18px; font-size:17px; color:#7e909b; flex-shrink:0; }
+        .nav-premium a:hover { transform:none; }
+        .nav-premium a.active { border-left:none; background:#e8f5f6; color:var(--accent); }
+        .sidebar-bottom { border-top:1px solid var(--line); padding:14px 16px 16px; display:grid; gap:5px; }
+        .sidebar-bottom p { font-size:10px; color:var(--muted); padding:0 4px 6px; }
+        .sidebar-tool { background:none; border:none; cursor:pointer; text-align:left; display:flex; align-items:center; gap:9px; color:var(--ink); min-height:42px; padding:9px 4px; font-size:12px; border-radius:8px; }
+        .sidebar-tool:hover { background:#f3f7f8; }
+        .sidebar-tool.edit-active { color:var(--accent); background:#e8f5f6; }
+        .sidebar-tool:disabled { opacity:.5; cursor:default; }
+        .backup-link { font-size:10px; color:var(--muted); padding:6px 4px 0; text-decoration:none; }
+        .content-premium { min-height:550px; padding:26px 28px; min-width:0; }
+        .content-section h2 { font-size:21px; font-weight:650; margin-bottom:18px; display:flex; gap:10px; align-items:center; }
+        .content-section h2 i { color:var(--accent); font-size:19px; }
+        .content-section h3 { font-size:14px; font-weight:650; margin-bottom:14px; }
+        .quick-links-premium { gap:8px; padding-bottom:18px; margin-bottom:22px; border-bottom:1px solid var(--line); }
+        .pill-premium { padding:8px 14px; border-radius:9px; font-size:12px; min-height:40px; }
+        .pill-premium:hover, .pill-premium.active { transform:none; box-shadow:none; }
+        .table-scroll { overflow:auto; max-width:100%; }
+        .table-premium th { padding:11px 14px; font-size:10px; color:var(--muted); border-bottom:1px solid var(--line); background:#f7f9fa; }
+        .table-premium td { padding:13px 14px; font-size:13px; border-color:#edf1f3; }
+        .table-premium td:first-child { width:43%; }
+        .table-premium td:last-child { width:100px; }
+        .badge-premium { padding:4px 9px; font-size:10px; font-weight:500; color:#687d80; background:#f0f5f5; }
+        .link-wrapper { flex-wrap:nowrap; }
+        .link-wrapper a { font-weight:600; }
+        .copy-link-btn { padding:9px; flex-shrink:0; }
+        .edit-input { min-width:180px; font-size:12px; padding:9px; border:1px solid #b6dce0; background:#f6fcfc; border-radius:7px; }
+        .edit-select { min-width:120px; font-size:12px; border:1px solid #b6dce0; background:#f6fcfc; border-radius:7px; }
+        .edit-mode-row, .edit-mode-row:hover { background:#f6fcfc !important; }
+        .menu-actions { position:static; transform:none; display:flex; justify-content:flex-end; padding:0; box-shadow:none; background:none; }
+        .nav-premium li:hover .menu-actions { display:flex; }
+        .edit-panel { gap:10px; padding:14px 20px; }
+        .edit-panel button { padding:11px 22px; border-radius:10px; font-size:13px; }
+        .btn-cancel-premium { background:#425563; }
+        .footer-premium { margin:22px 0 0; padding:18px 0; font-size:10px; }
+        .modal-content-premium { border-radius:18px; }
+        .info-message { padding:32px; border-radius:12px; }
+        .admin-dialog { margin:auto; width:min(760px,calc(100% - 32px)); max-height:90vh; padding:0; color:var(--ink); border:1px solid var(--line); border-radius:18px; box-shadow:0 25px 80px #162b3b35; }
+        .admin-dialog::backdrop { background:#192c3e55; }
+        .admin-header { display:flex; justify-content:space-between; align-items:center; padding:22px 26px 15px; }
+        .admin-header h2 { font-size:24px; }
+        .close-admin { border:none; background:#f3f5f7; border-radius:10px; width:42px; height:42px; font-size:27px; cursor:pointer; color:var(--muted); }
+        .connection-flow { padding:10px 26px; margin:0; font-size:12px; color:#42676a; background:#edf7f7; }
+        #adminForm { padding:20px 26px 24px; }
+        #adminForm fieldset { border:none; padding:0; margin:0 0 22px; }
+        #adminForm legend { font-size:14px; font-weight:700; margin-bottom:12px; }
+        #adminForm label { display:grid; gap:6px; color:#506674; font-size:12px; margin:0 0 10px; }
+        #adminForm input:not([type=checkbox]) { width:100%; min-width:0; padding:10px 12px; border:1px solid #dce4e9; border-radius:8px; color:var(--ink); background:white; font-size:12px; min-height:42px; }
+        #adminForm input:focus { outline:2px solid #abdce0; border-color:var(--accent); }
+        #adminForm .check-label { display:flex; align-items:center; gap:8px; min-height:40px; }
+        #adminForm input[type=checkbox] { accent-color:var(--accent); width:18px; height:18px; }
+        .form-hint { color:var(--muted); font-size:11px; line-height:1.6; }
+        .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+        .admin-footer { display:grid; gap:12px; border-top:1px solid var(--line); padding-top:16px; }
+        .file-actions { display:flex; gap:10px; flex-wrap:wrap; }
+        .secondary-button { padding:10px 14px; border-radius:8px; background:#f5f7f9; border:1px solid var(--line); color:var(--ink); cursor:pointer; min-height:42px; font-size:12px; }
+        .admin-footer .refresh-premium { width:fit-content; font-size:13px; }
+        .admin-message { margin-bottom:14px; color:#526a76; font-size:12px; line-height:1.6; }
+        @media (max-width:1100px) { .app-container { padding:16px; } .dashboard-premium { grid-template-columns:220px minmax(0,1fr); gap:16px; } .content-premium { padding:22px; } .search-premium { max-width:340px; min-width:200px; } .live-quote { font-size:17px; } .live-card { padding:10px; } }
+        @media (max-width:900px) { .dashboard-premium { grid-template-columns:210px minmax(0,1fr); } .sidebar-premium { display:block; position:sticky; } .mobile-toggle { display:none; } .header-premium { gap:16px; } .search-premium { flex-basis:250px; } .live-grid { min-width:700px; } }
+        @media (max-width:700px) { .dashboard-premium { grid-template-columns:minmax(0,1fr); } .sidebar-premium { display:none; position:static; } .sidebar-premium.mobile-open { display:block; } .mobile-toggle { display:flex; border-radius:10px; font-size:12px; } .header-premium { padding:16px; } .logo-area { width:100%; } .search-premium { flex:1; min-width:0; max-width:none; } .content-premium { padding:18px; min-height:380px; } .table-premium { min-width:540px; } .settings-grid { grid-template-columns:1fr; gap:0; } #adminForm { padding:18px; } .admin-header { padding:18px; } .connection-flow { padding:10px 18px; } }
+
+
+        /* Встроенные SVG-иконки: без загрузки CSS и шрифтов с CDN. */
+        .fa-folder { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%207V5h6l2%202h10v13H3Z%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-folder-open { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%208V5h6l2%202h9v3M3%2010h19l-3%2010H2Z%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-chart-line { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%203v17h17M7%2015l4-5%204%203%206-7%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-chart-bar { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2020h18M6%2017V9M12%2017V4M18%2017v-5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-chart-pie { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M11%203a9%209%200%201%200%2010%2010H11Z%20M14%202v8h8a9%209%200%200%200-8-8Z%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-money-bill-wave { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%225%22%20width%3D%2220%22%20height%3D%2214%22%20rx%3D%222%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%223%22%2F%3E%3Cpath%20d%3D%22M5%208h1M18%2016h1%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-database { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cellipse%20cx%3D%2212%22%20cy%3D%225%22%20rx%3D%228%22%20ry%3D%223%22%2F%3E%3Cpath%20d%3D%22M4%205v14c0%204%2016%204%2016%200V5M4%2012c0%204%2016%204%2016%200%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-calculator { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%225%22%20y%3D%222%22%20width%3D%2214%22%20height%3D%2220%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%206h8M8%2010h1M15%2010h1M8%2014h1M15%2014h1M8%2018h1M15%2018h1%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-book { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%203h15v18H7a3%203%200%200%201%200-6h12M4%2018V6a3%203%200%200%201%203-3M8%207h7M8%2011h7%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-users { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%229%22%20cy%3D%227%22%20r%3D%223%22%2F%3E%3Cpath%20d%3D%22M2%2021v-3a7%207%200%200%201%2014%200v3M16%204a3%203%200%200%201%200%206M18%2013a6%206%200%200%201%204%205v3%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-link { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m10%2014%204-4M8%2015l-2%202a4%204%200%200%201-6-6l5-5a4%204%200%200%201%206%200M16%209l2-2a4%204%200%200%201%206%206l-5%205a4%204%200%200%201-6%200%22%20transform%3D%22translate%281%200%29%20scale%28.9%29%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-search { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2210%22%20cy%3D%2210%22%20r%3D%227%22%2F%3E%3Cpath%20d%3D%22m15%2015%206%206%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-cog { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m9%202-1%203-3%201-2%203%202%203-1%203%203%203%203-1%203%202%203-2%203-1-1-3%202-3-2-3-3-1-1-3Z%22%2F%3E%3Ccircle%20cx%3D%2211%22%20cy%3D%2211%22%20r%3D%223%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-copy { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%2213%22%20height%3D%2213%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M16%208V3H3v13h5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-file-contract { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%202h10l4%204v16H5Z%20M14%202v5h5M8%2011h8M8%2015h8M8%2019h5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-cloud-sun { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2020a4%204%200%201%201%201-8%205%205%200%200%201%209%201%203.5%203.5%200%201%201%203%207Z%20M13%208a4%204%200%201%201%207%204M17%201v2M23%205l-2%201M11%204l1%201%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-pen { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m4%2016%2012-12%204%204L8%2020l-5%201Z%20M14%206l4%204%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-percent { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m5%2020%2014-16%22%2F%3E%3Ccircle%20cx%3D%226%22%20cy%3D%226%22%20r%3D%223%22%2F%3E%3Ccircle%20cx%3D%2218%22%20cy%3D%2218%22%20r%3D%223%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-sync-alt { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2010a9%209%200%200%200-15-6L3%207M3%203v4h4M3%2014a9%209%200%200%200%2015%206l3-3M21%2021v-4h-4%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-compass { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Cpath%20d%3D%22m8%2016%202-6%206-2-2%206Z%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-check { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m4%2012%205%205L20%205%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-times { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m5%205%2014%2014M19%205%205%2019%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-plus { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%203v18M3%2012h18%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-arrow-up { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2021V3M5%2010l7-7%207%207%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-arrow-down { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%203v18M5%2014l7%207%207-7%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-trash { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%205h18M7%205l1-3h8l1%203M5%205l1%2017h12l1-17M10%209v8M14%209v8%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-bars { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%205h18M3%2012h18M3%2019h18%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-chevron-down { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m5%208%207%207%207-7%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-tags { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%203h9l11%2011-8%208L2%2010Z%22%2F%3E%3Ccircle%20cx%3D%227%22%20cy%3D%227%22%20r%3D%221%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-gavel { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%203%208%208M4%205l4-4%209%209-4%204ZM10%2010l-7%208M12%2021h10%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-envelope { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%224%22%20width%3D%2220%22%20height%3D%2216%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22m2%205%2010%208%2010-8%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-star { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m12%202%203%206%207%201-5%205%201%208-6-4-6%204%201-8-5-5%207-1Z%22%2F%3E%3C%2Fsvg%3E"); }
+        .fas { display:inline-flex; width:1.15em; height:1.15em; flex-shrink:0; vertical-align:-.12em; font-style:normal; }
+        .fas::before { content:""; display:block; width:100%; height:100%; background:currentColor; -webkit-mask:var(--icon) center / contain no-repeat; mask:var(--icon) center / contain no-repeat; }
+        .fa-coins { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cellipse%20cx%3D%2212%22%20cy%3D%225%22%20rx%3D%228%22%20ry%3D%223%22%2F%3E%3Cpath%20d%3D%22M4%205v14c0%204%2016%204%2016%200V5M4%2012c0%204%2016%204%2016%200%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-signal { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2020h18M6%2017V9M12%2017V4M18%2017v-5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-edit { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m4%2016%2012-12%204%204L8%2020l-5%201Z%20M14%206l4%204%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-cloud-upload-alt { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2020a4%204%200%201%201%201-8%205%205%200%200%201%209%201%203.5%203.5%200%201%201%203%207Z%20M13%208a4%204%200%201%201%207%204M17%201v2M23%205l-2%201M11%204l1%201%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-hand-holding-usd { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%225%22%20width%3D%2220%22%20height%3D%2214%22%20rx%3D%222%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%223%22%2F%3E%3Cpath%20d%3D%22M5%208h1M18%2016h1%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-file-invoice-dollar { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%202h10l4%204v16H5Z%20M14%202v5h5M8%2011h8M8%2015h8M8%2019h5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-clipboard-list { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%202h10l4%204v16H5Z%20M14%202v5h5M8%2011h8M8%2015h8M8%2019h5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-project-diagram { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2020h18M6%2017V9M12%2017V4M18%2017v-5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-chalkboard-user { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%229%22%20cy%3D%227%22%20r%3D%223%22%2F%3E%3Cpath%20d%3D%22M2%2021v-3a7%207%200%200%201%2014%200v3M16%204a3%203%200%200%201%200%206M18%2013a6%206%200%200%201%204%205v3%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-heart { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m12%202%203%206%207%201-5%205%201%208-6-4-6%204%201-8-5-5%207-1Z%22%2F%3E%3C%2Fsvg%3E"); }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header-premium">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fas fa-chart-line" style="color: white;"></i></div>
+            <div class="brand-text"><span class="version-label">СПРАВОЧНИК · НОВАЯ ВЕРСИЯ</span>
+                <h1>БиФК · НКНХ</h1>
+                <p>Бюджетный и финансовый контроль | СЦ & ПЭ</p>
+            </div>
+        </div>
+        <div class="search-premium">
+            <i class="fas fa-search"></i>
+            <input aria-label="Поиск по справочнику" type="search" id="searchInput" class="search-input-premium" placeholder="Поиск по документам и ссылкам...">
+        </div>
+        <button id="refreshBtn" class="refresh-premium"><i class="fas fa-sync-alt"></i> Обновить</button>
+    </div>
+
+    <section class="live-panel" aria-label="Актуальные показатели">
+        <div class="live-heading"><h2><i class="fas fa-signal"></i> Актуальные показатели</h2><span class="live-update" id="liveUpdated" role="status">Загрузка данных…</span></div>
+        <div class="live-scroll"><div class="live-grid" id="liveGrid"></div></div>
+    </section>
+    
+    <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i> Меню разделов</button>
+    
+    <div class="dashboard-premium">
+        <aside class="sidebar-premium" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-compass"></i> Разделы</h2>
+                <button id="addSectionBtn" class="add-section-btn hidden"><i class="fas fa-plus"></i> Добавить</button>
+            </div>
+            <ul class="nav-premium" id="navMenu"><li class="loading">Загрузка...</li></ul>
+            <div class="sidebar-bottom"><p id="connectionStatus" role="status">Подключение…</p><button id="editBtn" class="sidebar-tool"><i class="fas fa-pen"></i> Редактировать справочник</button><button id="adminBtn" class="sidebar-tool"><i class="fas fa-cog"></i> Администрирование</button><a href="../" class="backup-link">Открыть резервную версию ↗</a></div>
+        </aside>
+        
+        <main class="content-premium" id="contentArea"><div class="loading">Загрузка данных...</div></main>
+    </div>
+    
+    <div class="footer-premium"><p>БиФК НКНХ · Система финансового контроля и бюджетирования</p></div>
+</div>
+
+
+<div id="editPanel" class="edit-panel">
+    <button id="saveBtn" class="btn-save-premium"><i class="fas fa-check"></i> Скачать bifk-data.txt</button>
+    <button id="cancelBtn" class="btn-cancel-premium"><i class="fas fa-times"></i> Отменить</button>
+</div>
+
+<div id="scrollTop" class="scroll-top"><i class="fas fa-arrow-up"></i></div>
+
+<!-- Модалка для раздела -->
+<div id="sectionModal" class="modal-premium">
+    <div class="modal-content-premium">
+        <h3 id="sectionModalTitle">Добавить раздел</h3>
+        <input type="text" id="sectionNameInput" placeholder="Название раздела">
+        <div class="icon-select-row">
+            <div id="sectionIconSelect" class="custom-select" style="flex:2"></div>
+            <div id="sectionIconPreview" class="icon-preview"><i class="fas fa-folder"></i></div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+            <button class="add-section-btn" onclick="closeModal('sectionModal')">Отмена</button>
+            <button class="add-section-btn" id="saveSectionConfirm" style="background:#008C95; color:white;">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка для подраздела -->
+<div id="subsectionModal" class="modal-premium">
+    <div class="modal-content-premium">
+        <h3 id="subsectionModalTitle">Добавить подраздел</h3>
+        <input type="text" id="subsectionNameInput" placeholder="Название подраздела">
+        <div class="icon-select-row">
+            <div id="subsectionIconSelect" class="custom-select" style="flex:2"></div>
+            <div id="subsectionIconPreview" class="icon-preview"><i class="fas fa-folder-open"></i></div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+            <button class="add-section-btn" onclick="closeModal('subsectionModal')">Отмена</button>
+            <button class="add-section-btn" id="saveSubsectionConfirm" style="background:#008C95; color:white;">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<dialog id="adminDialog" class="admin-dialog" aria-labelledby="adminTitle">
+    <header class="admin-header"><div><span class="version-label">НАСТРОЙКИ ПРИЛОЖЕНИЯ</span><h2 id="adminTitle">Администрирование</h2></div><button id="adminClose" class="close-admin" aria-label="Закрыть администрирование">×</button></header>
+    <p id="adminConnection" class="connection-flow"></p>
+    <form id="adminForm">
+        <fieldset><legend>Источник справочника</legend><label>Путь или ссылка на bifk-data.txt<input name="dataUrl" required autocomplete="off"></label><p class="form-hint">Для GitHub — относительный путь. Для SharePoint — ссылка на файл, доступный пользователю.</p></fieldset>
+        <fieldset><legend>Актуальные показатели</legend><div class="settings-grid"><label>Обновление, минут<input name="refreshMinutes" type="number" min="15" max="1440" step="1" required></label><label class="check-label"><input type="checkbox" name="currencyEnabled">Показывать курсы валют</label></div><label>Ссылка на источник курсов<input name="currencySource" type="url" required></label><p class="form-hint">USD, EUR и CNY загружаются с cbr-xml-daily.ru. Дата публикации отображается под курсами.</p></fieldset>
+        <fieldset><legend>Ставка рефинансирования</legend><label class="check-label"><input type="checkbox" name="rateEnabled">Показывать блок ставки</label><label>Официальный источник<input name="rateSource" type="url" required></label><div class="settings-grid"><label>Проверенное значение, %<input name="rateValue" type="text" inputmode="decimal" placeholder="Не задано"></label><label>Дата проверки<input name="rateDate" type="date"></label></div><p class="form-hint">Оставьте значение пустым для перехода на сайт ЦБ. Введённая ставка показывается с датой и отметкой «Введено вручную».</p></fieldset>
+        <fieldset><legend>Погода</legend><label class="check-label"><input type="checkbox" name="weatherEnabled">Показывать прогнозы</label><div class="settings-grid"><div><label>Первый город<input name="city0" required></label><label>Ссылка на прогноз<input name="weatherSource0" type="url" required></label><label>Ссылка на изображение<input name="weatherImage0" type="url" required></label></div><div><label>Второй город<input name="city1" required></label><label>Ссылка на прогноз<input name="weatherSource1" type="url" required></label><label>Ссылка на изображение<input name="weatherImage1" type="url" required></label></div></div><p class="form-hint">Внешние показатели используют HTTPS-источники на доменах .ru.</p></fieldset>
+        <p id="adminMessage" role="status" class="admin-message"></p>
+        <footer class="admin-footer"><div class="file-actions"><button type="button" id="importConfigBtn" class="secondary-button">Открыть конфиг</button><button type="button" id="downloadConfigBtn" class="secondary-button">Скачать текущий конфиг</button></div><button type="submit" class="refresh-premium">Применить и скачать конфиг</button><p class="form-hint">Изменения действуют до закрытия страницы. Файлы на SharePoint заменяет пользователь; браузер настройки не сохраняет.</p></footer>
+    </form><input type="file" id="configFile" accept=".json,application/json" hidden>
+</dialog>
+
+<script>
+    // 2. ПРОВЕРКА ДАННЫХ И КОНФИГА — до изменения текущего состояния.
+    function moscowTime() {
+        return new Intl.DateTimeFormat('ru-RU', {timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit'}).format(new Date()) + ' МСК';
+    }
+    function validateData(data) {
+        if (!data || !Array.isArray(data.menuItems) || !data.subsections || typeof data.subsections !== 'object' || Array.isArray(data.subsections) || !data.contentData || typeof data.contentData !== 'object' || Array.isArray(data.contentData)) throw new Error('В bifk-data.txt нужны menuItems, subsections и contentData.');
+        const sections = new Set();
+        const subs = new Set();
+        for (const section of data.menuItems) {
+            if (!section || typeof section.id !== 'string' || !section.id || typeof section.name !== 'string' || !section.name.trim() || sections.has(section.id)) throw new Error('Проверьте названия и уникальные идентификаторы разделов.');
+            sections.add(section.id);
+            const list = data.subsections[section.id] ?? [];
+            if (!Array.isArray(list)) throw new Error('Подразделы должны быть массивами.');
+            for (const sub of list) {
+                if (!sub || typeof sub.id !== 'string' || !sub.id || typeof sub.name !== 'string' || !sub.name.trim() || subs.has(sub.id)) throw new Error('Проверьте названия и уникальные идентификаторы подразделов.');
+                subs.add(sub.id);
+            }
+        }
+        for (const rows of Object.values(data.contentData)) {
+            if (!Array.isArray(rows) || rows.some(row => !Array.isArray(row) || row.length !== 4 || row.some(field => typeof field !== 'string'))) throw new Error('Каждая запись должна содержать четыре текстовых поля: название, ссылку, описание и статус.');
+        }
+    }
+
+    function ruSource(value, label) {
+        try {
+            const url = new URL(value);
+            if (url.protocol !== 'https:' || !url.hostname.endsWith('.ru') || url.username || url.password) throw new Error();
+            return url.href;
+        } catch (_) { throw new Error(`${label}: укажите HTTPS-ссылку на домен .ru.`); }
+    }
+
+    function validateConfig(raw) {
+        if (!raw || typeof raw !== 'object' || Array.isArray(raw) || raw.schemaVersion !== 1) throw new Error('Нужен config.json с schemaVersion: 1.');
+        const result = structuredClone(DEFAULT_CONFIG);
+        if (typeof raw.dataUrl !== 'string' || !raw.dataUrl.trim()) throw new Error('Укажите путь к bifk-data.txt.');
+        const source = new URL(raw.dataUrl, location.href);
+        if (source.protocol !== 'https:' || source.username || source.password) throw new Error('Для справочника нужен относительный путь или HTTPS-ссылка.');
+        result.dataUrl = raw.dataUrl.trim();
+        const interval = Number(raw.refreshMinutes);
+        if (!Number.isInteger(interval) || interval < 15 || interval > 1440) throw new Error('Интервал обновления: целое число от 15 до 1440 минут.');
+        result.refreshMinutes = interval;
+        for (const key of ['currency', 'rate', 'weather']) {
+            if (!raw[key] || typeof raw[key].enabled !== 'boolean') throw new Error('Проверьте включение блоков показателей.');
+            result[key].enabled = raw[key].enabled;
+        }
+        result.currency.sourceUrl = ruSource(raw.currency.sourceUrl, 'Источник курсов');
+        result.rate.sourceUrl = ruSource(raw.rate.sourceUrl, 'Источник ставки');
+        if (raw.rate.value !== null && raw.rate.value !== '') {
+            const value = Number(String(raw.rate.value).replace(',', '.'));
+            const day = String(raw.rate.verifiedOn || '');
+            const today = new Intl.DateTimeFormat('sv-SE', {timeZone: 'Europe/Moscow'}).format(new Date());
+            if (!Number.isFinite(value) || value <= 0 || value >= 100) throw new Error('Ставка должна быть больше 0 и меньше 100 %.');
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || Number.isNaN(Date.parse(day)) || new Date(day).toISOString().slice(0, 10) !== day || day > today) throw new Error('Укажите дату проверки ставки, не позднее сегодняшней.');
+            result.rate.value = value; result.rate.verifiedOn = day;
+        } else { result.rate.value = null; result.rate.verifiedOn = ''; }
+        if (!Array.isArray(raw.weather.places) || raw.weather.places.length !== 2) throw new Error('Укажите два города для прогноза.');
+        result.weather.places = raw.weather.places.map(place => {
+            if (typeof place?.name !== 'string' || !place.name.trim()) throw new Error('Укажите названия городов.');
+            return {name: place.name.trim(), sourceUrl: ruSource(place.sourceUrl, 'Ссылка на прогноз'), imageUrl: ruSource(place.imageUrl, 'Изображение прогноза')};
+        });
+        return result;
+    }
+
+    function updateConnection(error = '') {
+        const el = document.getElementById('connectionStatus');
+        el.textContent = error ? 'Не удалось обновить данные' : dataLoaded ? `Подключено · ${menuItems.length} разделов` : 'Ожидание данных';
+        el.title = error || appConfig.dataUrl;
+    }
+
+    function fillAdministration(config) {
+        const form = document.getElementById('adminForm');
+        form.elements.dataUrl.value = config.dataUrl;
+        form.elements.refreshMinutes.value = config.refreshMinutes;
+        form.elements.currencyEnabled.checked = config.currency.enabled;
+        form.elements.currencySource.value = config.currency.sourceUrl;
+        form.elements.rateEnabled.checked = config.rate.enabled;
+        form.elements.rateSource.value = config.rate.sourceUrl;
+        form.elements.rateValue.value = config.rate.value ?? '';
+        form.elements.rateDate.value = config.rate.verifiedOn;
+        form.elements.weatherEnabled.checked = config.weather.enabled;
+        config.weather.places.forEach((place, i) => {
+            form.elements['city' + i].value = place.name;
+            form.elements['weatherSource' + i].value = place.sourceUrl;
+            form.elements['weatherImage' + i].value = place.imageUrl;
+        });
+    }
+
+    function openAdministration() {
+        if (isEditMode) { showToast('Завершите редактирование справочника перед сменой источника.', true); return; }
+        fillAdministration(appConfig);
+        document.getElementById('adminMessage').textContent = configError;
+        const records = Object.values(contentData).reduce((n, rows) => n + rows.length, 0);
+        document.getElementById('adminConnection').textContent = `${configLoaded ? 'Конфиг загружен' : 'Начальные настройки'} → ${dataLoaded ? `Справочник подключён: ${menuItems.length} разделов, ${records} записей` : 'Данные не подключены'}`;
+        document.getElementById('adminDialog').showModal();
+    }
+
+    async function applyAdministration(event) {
+        event.preventDefault();
+        if (configBusy || liveRefreshPending) { document.getElementById('adminMessage').textContent = 'Дождитесь завершения обновления показателей и повторите.'; return; }
+        const form = event.currentTarget;
+        const previous = appConfig;
+        const message = document.getElementById('adminMessage');
+        try {
+            const draft = {
+                schemaVersion: 1,
+                dataUrl: form.elements.dataUrl.value,
+                refreshMinutes: form.elements.refreshMinutes.value,
+                currency: {enabled: form.elements.currencyEnabled.checked, sourceUrl: form.elements.currencySource.value},
+                rate: {enabled: form.elements.rateEnabled.checked, sourceUrl: form.elements.rateSource.value, value: form.elements.rateValue.value, verifiedOn: form.elements.rateDate.value},
+                weather: {enabled: form.elements.weatherEnabled.checked, places: [0, 1].map(i => ({name: form.elements['city' + i].value, sourceUrl: form.elements['weatherSource' + i].value, imageUrl: form.elements['weatherImage' + i].value}))}
+            };
+            appConfig = validateConfig(draft);
+            configBusy = true;
+            form.querySelectorAll('input, button').forEach(el => el.disabled = true);
+            message.textContent = 'Проверяем подключение к справочнику…';
+            if (!await loadDirectory()) throw new Error('Не удалось загрузить файл данных. Настройки не применены; проверьте ссылку и доступ.');
+            configLoaded = true; configError = '';
+            document.getElementById('searchInput').value = '';
+            activeSection = menuItems[0]?.id; activeSub = subsections[activeSection]?.[0]?.id;
+            renderMenu(); renderContent(); renderLiveCards(); scheduleIndicators();
+            document.getElementById('editBtn').disabled = false;
+            downloadJSON(appConfig, 'config.json');
+            message.textContent = 'Настройки применены к этой странице, config.json скачан. Для следующего запуска разместите файл рядом с приложением.';
+            refreshLiveData(true);
+        } catch (e) { appConfig = previous; updateConnection(); message.textContent = e.message; }
+        finally { configBusy = false; form.querySelectorAll('input, button').forEach(el => el.disabled = false); }
+    }
+
+
+    // 1. КОНФИГУРАЦИЯ. Изменения живут только в текущей странице и экспортируются в файл.
+    const DEFAULT_CONFIG = {"schemaVersion": 1, "dataUrl": "./bifk-data.txt", "refreshMinutes": 60, "currency": {"enabled": true, "sourceUrl": "https://www.cbr.ru/currency_base/daily/"}, "rate": {"enabled": true, "sourceUrl": "https://www.cbr.ru/statistics/idkp_br/refinancing_rates1/", "value": null, "verifiedOn": ""}, "weather": {"enabled": true, "places": [{"name": "Нижнекамск", "sourceUrl": "https://rp5.ru/5770/ru", "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=16&id=5770&lang=ru&um=00000"}, {"name": "Москва", "sourceUrl": "https://rp5.ru/5483/ru", "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=16&id=5483&lang=ru&um=00000"}]}};
+    let appConfig = structuredClone(DEFAULT_CONFIG);
+    let configLoaded = false;
+    let configError = '';
+    let dataLoaded = false;
+    let dataLoadedAt = null;
+    let configBusy = false;
+    let liveTimer;
+    const CURRENCY_API = 'https://www.cbr-xml-daily.ru/daily_json.js';
+    const CURRENCY_JSONP = 'https://www.cbr-xml-daily.ru/daily_jsonp.js';
+    const CURRENCY_CODES = ['USD', 'EUR', 'CNY'];
+    const liveState = {};
+    let liveRefreshPending = false;
+    let lastLiveRefresh = 0;
+
+    // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
+    let menuItems = [];
+    let subsections = {};
+    let contentData = {};
+    let originalMenu = [];
+    let originalSubs = {};
+    let originalContent = {};
+    let isEditMode = false;
+    let activeSection = null;
+    let activeSub = null;
+    let editingSection = null;
+    let editingSubParent = null;
+    let editingSubId = null;
+    
+    // Список иконок: класс FontAwesome + название на русском
+    const iconList = [
+        { class: "fas fa-folder", name: "Папка" },
+        { class: "fas fa-folder-open", name: "Открытая папка" },
+        { class: "fas fa-chart-line", name: "График" },
+        { class: "fas fa-chart-bar", name: "Диаграмма" },
+        { class: "fas fa-chart-pie", name: "Круговая диаграмма" },
+        { class: "fas fa-money-bill-wave", name: "Деньги" },
+        { class: "fas fa-calculator", name: "Калькулятор" },
+        { class: "fas fa-tags", name: "Теги" },
+        { class: "fas fa-database", name: "База данных" },
+        { class: "fas fa-gavel", name: "Молоток" },
+        { class: "fas fa-file-contract", name: "Договор" },
+        { class: "fas fa-users", name: "Пользователи" },
+        { class: "fas fa-book", name: "Книга" },
+        { class: "fas fa-project-diagram", name: "Диаграмма проекта" },
+        { class: "fas fa-hand-holding-usd", name: "Рука с деньгами" },
+        { class: "fas fa-file-invoice-dollar", name: "Счет-фактура" },
+        { class: "fas fa-clipboard-list", name: "Список" },
+        { class: "fas fa-chalkboard-user", name: "Доска" },
+        { class: "fas fa-link", name: "Ссылка" },
+        { class: "fas fa-envelope", name: "Почта" },
+        { class: "fas fa-cloud-upload-alt", name: "Облако" },
+        { class: "fas fa-star", name: "Звезда" },
+        { class: "fas fa-heart", name: "Сердце" },
+        { class: "fas fa-cog", name: "Настройки" }
+    ];
+    
+    // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+    function showToast(msg, isError = false) {
+        let existing = document.querySelector('.toast');
+        if (existing) existing.remove();
+        let toast = document.createElement('div');
+        toast.className = 'toast' + (isError ? ' error' : '');
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2500);
+    }
+    
+    function escapeHtml(str) {
+        return String(str ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+
+    function safeLink(value) {
+        try {
+            const raw = String(value || '').trim();
+            if (!raw) return '';
+            // Внутренние UNC- и файловые пути остаются доступными для копирования.
+            if (/^(?:\\\\|[a-z]:[\\/]|file:)/i.test(raw) || raw === '#') return '';
+            const url = new URL(raw, window.location.href);
+            return ['https:', 'http:'].includes(url.protocol) ? url.href : '';
+        } catch (_) { return ''; }
+    }
+
+    const safeIcon = value => iconList.some(item => item.class === value) ? value : 'fas fa-folder';
+
+    const rubles = new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const shortDate = date => /^\d{4}-\d{2}-\d{2}$/.test(String(date || '')) ?
+        `${date.slice(8, 10)}.${date.slice(5, 7)}.${date.slice(0, 4)}` : '';
+
+    async function fetchJson(url) {
+        const controller = new AbortController();
+        let timeout;
+        try {
+            return await Promise.race([
+                (async () => {
+                    const response = await fetch(url, { cache: 'no-store', signal: controller.signal });
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.json();
+                })(),
+                new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new Error('Время ожидания источника истекло')); }, 12000); })
+            ]);
+        } finally { clearTimeout(timeout); }
+    }
+
+    function fetchCurrencyData() {
+        // JSONP поддерживается поставщиком курсов и работает без разрешения CORS в SharePoint.
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            let settled = false;
+            const finish = (error, data) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                script.remove();
+                delete window.CBR_XML_Daily_Ru;
+                error ? reject(error) : resolve(data);
+            };
+            const timer = setTimeout(() => finish(new Error('Таймаут курсов')), 12000);
+            window.CBR_XML_Daily_Ru = data => finish(null, data);
+            script.onerror = () => finish(new Error('Курсы недоступны'));
+            script.src = `${CURRENCY_JSONP}?t=${Date.now()}`;
+            document.head.appendChild(script);
+        }).catch(() => fetchJson(CURRENCY_API));
+    }
+
+    // 3. ПОКАЗАТЕЛИ. Курсы и информеры .ru; ставка — по проверенному значению пользователя.
+    function renderLiveCards() {
+        const grid = document.getElementById('liveGrid');
+        const cards = [];
+        if (appConfig.currency.enabled) {
+            cards.push(`<article class="live-card"><div class="live-card-top"><i class="fas fa-coins"></i> Курсы ЦБ · ₽ за 1</div><div class="live-currencies">${CURRENCY_CODES.map(code => {
+                const item = liveState[code];
+                return `<a class="live-quote ${item?.stale ? 'live-stale' : ''}" href="${escapeHtml(appConfig.currency.sourceUrl)}" target="_blank" rel="noopener noreferrer"><small>${code}</small><span>${item ? escapeHtml(item.value) : '—'}</span></a>`;
+            }).join('')}</div><div class="live-detail">${escapeHtml(liveState.currencyMeta || 'Ожидание курсов')} · <a href="https://www.cbr-xml-daily.ru/" target="_blank" rel="noopener noreferrer">источник ↗</a></div></article>`);
+        }
+        if (appConfig.rate.enabled) {
+            const rate = appConfig.rate;
+            const value = rate.value === null ? 'Проверить на сайте ЦБ ↗' : `${rubles.format(rate.value)} %`;
+            cards.push(`<article class="live-card"><div class="live-card-top"><i class="fas fa-percent"></i> Ставка рефинансирования</div><a class="live-rate-link" href="${escapeHtml(rate.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(value)}</a><div class="live-detail">${rate.value === null ? 'Официальный источник' : `Введено вручную · на ${shortDate(rate.verifiedOn)}`}</div></article>`);
+        }
+        if (appConfig.weather.enabled) {
+            cards.push(`<article class="live-card"><div class="live-card-top"><i class="fas fa-cloud-sun"></i> Погода · rp5.ru</div><div class="live-weather-widgets">${appConfig.weather.places.map(place => `<div class="live-weather-place"><a href="${escapeHtml(place.sourceUrl)}" target="_blank" rel="noopener noreferrer"><span>${escapeHtml(place.name)}</span><img width="120" height="60" alt="Прогноз: ${escapeHtml(place.name)}" src="${escapeHtml(place.imageUrl)}"><span class="weather-fallback" hidden>Открыть прогноз ↗</span></a></div>`).join('')}</div></article>`);
+        }
+        grid.innerHTML = cards.join('');
+        grid.style.setProperty('--card-count', String(cards.length || 1));
+        document.querySelector('.live-panel').hidden = !cards.length;
+        grid.querySelectorAll('.live-weather-place img').forEach(img => {
+            img.addEventListener('error', () => { img.hidden = true; img.nextElementSibling.hidden = false; }, {once: true});
+        });
+    }
+
+    async function refreshLiveData(force = false) {
+        if (liveRefreshPending || (!force && Date.now() - lastLiveRefresh < appConfig.refreshMinutes * 60000)) return;
+        if (!appConfig.currency.enabled) {
+            document.getElementById('liveUpdated').textContent = 'Источники доступны по ссылкам';
+            return;
+        }
+        liveRefreshPending = true;
+        lastLiveRefresh = Date.now();
+        const status = document.getElementById('liveUpdated');
+        status.textContent = 'Обновление курсов…';
+        try {
+            const currency = await fetchCurrencyData();
+            let errors = 0;
+            for (const code of CURRENCY_CODES) {
+                const row = currency?.Valute?.[code];
+                if (row && Number(row.Value) > 0 && Number(row.Nominal) > 0 && Number.isFinite(Number(row.Value))) {
+                    liveState[code] = {value: `${rubles.format(Number(row.Value) / Number(row.Nominal))} ₽`, stale: false};
+                } else {
+                    errors++;
+                    if (liveState[code]) liveState[code].stale = true;
+                }
+            }
+            liveState.currencyMeta = `На ${shortDate(String(currency.Date || '').slice(0, 10)) || 'дату публикации'}`;
+            status.textContent = errors ? 'Часть курсов недоступна' : `Курсы обновлены · ${moscowTime()}`;
+        } catch (error) {
+            for (const code of CURRENCY_CODES) if (liveState[code]) liveState[code].stale = true;
+            liveState.currencyMeta = 'Обновление недоступно';
+            status.textContent = 'Курсы недоступны · источники по ссылкам';
+        } finally {
+            liveRefreshPending = false;
+            renderLiveCards();
+        }
+    }
+
+    function scheduleIndicators() {
+        clearInterval(liveTimer);
+        liveTimer = setInterval(() => {
+            if (document.visibilityState !== 'hidden') { renderLiveCards(); refreshLiveData(); }
+        }, appConfig.refreshMinutes * 60000);
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+        // Закрываем все открытые кастомные селекты
+        document.querySelectorAll('.custom-select.open').forEach(el => el.classList.remove('open'));
+    }
+    
+    function showModal(id) {
+        document.getElementById(id).classList.add('active');
+    }
+    
+    // Кастомный выпадающий список с иконками
+    function createCustomSelect(containerId, previewId, currentIcon, onChangeCallback) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        container.innerHTML = '';
+        const trigger = document.createElement('div');
+        trigger.className = 'select-trigger';
+        const selectedIcon = iconList.find(ic => ic.class === currentIcon) || iconList[0];
+        trigger.innerHTML = `<i class="${selectedIcon.class}"></i><span>${selectedIcon.name}</span><i class="fas fa-chevron-down arrow"></i>`;
+        
+        const dropdown = document.createElement('div');
+        dropdown.className = 'select-dropdown';
+        
+        iconList.forEach(icon => {
+            const option = document.createElement('div');
+            option.className = 'select-option';
+            if (icon.class === currentIcon) option.classList.add('selected');
+            option.innerHTML = `<i class="${icon.class}"></i><span>${icon.name}</span>`;
+            option.onclick = (e) => {
+                e.stopPropagation();
+                // Обновляем триггер
+                trigger.innerHTML = `<i class="${icon.class}"></i><span>${icon.name}</span><i class="fas fa-chevron-down arrow"></i>`;
+                // Обновляем превью
+                const preview = document.getElementById(previewId);
+                if (preview) preview.innerHTML = `<i class="${icon.class}"></i>`;
+                // Закрываем дропдаун
+                container.classList.remove('open');
+                // Вызываем колбек
+                if (onChangeCallback) onChangeCallback(icon.class);
+                // Обновляем выбранный класс у опций
+                dropdown.querySelectorAll('.select-option').forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+            };
+            dropdown.appendChild(option);
+        });
+        
+        container.appendChild(trigger);
+        container.appendChild(dropdown);
+        
+        // Клик по триггеру
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Закрываем другие открытые селекты
+            document.querySelectorAll('.custom-select.open').forEach(el => {
+                if (el !== container) el.classList.remove('open');
+            });
+            container.classList.toggle('open');
+        });
+        
+        // Закрытие при клике вне
+
+        
+        return selectedIcon.class;
+    }
+    
+    function getSelectedIconValue(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return 'fas fa-folder';
+        const trigger = container.querySelector('.select-trigger i');
+        if (trigger) {
+            // Извлекаем класс иконки
+            const classes = trigger.className.split(' ');
+            return classes.find(c => c.startsWith('fa-')) ? trigger.className : 'fas fa-folder';
+        }
+        return 'fas fa-folder';
+    }
+    
+    // Копирование в буфер обмена
+    function copyToClipboard(text) {
+        if (!text) return;
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        textarea.setSelectionRange(0, 99999);
+        try {
+            document.execCommand('copy');
+            let displayText = text.length > 60 ? text.substring(0, 60) + '...' : text;
+            showToast('✅ Скопировано: ' + displayText);
+        } catch (err) {
+            showToast('❌ Не удалось скопировать', true);
+        }
+        document.body.removeChild(textarea);
+    }
+    
+    window.copyLink = function(link) {
+        copyToClipboard(link);
+    };
+    
+    // ========== РАБОТА С ДАННЫМИ ==========
+    function loadFromJSON(data) {
+        validateData(data);
+        menuItems = JSON.parse(JSON.stringify(data.menuItems || []));
+        subsections = JSON.parse(JSON.stringify(data.subsections || {}));
+        contentData = JSON.parse(JSON.stringify(data.contentData || {}));
+        for (let item of menuItems) {
+            if (!subsections[item.id]) subsections[item.id] = [];
+            if (subsections[item.id].length === 0) {
+                let defaultSubId = item.id + '_main';
+                subsections[item.id].push({ id: defaultSubId, name: "Основное", icon: "fas fa-folder-open" });
+                if (!contentData[defaultSubId]) contentData[defaultSubId] = [];
+            }
+        }
+    }
+    
+    async function loadDirectory() {
+        const controller = new AbortController();
+        let timeout;
+        try {
+            let url = new URL(appConfig.dataUrl, location.href);
+            url.searchParams.set('_updated', String(Date.now()));
+            let text = await Promise.race([
+                (async () => {
+                    const resp = await fetch(url, { headers: { 'Accept': 'text/plain' }, cache: 'no-store', signal: controller.signal });
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    return resp.text();
+                })(),
+                new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new Error('Время ожидания файла данных истекло')); }, 10000); })
+            ]);
+            let json = JSON.parse(text);
+            loadFromJSON(json);
+            dataLoaded = true;
+            dataLoadedAt = new Date();
+            updateConnection();
+            originalMenu = JSON.parse(JSON.stringify(menuItems));
+            originalSubs = JSON.parse(JSON.stringify(subsections));
+            originalContent = JSON.parse(JSON.stringify(contentData));
+            return true;
+        } catch(e) {
+            console.error('Ошибка загрузки:', e);
+            updateConnection(e.message);
+            return false;
+        } finally { clearTimeout(timeout); }
+    }
+    
+    // Сохранение выполняется только через скачивание файла пользователем.
+    function downloadJSON(value, filename) {
+        const blob = new Blob([JSON.stringify(value, null, 2)], {type: 'text/plain;charset=utf-8'});
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url; link.download = filename;
+        document.body.appendChild(link); link.click(); link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+    function saveToDownloads() {
+        downloadJSON({menuItems, subsections, contentData}, 'bifk-data.txt');
+        showToast('Файл скачан. Разместите его на SharePoint вручную.');
+    }
+
+    function renderMenu() {
+        let container = document.getElementById('navMenu');
+        if (!menuItems.length) { container.innerHTML = '<li class="info-message">Нет разделов</li>'; return; }
+        let html = '';
+        menuItems.forEach(item => {
+            html += `<li><a href="#" data-section="${escapeHtml(item.id)}" class="${activeSection === item.id ? 'active' : ''}"><i class="${safeIcon(item.icon)}"></i><span>${escapeHtml(item.name)}</span></a>`;
+            if (isEditMode) html += `<div class="menu-actions"><button class="edit-menu-btn" data-action="edit-section" data-section="${escapeHtml(item.id)}"><i class="fas fa-edit"></i> Ред.</button><button class="delete-menu-btn" data-action="delete-section" data-section="${escapeHtml(item.id)}"><i class="fas fa-trash"></i> Уд.</button></div>`;
+            html += `</li>`;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll('.nav-premium a[data-section]').forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); activateSection(link.dataset.section); }));
+    }
+    
+    function renderContent() {
+        let container = document.getElementById('contentArea');
+        if (!menuItems.length) { container.innerHTML = '<div class="info-message"><h2>Справочник пока пуст</h2><p>Добавьте раздел и документы в режиме редактирования.</p></div>'; return; }
+        let html = '';
+        for (let section of menuItems.filter(item => item.id === (activeSection || menuItems[0]?.id))) {
+            let subs = subsections[section.id] || [];
+            let activeSubId = activeSub && subs.find(s => s.id === activeSub) ? activeSub : (subs[0]?.id);
+            let pills = '<div class="quick-links-premium">';
+            subs.forEach(sub => { pills += `<a href="#" data-section="${escapeHtml(section.id)}" data-sub="${escapeHtml(sub.id)}" class="pill-premium ${activeSubId === sub.id ? 'active' : ''}"><i class="${safeIcon(sub.icon)}"></i> ${escapeHtml(sub.name)}</a>`; });
+            if (isEditMode) pills += `<button class="add-subsection-btn" data-action="add-subsection" data-section="${escapeHtml(section.id)}"><i class="fas fa-plus"></i> Добавить подраздел</button>`;
+            pills += '</div>';
+            let subsHtml = '';
+            for (let sub of subs.filter(item => item.id === activeSubId)) {
+                let rows = contentData[sub.id] || [];
+                let display = activeSubId === sub.id ? 'block' : 'none';
+                let tableRows = '';
+                if (isEditMode) {
+                    tableRows = rows.map((row, idx) => `<tr class="edit-mode-row"><td><input type="text" class="edit-input" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" aria-label="Наименование" data-field="name" value="${escapeHtml(row[0])}"></td><td><input type="text" class="edit-input" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" aria-label="Ссылка" data-field="link" value="${escapeHtml(row[1])}"></td><td><input type="text" class="edit-input" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" aria-label="Описание" data-field="desc" value="${escapeHtml(row[2])}"></td><td><select class="edit-select" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" aria-label="Статус" data-field="status"><option ${row[3]==='Активно'?'selected':''}>Активно</option><option ${row[3]==='Отсутствует'?'selected':''}>Отсутствует</option><option ${row[3]==='Остановлено'?'selected':''}>Остановлено</option></select></td><td><div class="row-actions"><button data-action="move-up" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" class="row-action-icon up" aria-label="Поднять строку"><i class="fas fa-arrow-up"></i></button><button data-action="move-down" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" class="row-action-icon down" aria-label="Опустить строку"><i class="fas fa-arrow-down"></i></button><button data-action="delete-row" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" class="row-action-icon delete" aria-label="Удалить строку"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
+                    tableRows += `<tr><td colspan="5"><button data-action="add-row" data-sub="${escapeHtml(sub.id)}" class="add-row-btn"><i class="fas fa-plus"></i> Добавить строку</button></td></tr>`;
+                } else {
+                    tableRows = rows.map(row => {
+                        const link = safeLink(row[1]);
+                        const title = link ? `<a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer"><i class="fas fa-link"></i> ${escapeHtml(row[0])}</a>` : `<span>${escapeHtml(row[0])}</span>`;
+                        return `<tr><td><div class="link-wrapper">${title}${row[1] ? `<button class="copy-link-btn" data-copy="${escapeHtml(row[1])}" aria-label="Скопировать ссылку"><i class="fas fa-copy"></i></button>` : ''}</div></td><td>${escapeHtml(row[2])}</td><td><span class="badge-premium">${escapeHtml(row[3] || 'Активно')}</span></td></tr>`;
+                    }).join('');
+                }
+                subsHtml += `<div id="sub_${escapeHtml(sub.id)}" data-parent="${escapeHtml(section.id)}" style="display:${display}"><div class="clearfix"><h3 style="display:inline-flex; gap:10px;"><i class="${safeIcon(sub.icon)}"></i> ${escapeHtml(sub.name)}</h3>${isEditMode?`<div class="subsection-actions"><button data-action="edit-subsection" data-section="${escapeHtml(section.id)}" data-sub="${escapeHtml(sub.id)}" class="subsection-action-btn edit">Ред.</button><button data-action="delete-subsection" data-section="${escapeHtml(section.id)}" data-sub="${escapeHtml(sub.id)}" class="subsection-action-btn delete">Уд.</button></div>`:''}</div><div class="table-scroll"><table class="table-premium"><thead><tr><th>Наименование</th>${isEditMode?'<th>Ссылка</th>':''}<th>Описание</th><th>Статус</th>${isEditMode?'<th>Действия</th>':''}</tr></thead><tbody>${tableRows}</tbody></table></div></div>`;
+            }
+            html += `<div id="section_${escapeHtml(section.id)}" class="content-section ${activeSection === section.id ? 'active' : ''}"><h2><i class="${safeIcon(section.icon)}"></i> ${escapeHtml(section.name)}</h2>${pills}${subsHtml}</div>`;
+        }
+        container.innerHTML = html;
+        document.querySelectorAll('.pill-premium').forEach(pill => pill.addEventListener('click', (e) => { e.preventDefault(); activateSubsection(pill.dataset.section, pill.dataset.sub); }));
+        if (isEditMode) document.querySelectorAll('.edit-input, .edit-select').forEach(inp => inp.addEventListener('input', function() { let row = contentData[this.dataset.sub]?.[parseInt(this.dataset.row)]; if(row) row[this.dataset.field === 'name'?0:this.dataset.field === 'link'?1:this.dataset.field === 'desc'?2:3] = this.value; }));
+        if (document.getElementById('searchInput').value.trim()) renderSearchResults();
+    }
+
+    function renderSearchResults() {
+        const query = document.getElementById('searchInput').value.trim().toLocaleLowerCase('ru-RU');
+        if (!query || isEditMode) return;
+        const matches = [];
+        for (const section of menuItems) for (const sub of (subsections[section.id] || [])) {
+            for (const row of (contentData[sub.id] || [])) {
+                const haystack = [section.name, sub.name, row[0], row[2], row[3]].join(' ').toLocaleLowerCase('ru-RU');
+                if (haystack.includes(query)) matches.push({ section, sub, row });
+            }
+        }
+        const content = document.getElementById('contentArea');
+        content.innerHTML = `<h2>Результаты поиска</h2><p class="live-meta">Найдено: ${matches.length}</p>` +
+            (matches.length ? `<div class="search-results">${matches.map(x => `<button class="search-result" data-section="${escapeHtml(x.section.id)}" data-sub="${escapeHtml(x.sub.id)}"><strong>${escapeHtml(x.row[0])}</strong><small>${escapeHtml(x.section.name)} · ${escapeHtml(x.sub.name)}</small><span>${escapeHtml(x.row[2])}</span></button>`).join('')}</div>` : '<div class="info-message">Попробуйте другой запрос.</div>');
+        content.querySelectorAll('.search-result').forEach(button => button.addEventListener('click', () => {
+            document.getElementById('searchInput').value = '';
+            activateSection(button.dataset.section);
+            activateSubsection(button.dataset.section, button.dataset.sub);
+        }));
+    }
+    
+    function activateSection(sectionId) { activeSection = sectionId; activeSub = (subsections[sectionId] || [])[0]?.id; renderMenu(); renderContent(); }
+    function activateSubsection(sectionId, subId) { activeSection = sectionId; activeSub = subId; renderContent(); }
+    
+    window.moveRowUp = (subId, idx) => { if(idx>0) { let rows = contentData[subId]; [rows[idx-1], rows[idx]] = [rows[idx], rows[idx-1]]; renderContent(); } };
+    window.moveRowDown = (subId, idx) => { let rows = contentData[subId]; if(idx<rows.length-1) { [rows[idx+1], rows[idx]] = [rows[idx], rows[idx+1]]; renderContent(); } };
+    window.deleteRow = (subId, idx) => { if(confirm('Удалить?')) { contentData[subId].splice(idx,1); renderContent(); } };
+    window.addRow = (subId) => { contentData[subId] = contentData[subId] || []; contentData[subId].push(['Новая запись','','','Активно']); renderContent(); };
+    window.deleteSection = (id) => { if(confirm('Удалить раздел?')) { (subsections[id] || []).forEach(s => delete contentData[s.id]); menuItems = menuItems.filter(s=>s.id!==id); delete subsections[id]; renderMenu(); renderContent(); if(menuItems.length) activateSection(menuItems[0].id); } };
+    window.deleteSubsection = (sectionId, subId) => { if(confirm('Удалить подраздел?')) { subsections[sectionId] = subsections[sectionId].filter(s=>s.id!==subId); delete contentData[subId]; renderContent(); } };
+    
+    window.openEditSection = (id, name, icon) => { editingSection = id; document.getElementById('sectionNameInput').value = name; createCustomSelect('sectionIconSelect', 'sectionIconPreview', icon, (val) => {}); showModal('sectionModal'); };
+    window.openAddSubsection = (sectionId) => { editingSubParent = sectionId; editingSubId = null; document.getElementById('subsectionNameInput').value = ''; createCustomSelect('subsectionIconSelect', 'subsectionIconPreview', 'fas fa-folder-open', (val)=>{}); showModal('subsectionModal'); };
+    window.openEditSubsection = (sectionId, subId, name, icon) => { editingSubParent = sectionId; editingSubId = subId; document.getElementById('subsectionNameInput').value = name; createCustomSelect('subsectionIconSelect', 'subsectionIconPreview', icon, (val)=>{}); showModal('subsectionModal'); };
+    
+    function enableEditMode() { originalMenu = structuredClone(menuItems); originalSubs = structuredClone(subsections); originalContent = structuredClone(contentData); document.getElementById('searchInput').value = ''; isEditMode = true; document.getElementById('editPanel').classList.add('active'); document.getElementById('editBtn').classList.add('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-check"></i> Завершить редактирование'; document.getElementById('addSectionBtn').classList.remove('hidden'); renderMenu(); renderContent(); showToast('Режим редактирования включён'); }
+    function disableEditMode(cancel=false) { if(cancel) { menuItems = JSON.parse(JSON.stringify(originalMenu)); subsections = JSON.parse(JSON.stringify(originalSubs)); contentData = JSON.parse(JSON.stringify(originalContent)); showToast('Изменения отменены'); } isEditMode = false; document.getElementById('editPanel').classList.remove('active'); document.getElementById('editBtn').classList.remove('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-pen"></i> Редактировать справочник'; document.getElementById('addSectionBtn').classList.add('hidden'); renderMenu(); renderContent(); if(activeSection) activateSection(activeSection); }
+    
+    // Кнопка сохранения запускает скачивание текстового файла.
+    async function saveChanges() {
+        saveToDownloads();
+        disableEditMode(false);
+    }
+    
+    // 6. ЗАПУСК: конфиг → данные, показатели выполняются независимо.
+    async function init() {
+        document.getElementById('refreshBtn').onclick = async () => {
+            if (configBusy) return;
+            if (isEditMode) { showToast('Сначала завершите редактирование или скачайте изменения.', true); return; }
+            const btn = document.getElementById('refreshBtn'); btn.disabled = true;
+            try {
+                const ok = await loadDirectory();
+                if (ok) { activeSection = menuItems.some(x => x.id === activeSection) ? activeSection : menuItems[0]?.id; renderMenu(); renderContent(); }
+                else showToast('Не удалось обновить справочник. Последние загруженные данные сохранены на странице.', true);
+                refreshLiveData(true);
+            } finally { btn.disabled = false; }
+        };
+        document.getElementById('searchInput').addEventListener('input', () => {
+            if (isEditMode) return;
+            if (document.getElementById('searchInput').value.trim()) renderSearchResults();
+            else renderContent();
+        });
+        document.getElementById('adminBtn').onclick = openAdministration;
+        document.getElementById('adminClose').onclick = () => document.getElementById('adminDialog').close();
+        document.getElementById('adminForm').onsubmit = applyAdministration;
+        document.getElementById('downloadConfigBtn').onclick = () => downloadJSON(appConfig, 'config.json');
+        document.getElementById('importConfigBtn').onclick = () => document.getElementById('configFile').click();
+        document.getElementById('configFile').onchange = async event => {
+            try {
+                const file = event.target.files[0]; if (!file) return;
+                fillAdministration(validateConfig(JSON.parse(await file.text())));
+                document.getElementById('adminMessage').textContent = 'Настройки прочитаны. Нажмите «Применить и скачать конфиг».';
+            } catch (e) { document.getElementById('adminMessage').textContent = e.message; }
+            event.target.value = '';
+        };
+        try { appConfig = validateConfig(await fetchJson('./config.json')); configLoaded = true; }
+        catch (e) { configError = 'config.json недоступен или содержит ошибку. Использованы начальные настройки.'; }
+        renderLiveCards(); refreshLiveData(); scheduleIndicators();
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshLiveData(); });
+        window.addEventListener('online', () => refreshLiveData(true));
+        const loaded = await loadDirectory();
+        document.getElementById('editBtn').disabled = !loaded;
+        if (!loaded) {
+            document.getElementById('navMenu').innerHTML = '<li class="info-message">Данные недоступны</li>';
+            document.getElementById('contentArea').innerHTML = '<div class="info-message"><h2>Подключите справочник</h2><p>Откройте «Администрирование» и проверьте путь к bifk-data.txt.</p><button class="refresh-premium" id="connectDataBtn">Настроить подключение</button></div>';
+            document.getElementById('connectDataBtn').onclick = openAdministration;
+        } else { activeSection = menuItems[0]?.id; activeSub = subsections[activeSection]?.[0]?.id; renderMenu(); renderContent(); }
+    }
+
+    document.getElementById('contentArea').addEventListener('click', event => {
+        const button = event.target.closest('button[data-copy]');
+        if (button) copyToClipboard(button.dataset.copy);
+    });
+    document.addEventListener('click', event => {
+        const button = event.target.closest('button[data-action]');
+        if (!button || !isEditMode) return;
+        const { action, section, sub, row } = button.dataset;
+        const sectionData = menuItems.find(item => item.id === section);
+        const subData = (subsections[section] || []).find(item => item.id === sub);
+        if (action === 'edit-section' && sectionData) openEditSection(section, sectionData.name, sectionData.icon);
+        if (action === 'delete-section' && sectionData) deleteSection(section);
+        if (action === 'add-subsection' && sectionData) openAddSubsection(section);
+        if (action === 'edit-subsection' && subData) openEditSubsection(section, sub, subData.name, subData.icon);
+        if (action === 'delete-subsection' && subData) deleteSubsection(section, sub);
+        if (action === 'move-up') moveRowUp(sub, Number(row));
+        if (action === 'move-down') moveRowDown(sub, Number(row));
+        if (action === 'delete-row') deleteRow(sub, Number(row));
+        if (action === 'add-row') addRow(sub);
+    });
+    
+    document.getElementById('editBtn').onclick = () => isEditMode ? saveChanges() : enableEditMode();
+    document.getElementById('saveBtn').onclick = saveChanges;
+    document.getElementById('cancelBtn').onclick = () => disableEditMode(true);
+    document.getElementById('addSectionBtn').onclick = () => { if(!isEditMode) { alert('Включите режим редактирования'); return; } editingSection = null; document.getElementById('sectionNameInput').value = ''; createCustomSelect('sectionIconSelect', 'sectionIconPreview', 'fas fa-folder', ()=>{}); showModal('sectionModal'); };
+    document.getElementById('saveSectionConfirm').onclick = () => {
+        let name = document.getElementById('sectionNameInput').value.trim();
+        if(!name) { alert('Введите название'); return; }
+        let icon = getSelectedIconValue('sectionIconSelect');
+        if(editingSection) { let idx = menuItems.findIndex(s=>s.id===editingSection); if(idx!==-1) { menuItems[idx].name = name; menuItems[idx].icon = icon; } editingSection = null; }
+        else { let newId = 'section_'+Date.now(); menuItems.push({ id:newId, name:name, icon:icon }); let defaultSubId = newId+'_main'; subsections[newId] = [{ id:defaultSubId, name:'Основное', icon:'fas fa-folder-open' }]; if(!contentData[defaultSubId]) contentData[defaultSubId]=[]; }
+        closeModal('sectionModal'); renderMenu(); renderContent(); if(menuItems.length) activateSection(menuItems[menuItems.length-1].id);
+    };
+    document.getElementById('saveSubsectionConfirm').onclick = () => {
+        let name = document.getElementById('subsectionNameInput').value.trim();
+        if(!name) { alert('Введите название'); return; }
+        let icon = getSelectedIconValue('subsectionIconSelect');
+        if(editingSubId && editingSubParent) { let subs = subsections[editingSubParent] || []; let idx = subs.findIndex(s=>s.id===editingSubId); if(idx!==-1) { subs[idx].name = name; subs[idx].icon = icon; } }
+        else if(editingSubParent) { let newId = editingSubParent+'_sub_'+Date.now(); subsections[editingSubParent] = subsections[editingSubParent] || []; subsections[editingSubParent].push({ id:newId, name:name, icon:icon }); if(!contentData[newId]) contentData[newId]=[]; }
+        closeModal('subsectionModal'); renderContent();
+    };
+    document.addEventListener('click', event => { if (!event.target.closest('.custom-select')) document.querySelectorAll('.custom-select.open').forEach(el => el.classList.remove('open')); });
+    document.getElementById('mobileToggle').onclick = () => document.getElementById('sidebar').classList.toggle('mobile-open');
+    window.onscroll = () => document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 300);
+    document.getElementById('scrollTop').onclick = () => window.scrollTo({ top:0, behavior:'smooth' });
+    init();
+</script>
+</body>
+</html>

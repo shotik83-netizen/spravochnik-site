@@ -719,6 +719,52 @@
         }
         @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
 
+
+        /* Уточнения оформления и режима редактирования. */
+        .header-premium { margin-bottom:0; }
+        .live-heading { margin:0; padding:16px 2px; }
+        .brand-line { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+        .sibur-wordmark { color:var(--accent); font-family:Arial,sans-serif; font-size:32px; font-weight:900; font-style:italic; letter-spacing:-1.4px; line-height:1; }
+        .brand-divider { width:1px; height:26px; background:#dbe6e9; }
+        #departmentName { font-size:23px; font-weight:650; letter-spacing:-.4px; }
+        .department-input { font:inherit; font-size:21px; color:var(--ink); min-width:150px; width:240px; max-width:100%; padding:6px 9px; border:1px solid #8dc6c8; border-radius:6px; background:#f4fbfb; }
+        .department-input:focus { outline:2px solid #008c9533; outline-offset:2px; }
+        [hidden] { display:none !important; }
+        .logo-area { flex-shrink:0; }
+        .dashboard-premium { transition:grid-template-columns .32s ease; }
+        .dashboard-premium.editing-directory { grid-template-columns:470px minmax(0,1fr); }
+        .editing-directory .nav-premium li:not(.info-message) { display:flex; align-items:center; gap:4px; }
+        .editing-directory .nav-premium a { flex:1; min-width:0; padding:11px 10px; gap:9px; }
+        .editing-directory .nav-premium a span { white-space:nowrap; }
+        .editing-directory .menu-actions { flex:none; padding:0 4px 0 0; gap:4px; white-space:nowrap; }
+        .editing-directory .menu-actions button { padding:6px 7px; }
+        .editing-directory .sidebar-header { flex-wrap:nowrap; }
+        .weather-card { background:linear-gradient(145deg,#fff 55%,#f0f9f9); }
+        .live-weather-place { background:#f8fcfc; border:1px solid #e0eeee; border-radius:7px; padding:5px 8px; }
+        .live-weather-place img { border-radius:4px; filter:none; }
+        @media (max-width:1100px) {
+            .dashboard-premium.editing-directory { grid-template-columns:440px minmax(0,1fr); }
+            .editing-directory .nav-premium a { font-size:12px; }
+            .editing-directory .menu-actions button { padding:6px; }
+            .logo-area { flex-shrink:1; }
+        }
+        @media (max-width:900px) {
+            .header-premium { flex-wrap:wrap; }
+            .logo-area { width:100%; }
+            .dashboard-premium.editing-directory { grid-template-columns:420px minmax(0,1fr); }
+            .editing-directory .nav-premium a { font-size:11.5px; }
+        }
+        @media (max-width:700px) {
+            .dashboard-premium.editing-directory { grid-template-columns:minmax(0,1fr); }
+            .editing-directory .nav-premium { overflow-x:auto; }
+            .editing-directory .nav-premium li:not(.info-message) { min-width:390px; }
+            .brand-line { gap:10px; }
+            .sibur-wordmark { font-size:27px; }
+            #departmentName { font-size:20px; }
+            .department-input { font-size:18px; width:185px; }
+        }
+        @media (prefers-reduced-motion:reduce) { .dashboard-premium { transition:none; } }
+
     </style>
 </head>
 <body>
@@ -728,7 +774,7 @@
         <div class="logo-area">
             <div class="logo-icon"><i class="fas fa-chart-line" style="color: white;"></i></div>
             <div class="brand-text"><span class="version-label">СПРАВОЧНИК · НОВАЯ ВЕРСИЯ</span>
-                <h1>БиФК · НКНХ</h1>
+                <h1 class="brand-line"><span class="sibur-wordmark">СИБУР</span><span class="brand-divider" aria-hidden="true"></span><span id="departmentName">БиФК НКНХ</span><input id="departmentInput" class="department-input" aria-label="Название подразделения после СИБУР" maxlength="80" value="БиФК НКНХ" hidden></h1>
                 <p>Бюджетный и финансовый контроль | СЦ & ПЭ</p>
             </div>
         </div>
@@ -808,7 +854,7 @@
     <form id="adminForm">
         <fieldset><legend>Источник справочника</legend><label>Путь или ссылка на bifk-data.txt<input name="dataUrl" required autocomplete="off"></label><p class="form-hint">Для GitHub — относительный путь. Для SharePoint — ссылка на файл, доступный пользователю.</p></fieldset>
         <fieldset><legend>Актуальные показатели</legend><div class="settings-grid"><label>Обновление, минут<input name="refreshMinutes" type="number" min="15" max="1440" step="1" required></label><label class="check-label"><input type="checkbox" name="currencyEnabled">Показывать курсы валют</label></div><label>Ссылка на источник курсов<input name="currencySource" type="url" required></label><p class="form-hint">USD, EUR и CNY загружаются с cbr-xml-daily.ru. Дата публикации отображается под курсами.</p></fieldset>
-        <fieldset><legend>Ставка рефинансирования</legend><label class="check-label"><input type="checkbox" name="rateEnabled">Показывать блок ставки</label><label>Официальный источник<input name="rateSource" type="url" required></label><div class="settings-grid"><label>Проверенное значение, %<input name="rateValue" type="text" inputmode="decimal" placeholder="Не задано"></label><label>Дата проверки<input name="rateDate" type="date"></label></div><p class="form-hint">Оставьте значение пустым для перехода на сайт ЦБ. Введённая ставка показывается с датой и отметкой «Введено вручную».</p></fieldset>
+        <fieldset><legend>Ставка рефинансирования</legend><label class="check-label"><input type="checkbox" name="rateEnabled">Показывать блок ставки</label><label>Официальный источник<input name="rateSource" type="url" required></label><div class="settings-grid"><label>Проверенное значение, %<input name="rateValue" type="text" inputmode="decimal" placeholder="Не задано"></label><label>Дата проверки<input name="rateDate" type="date"></label></div><p class="form-hint">Оставьте значение пустым для перехода на сайт ЦБ. Значение с датой проверки обновляется вручную; ссылка ведёт к актуальной таблице Банка России.</p></fieldset>
         <fieldset><legend>Погода</legend><label class="check-label"><input type="checkbox" name="weatherEnabled">Показывать прогнозы</label><div class="settings-grid"><div><label>Первый город<input name="city0" required></label><label>Ссылка на прогноз<input name="weatherSource0" type="url" required></label><label>Ссылка на изображение<input name="weatherImage0" type="url" required></label></div><div><label>Второй город<input name="city1" required></label><label>Ссылка на прогноз<input name="weatherSource1" type="url" required></label><label>Ссылка на изображение<input name="weatherImage1" type="url" required></label></div></div><p class="form-hint">Внешние показатели используют HTTPS-источники на доменах .ru.</p></fieldset>
         <p id="adminMessage" role="status" class="admin-message"></p>
         <footer class="admin-footer"><div class="file-actions"><button type="button" id="importConfigBtn" class="secondary-button">Открыть конфиг</button><button type="button" id="downloadConfigBtn" class="secondary-button">Скачать текущий конфиг</button></div><button type="submit" class="refresh-premium">Применить и скачать конфиг</button><p class="form-hint">Изменения действуют до закрытия страницы. Файлы на SharePoint заменяет пользователь; браузер настройки не сохраняет.</p></footer>
@@ -822,6 +868,7 @@
     }
     function validateData(data) {
         if (!data || !Array.isArray(data.menuItems) || !data.subsections || typeof data.subsections !== 'object' || Array.isArray(data.subsections) || !data.contentData || typeof data.contentData !== 'object' || Array.isArray(data.contentData)) throw new Error('В bifk-data.txt нужны menuItems, subsections и contentData.');
+        if (data.branding !== undefined && (!data.branding || typeof data.branding.department !== 'string' || !data.branding.department.trim() || data.branding.department.length > 80)) throw new Error('Название подразделения должно содержать от 1 до 80 символов.');
         const sections = new Set();
         const subs = new Set();
         for (const section of data.menuItems) {
@@ -946,7 +993,7 @@
 
 
     // 1. КОНФИГУРАЦИЯ. Изменения живут только в текущей странице и экспортируются в файл.
-    const DEFAULT_CONFIG = {"schemaVersion": 1, "dataUrl": "./bifk-data.txt", "refreshMinutes": 60, "currency": {"enabled": true, "sourceUrl": "https://www.cbr.ru/currency_base/daily/"}, "rate": {"enabled": true, "sourceUrl": "https://www.cbr.ru/statistics/idkp_br/refinancing_rates1/", "value": null, "verifiedOn": ""}, "weather": {"enabled": true, "places": [{"name": "Нижнекамск", "sourceUrl": "https://rp5.ru/5770/ru", "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=16&id=5770&lang=ru&um=00000"}, {"name": "Москва", "sourceUrl": "https://rp5.ru/5483/ru", "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=16&id=5483&lang=ru&um=00000"}]}};
+    const DEFAULT_CONFIG = {"schemaVersion": 1, "dataUrl": "./bifk-data.txt", "refreshMinutes": 60, "currency": {"enabled": true, "sourceUrl": "https://www.cbr.ru/currency_base/daily/"}, "rate": {"enabled": true, "sourceUrl": "https://www.cbr.ru/hd_base/KeyRate/", "value": 14, "verifiedOn": "2026-09-30"}, "weather": {"enabled": true, "places": [{"name": "Нижнекамск", "sourceUrl": "https://rp5.ru/5770/ru", "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=21&id=5770&lang=ru&um=00000"}, {"name": "Москва", "sourceUrl": "https://rp5.ru/5483/ru", "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=21&id=5483&lang=ru&um=00000"}]}};
     let appConfig = structuredClone(DEFAULT_CONFIG);
     let configLoaded = false;
     let configError = '';
@@ -968,6 +1015,8 @@
     let originalMenu = [];
     let originalSubs = {};
     let originalContent = {};
+    let departmentName = 'БиФК НКНХ';
+    let originalDepartmentName = departmentName;
     let isEditMode = false;
     let activeSection = null;
     let activeSub = null;
@@ -1071,7 +1120,7 @@
         }).catch(() => fetchJson(CURRENCY_API));
     }
 
-    // 3. ПОКАЗАТЕЛИ. Курсы и информеры .ru; ставка — по проверенному значению пользователя.
+    // 3. ПОКАЗАТЕЛИ. Курсы и информеры .ru; ставка — проверенный снимок с прямой ссылкой на ЦБ.
     function renderLiveCards() {
         const grid = document.getElementById('liveGrid');
         const cards = [];
@@ -1084,10 +1133,10 @@
         if (appConfig.rate.enabled) {
             const rate = appConfig.rate;
             const value = rate.value === null ? 'Проверить на сайте ЦБ ↗' : `${rubles.format(rate.value)} %`;
-            cards.push(`<article class="live-card"><div class="live-card-top"><i class="fas fa-percent"></i> Ставка рефинансирования</div><a class="live-rate-link" href="${escapeHtml(rate.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(value)}</a><div class="live-detail">${rate.value === null ? 'Официальный источник' : `Введено вручную · на ${shortDate(rate.verifiedOn)}`}</div></article>`);
+            cards.push(`<article class="live-card"><div class="live-card-top"><i class="fas fa-percent"></i> Ставка рефинансирования</div><a class="live-rate-link" href="${escapeHtml(rate.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(value)}</a><div class="live-detail">${rate.value === null ? 'Официальный источник' : `Проверено на ${shortDate(rate.verifiedOn)} · вручную`} · <a href="${escapeHtml(rate.sourceUrl)}" target="_blank" rel="noopener noreferrer">Ставка на сайте ЦБ ↗</a></div></article>`);
         }
         if (appConfig.weather.enabled) {
-            cards.push(`<article class="live-card"><div class="live-card-top"><i class="fas fa-cloud-sun"></i> Погода · rp5.ru</div><div class="live-weather-widgets">${appConfig.weather.places.map(place => `<div class="live-weather-place"><a href="${escapeHtml(place.sourceUrl)}" target="_blank" rel="noopener noreferrer"><span>${escapeHtml(place.name)}</span><img width="120" height="60" alt="Прогноз: ${escapeHtml(place.name)}" src="${escapeHtml(place.imageUrl)}"><span class="weather-fallback" hidden>Открыть прогноз ↗</span></a></div>`).join('')}</div></article>`);
+            cards.push(`<article class="live-card weather-card"><div class="live-card-top"><i class="fas fa-cloud-sun"></i> Погода · rp5.ru</div><div class="live-weather-widgets">${appConfig.weather.places.map(place => `<div class="live-weather-place"><a href="${escapeHtml(place.sourceUrl)}" target="_blank" rel="noopener noreferrer"><span>${escapeHtml(place.name)}</span><img width="120" height="60" alt="Прогноз: ${escapeHtml(place.name)}" src="${escapeHtml(place.imageUrl)}"><span class="weather-fallback" hidden>Открыть прогноз ↗</span></a></div>`).join('')}</div></article>`);
         }
         grid.innerHTML = cards.join('');
         grid.style.setProperty('--card-count', String(cards.length || 1));
@@ -1243,6 +1292,8 @@
     // ========== РАБОТА С ДАННЫМИ ==========
     function loadFromJSON(data) {
         validateData(data);
+        departmentName = data.branding?.department.trim() || 'БиФК НКНХ';
+        renderBrand();
         menuItems = JSON.parse(JSON.stringify(data.menuItems || []));
         subsections = JSON.parse(JSON.stringify(data.subsections || {}));
         contentData = JSON.parse(JSON.stringify(data.contentData || {}));
@@ -1296,7 +1347,7 @@
         setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
     function saveToDownloads() {
-        downloadJSON({menuItems, subsections, contentData}, 'bifk-data.txt');
+        downloadJSON({menuItems, subsections, contentData, branding: {department: departmentName}}, 'bifk-data.txt');
         showToast('Файл скачан. Разместите его на SharePoint вручную.');
     }
 
@@ -1383,11 +1434,23 @@
     window.openAddSubsection = (sectionId) => { editingSubParent = sectionId; editingSubId = null; document.getElementById('subsectionNameInput').value = ''; createCustomSelect('subsectionIconSelect', 'subsectionIconPreview', 'fas fa-folder-open', (val)=>{}); showModal('subsectionModal'); };
     window.openEditSubsection = (sectionId, subId, name, icon) => { editingSubParent = sectionId; editingSubId = subId; document.getElementById('subsectionNameInput').value = name; createCustomSelect('subsectionIconSelect', 'subsectionIconPreview', icon, (val)=>{}); showModal('subsectionModal'); };
     
-    function enableEditMode() { originalMenu = structuredClone(menuItems); originalSubs = structuredClone(subsections); originalContent = structuredClone(contentData); document.getElementById('searchInput').value = ''; isEditMode = true; document.getElementById('editPanel').classList.add('active'); document.getElementById('editBtn').classList.add('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-check"></i> Завершить редактирование'; document.getElementById('addSectionBtn').classList.remove('hidden'); renderMenu(); renderContent(); showToast('Режим редактирования включён'); }
-    function disableEditMode(cancel=false) { if(cancel) { menuItems = JSON.parse(JSON.stringify(originalMenu)); subsections = JSON.parse(JSON.stringify(originalSubs)); contentData = JSON.parse(JSON.stringify(originalContent)); showToast('Изменения отменены'); } isEditMode = false; document.getElementById('editPanel').classList.remove('active'); document.getElementById('editBtn').classList.remove('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-pen"></i> Редактировать справочник'; document.getElementById('addSectionBtn').classList.add('hidden'); renderMenu(); renderContent(); if(activeSection) activateSection(activeSection); }
+    function renderBrand() {
+        document.getElementById('departmentName').textContent = departmentName;
+        document.getElementById('departmentName').hidden = isEditMode;
+        const input = document.getElementById('departmentInput');
+        input.hidden = !isEditMode;
+        input.value = departmentName;
+        document.querySelector('.dashboard-premium').classList.toggle('editing-directory', isEditMode);
+    }
+
+    function enableEditMode() { originalDepartmentName = departmentName; originalMenu = structuredClone(menuItems); originalSubs = structuredClone(subsections); originalContent = structuredClone(contentData); document.getElementById('searchInput').value = ''; isEditMode = true; renderBrand(); document.getElementById('editPanel').classList.add('active'); document.getElementById('editBtn').classList.add('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-check"></i> Завершить редактирование'; document.getElementById('addSectionBtn').classList.remove('hidden'); renderMenu(); renderContent(); showToast('Режим редактирования включён'); }
+    function disableEditMode(cancel=false) { if(cancel) { departmentName = originalDepartmentName; menuItems = JSON.parse(JSON.stringify(originalMenu)); subsections = JSON.parse(JSON.stringify(originalSubs)); contentData = JSON.parse(JSON.stringify(originalContent)); showToast('Изменения отменены'); } isEditMode = false; renderBrand(); document.getElementById('editPanel').classList.remove('active'); document.getElementById('editBtn').classList.remove('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-pen"></i> Редактировать справочник'; document.getElementById('addSectionBtn').classList.add('hidden'); renderMenu(); renderContent(); if(activeSection) activateSection(activeSection); }
     
     // Кнопка сохранения запускает скачивание текстового файла.
     async function saveChanges() {
+        const input = document.getElementById('departmentInput');
+        if (!input.value.trim()) { showToast('Укажите название подразделения.', true); input.focus(); return; }
+        departmentName = input.value.trim();
         saveToDownloads();
         disableEditMode(false);
     }
@@ -1411,7 +1474,22 @@
             else renderContent();
         });
         document.getElementById('adminBtn').onclick = openAdministration;
-        document.getElementById('adminClose').onclick = () => document.getElementById('adminDialog').close();
+        const adminDialog = document.getElementById('adminDialog');
+        const closeAdministration = () => adminDialog.close();
+        document.getElementById('adminClose').onclick = closeAdministration;
+        // Закрытие только за границами окна; клики и перетаскивание внутри полей его не закрывают.
+        const outsideAdministration = event => {
+            const box = adminDialog.getBoundingClientRect();
+            return event.target === adminDialog && (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom);
+        };
+        let backdropPointer = null;
+        adminDialog.addEventListener('pointerdown', event => { backdropPointer = outsideAdministration(event) ? event.pointerId : null; });
+        adminDialog.addEventListener('pointerup', event => {
+            if (backdropPointer === event.pointerId && outsideAdministration(event)) closeAdministration();
+            backdropPointer = null;
+        });
+        adminDialog.addEventListener('pointercancel', () => { backdropPointer = null; });
+        document.getElementById('departmentInput').addEventListener('input', event => { if (isEditMode) departmentName = event.target.value; });
         document.getElementById('adminForm').onsubmit = applyAdministration;
         document.getElementById('downloadConfigBtn').onclick = () => downloadJSON(appConfig, 'config.json');
         document.getElementById('importConfigBtn').onclick = () => document.getElementById('configFile').click();

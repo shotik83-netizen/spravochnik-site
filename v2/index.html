@@ -836,7 +836,7 @@
 
 
 <div id="editPanel" class="edit-panel">
-    <button id="saveBtn" class="btn-save-premium"><i class="fas fa-check"></i> Скачать bifk-data.txt</button>
+    <button id="saveBtn" class="btn-save-premium"><i class="fas fa-check"></i> Сохранить изменения</button>
     <button id="cancelBtn" class="btn-cancel-premium"><i class="fas fa-times"></i> Отменить</button>
 </div>
 
@@ -878,13 +878,13 @@
     <header class="admin-header"><div><span class="version-label">НАСТРОЙКИ ПРИЛОЖЕНИЯ</span><h2 id="adminTitle">Администрирование</h2></div><button id="adminClose" class="close-admin" aria-label="Закрыть администрирование">×</button></header>
     <p id="adminConnection" class="connection-flow"></p>
     <form id="adminForm">
-        <fieldset><legend>Источник справочника</legend><label>Путь или ссылка на bifk-data.txt<input name="dataUrl" required autocomplete="off"></label><p class="form-hint">Для GitHub — относительный путь. Для SharePoint — ссылка на файл, доступный пользователю.</p></fieldset>
+        <fieldset><legend>Источник справочника</legend><label>Путь или ссылка на bifk-data.txt<input name="dataUrl" required autocomplete="off"></label><p class="form-hint">Один файл содержит справочник и настройки. Если меняете его расположение, укажите эту же ссылку в DATA_FILE_URL внутри HTML для следующих запусков.</p></fieldset>
         <fieldset><legend>Актуальные показатели</legend><div class="settings-grid"><label>Обновление, минут<input name="refreshMinutes" type="number" min="15" max="1440" step="1" required></label><label class="check-label"><input type="checkbox" name="currencyEnabled">Показывать курсы валют</label></div><label>Ссылка на источник курсов<input name="currencySource" type="url" required></label><p class="form-hint">USD, EUR и CNY загружаются с cbr-xml-daily.ru. Дата публикации отображается под курсами.</p></fieldset>
         <fieldset><legend>Ставка рефинансирования</legend><label class="check-label"><input type="checkbox" name="rateEnabled">Показывать блок ставки</label><label>Официальный источник<input name="rateSource" type="url" required></label><div class="settings-grid"><label>Проверенное значение, %<input name="rateValue" type="text" inputmode="decimal" placeholder="Не задано"></label><label>Дата проверки<input name="rateDate" type="date"></label></div><p class="form-hint">Оставьте значение пустым для перехода на сайт ЦБ. Значение с датой проверки обновляется вручную; ссылка ведёт к актуальной таблице Банка России.</p></fieldset>
         <fieldset><legend>Погода</legend><label class="check-label"><input type="checkbox" name="weatherEnabled">Показывать прогнозы</label><div class="settings-grid"><div><label>Первый город<input name="city0" required></label><label>Ссылка на прогноз<input name="weatherSource0" type="url" required></label><label>Ссылка на изображение<input name="weatherImage0" type="url" required></label></div><div><label>Второй город<input name="city1" required></label><label>Ссылка на прогноз<input name="weatherSource1" type="url" required></label><label>Ссылка на изображение<input name="weatherImage1" type="url" required></label></div></div><p class="form-hint">Внешние показатели используют HTTPS-источники на доменах .ru.</p></fieldset>
         <p id="adminMessage" role="status" class="admin-message"></p>
-        <footer class="admin-footer"><div class="file-actions"><button type="button" id="importConfigBtn" class="secondary-button">Открыть конфиг</button><button type="button" id="downloadConfigBtn" class="secondary-button">Скачать текущий конфиг</button></div><button type="submit" class="refresh-premium">Применить и скачать конфиг</button><p class="form-hint">Изменения действуют до закрытия страницы. Файлы на SharePoint заменяет пользователь; браузер настройки не сохраняет.</p></footer>
-    </form><input type="file" id="configFile" accept=".json,application/json" hidden>
+        <footer class="admin-footer"><button type="submit" class="refresh-premium">Сохранить изменения</button><p class="form-hint">При сохранении изменений скачивается один bifk-data.txt с настройками и справочником. Замените этот файл на SharePoint вручную.</p></footer>
+    </form>
 </dialog>
 
 <script>
@@ -924,7 +924,7 @@
     }
 
     function validateConfig(raw) {
-        if (!raw || typeof raw !== 'object' || Array.isArray(raw) || raw.schemaVersion !== 1) throw new Error('Нужен config.json с schemaVersion: 1.');
+        if (!raw || typeof raw !== 'object' || Array.isArray(raw) || raw.schemaVersion !== 1) throw new Error('В настройках bifk-data.txt нужен schemaVersion: 1.');
         const result = structuredClone(DEFAULT_CONFIG);
         if (typeof raw.dataUrl !== 'string' || !raw.dataUrl.trim()) throw new Error('Укажите путь к bifk-data.txt.');
         const source = new URL(raw.dataUrl, location.href);
@@ -984,7 +984,7 @@
         fillAdministration(appConfig);
         document.getElementById('adminMessage').textContent = configError;
         const records = Object.values(contentData).reduce((n, rows) => n + rows.length, 0);
-        document.getElementById('adminConnection').textContent = `${configLoaded ? 'Конфиг загружен' : 'Начальные настройки'} → ${dataLoaded ? `Справочник подключён: ${menuItems.length} разделов, ${records} записей` : 'Данные не подключены'}`;
+        document.getElementById('adminConnection').textContent = `${dataLoaded ? `bifk-data.txt подключён: ${menuItems.length} разделов, ${records} записей` : 'Файл не подключён'} · ${configLoaded ? 'Настройки из этого же файла' : 'Начальные настройки'}`;
         document.getElementById('adminDialog').showModal();
     }
 
@@ -993,28 +993,36 @@
         if (configBusy || liveRefreshPending) { document.getElementById('adminMessage').textContent = 'Дождитесь завершения обновления показателей и повторите.'; return; }
         const form = event.currentTarget;
         const previous = appConfig;
+        const previousPayload = JSON.stringify(directoryPayload());
         const message = document.getElementById('adminMessage');
         try {
-            const draft = {
+            const draft = validateConfig({
                 schemaVersion: 1,
                 dataUrl: form.elements.dataUrl.value,
                 refreshMinutes: form.elements.refreshMinutes.value,
                 currency: {enabled: form.elements.currencyEnabled.checked, sourceUrl: form.elements.currencySource.value},
                 rate: {enabled: form.elements.rateEnabled.checked, sourceUrl: form.elements.rateSource.value, value: form.elements.rateValue.value, verifiedOn: form.elements.rateDate.value},
                 weather: {enabled: form.elements.weatherEnabled.checked, places: [0, 1].map(i => ({name: form.elements['city' + i].value, sourceUrl: form.elements['weatherSource' + i].value, imageUrl: form.elements['weatherImage' + i].value}))}
-            };
-            appConfig = validateConfig(draft);
+            });
+            const sourceChanged = draft.dataUrl !== previous.dataUrl;
             configBusy = true;
             form.querySelectorAll('input, button').forEach(el => el.disabled = true);
-            message.textContent = 'Проверяем подключение к справочнику…';
-            if (!await loadDirectory()) throw new Error('Не удалось загрузить файл данных. Настройки не применены; проверьте ссылку и доступ.');
+            if (sourceChanged || !dataLoaded) {
+                message.textContent = 'Проверяем подключение к справочнику…';
+                if (!await loadDirectory(draft.dataUrl, draft)) throw new Error('Не удалось загрузить bifk-data.txt. Настройки не применены; проверьте ссылку и доступ.');
+                document.getElementById('searchInput').value = '';
+                activeSection = menuItems[0]?.id; activeSub = subsections[activeSection]?.[0]?.id;
+                renderMenu(); renderContent();
+            } else { appConfig = draft; }
+            if (!sourceChanged && JSON.stringify(directoryPayload()) === previousPayload) {
+                message.textContent = 'Изменений нет — файл не скачивается.';
+                return;
+            }
             configLoaded = true; configError = '';
-            document.getElementById('searchInput').value = '';
-            activeSection = menuItems[0]?.id; activeSub = subsections[activeSection]?.[0]?.id;
-            renderMenu(); renderContent(); renderLiveCards(); scheduleIndicators();
+            updateConnection(); renderLiveCards(); scheduleIndicators();
             document.getElementById('editBtn').disabled = false;
-            downloadJSON(appConfig, 'config.json');
-            message.textContent = 'Настройки применены к этой странице, config.json скачан. Для следующего запуска разместите файл рядом с приложением.';
+            saveToDownloads();
+            message.textContent = 'Изменения сохранены в скачанный bifk-data.txt. Замените этот файл на SharePoint вручную.';
             refreshLiveData(true);
         } catch (e) { appConfig = previous; updateConnection(); message.textContent = e.message; }
         finally { configBusy = false; form.querySelectorAll('input, button').forEach(el => el.disabled = false); }
@@ -1022,7 +1030,10 @@
 
 
     // 1. КОНФИГУРАЦИЯ. Изменения живут только в текущей странице и экспортируются в файл.
-    const DEFAULT_CONFIG = {"schemaVersion": 1, "dataUrl": "./bifk-data.txt", "refreshMinutes": 60, "currency": {"enabled": true, "sourceUrl": "https://www.cbr.ru/currency_base/daily/"}, "rate": {"enabled": true, "sourceUrl": "https://www.cbr.ru/hd_base/KeyRate/", "value": 14, "verifiedOn": "2026-09-30"}, "weather": {"enabled": true, "places": [{"name": "Нижнекамск", "sourceUrl": "https://rp5.ru/5770/ru", "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=21&id=5770&lang=ru&um=00000"}, {"name": "Москва", "sourceUrl": "https://rp5.ru/5483/ru", "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=21&id=5483&lang=ru&um=00000"}]}};
+    // Единственная ссылка для SharePoint. Если файлы рядом, менять её не нужно.
+    const DATA_FILE_URL = './bifk-data.txt';
+    const DEFAULT_CONFIG = {"schemaVersion": 1, "refreshMinutes": 60, "currency": {"enabled": true, "sourceUrl": "https://www.cbr.ru/currency_base/daily/"}, "rate": {"enabled": true, "sourceUrl": "https://www.cbr.ru/hd_base/KeyRate/", "value": 14, "verifiedOn": "2026-09-30"}, "weather": {"enabled": true, "places": [{"name": "Нижнекамск", "sourceUrl": "https://rp5.ru/5770/ru", "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=21&id=5770&lang=ru&um=00000"}, {"name": "Москва", "sourceUrl": "https://rp5.ru/5483/ru", "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=21&id=5483&lang=ru&um=00000"}]}};
+    DEFAULT_CONFIG.dataUrl = DATA_FILE_URL;
     let appConfig = structuredClone(DEFAULT_CONFIG);
     let configLoaded = false;
     let configError = '';
@@ -1050,6 +1061,7 @@
     let headerDescription = 'Бюджетный и финансовый контроль | СЦ & ПЭ';
     let originalHeaderLabel = headerLabel;
     let originalHeaderDescription = headerDescription;
+    let originalEditPayload = '';
     let isEditMode = false;
     let activeSection = null;
     let activeSub = null;
@@ -1342,22 +1354,27 @@
         }
     }
     
-    async function loadDirectory() {
+    async function loadDirectory(source = appConfig.dataUrl, settingsOverride = null) {
         const controller = new AbortController();
         let timeout;
         try {
-            let url = new URL(appConfig.dataUrl, location.href);
+            const url = new URL(source, location.href);
             url.searchParams.set('_updated', String(Date.now()));
-            let text = await Promise.race([
+            const text = await Promise.race([
                 (async () => {
                     const resp = await fetch(url, { headers: { 'Accept': 'text/plain' }, cache: 'no-store', signal: controller.signal });
                     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
                     return resp.text();
                 })(),
-                new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new Error('Время ожидания файла данных истекло')); }, 10000); })
+                new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new Error('Время ожидания bifk-data.txt истекло')); }, 10000); })
             ]);
-            let json = JSON.parse(text);
+            const json = JSON.parse(text);
+            // Проверяем настройки и базу до изменения текущей страницы.
+            const nextConfig = validateConfig({... (settingsOverride || (json.config === undefined ? DEFAULT_CONFIG : json.config)), dataUrl: source});
             loadFromJSON(json);
+            appConfig = nextConfig;
+            configLoaded = !!settingsOverride || json.config !== undefined;
+            configError = '';
             dataLoaded = true;
             dataLoadedAt = new Date();
             updateConnection();
@@ -1381,8 +1398,13 @@
         document.body.appendChild(link); link.click(); link.remove();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
+    function directoryPayload() {
+        const config = structuredClone(appConfig);
+        delete config.dataUrl;
+        return {menuItems, subsections, contentData, branding: {department: departmentName, label: headerLabel, description: headerDescription}, config};
+    }
     function saveToDownloads() {
-        downloadJSON({menuItems, subsections, contentData, branding: {department: departmentName, label: headerLabel, description: headerDescription}}, 'bifk-data.txt');
+        downloadJSON(directoryPayload(), 'bifk-data.txt');
         showToast('Файл скачан. Разместите его на SharePoint вручную.');
     }
 
@@ -1486,7 +1508,7 @@
         document.querySelector('.dashboard-premium').classList.toggle('editing-directory', isEditMode);
     }
 
-    function enableEditMode() { originalDepartmentName = departmentName; originalHeaderLabel = headerLabel; originalHeaderDescription = headerDescription; originalMenu = structuredClone(menuItems); originalSubs = structuredClone(subsections); originalContent = structuredClone(contentData); document.getElementById('searchInput').value = ''; isEditMode = true; renderBrand(); document.getElementById('editPanel').classList.add('active'); document.getElementById('editBtn').classList.add('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-check"></i> Завершить редактирование'; document.getElementById('addSectionBtn').classList.remove('hidden'); renderMenu(); renderContent(); showToast('Режим редактирования включён'); }
+    function enableEditMode() { originalEditPayload = JSON.stringify(directoryPayload()); originalDepartmentName = departmentName; originalHeaderLabel = headerLabel; originalHeaderDescription = headerDescription; originalMenu = structuredClone(menuItems); originalSubs = structuredClone(subsections); originalContent = structuredClone(contentData); document.getElementById('searchInput').value = ''; isEditMode = true; renderBrand(); document.getElementById('editPanel').classList.add('active'); document.getElementById('editBtn').classList.add('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-check"></i> Завершить редактирование'; document.getElementById('addSectionBtn').classList.remove('hidden'); renderMenu(); renderContent(); showToast('Режим редактирования включён'); }
     function disableEditMode(cancel=false) { if(cancel) { departmentName = originalDepartmentName; headerLabel = originalHeaderLabel; headerDescription = originalHeaderDescription; menuItems = JSON.parse(JSON.stringify(originalMenu)); subsections = JSON.parse(JSON.stringify(originalSubs)); contentData = JSON.parse(JSON.stringify(originalContent)); showToast('Изменения отменены'); } isEditMode = false; renderBrand(); document.getElementById('editPanel').classList.remove('active'); document.getElementById('editBtn').classList.remove('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-pen"></i> Редактировать справочник'; document.getElementById('addSectionBtn').classList.add('hidden'); renderMenu(); renderContent(); if(activeSection) activateSection(activeSection); }
     
     // Кнопка сохранения запускает скачивание текстового файла.
@@ -1496,11 +1518,12 @@
         departmentName = input.value.trim();
         headerLabel = document.getElementById('headerLabelInput').value.trim();
         headerDescription = document.getElementById('headerDescriptionInput').value.trim();
-        saveToDownloads();
+        if (JSON.stringify(directoryPayload()) !== originalEditPayload) saveToDownloads();
+        else showToast('Изменений нет — файл не скачивается.');
         disableEditMode(false);
     }
     
-    // 6. ЗАПУСК: конфиг → данные, показатели выполняются независимо.
+    // 6. ЗАПУСК: один bifk-data.txt → настройки и данные → показатели.
     async function init() {
         document.getElementById('refreshBtn').onclick = async () => {
             if (configBusy) return;
@@ -1508,7 +1531,7 @@
             const btn = document.getElementById('refreshBtn'); btn.disabled = true;
             try {
                 const ok = await loadDirectory();
-                if (ok) { activeSection = menuItems.some(x => x.id === activeSection) ? activeSection : menuItems[0]?.id; renderMenu(); renderContent(); }
+                if (ok) { activeSection = menuItems.some(x => x.id === activeSection) ? activeSection : menuItems[0]?.id; renderMenu(); renderContent(); renderLiveCards(); scheduleIndicators(); }
                 else showToast('Не удалось обновить справочник. Последние загруженные данные сохранены на странице.', true);
                 refreshLiveData(true);
             } finally { btn.disabled = false; }
@@ -1538,22 +1561,10 @@
         document.getElementById('headerLabelInput').addEventListener('input', event => { if (isEditMode) headerLabel = event.target.value; });
         document.getElementById('headerDescriptionInput').addEventListener('input', event => { if (isEditMode) headerDescription = event.target.value; });
         document.getElementById('adminForm').onsubmit = applyAdministration;
-        document.getElementById('downloadConfigBtn').onclick = () => downloadJSON(appConfig, 'config.json');
-        document.getElementById('importConfigBtn').onclick = () => document.getElementById('configFile').click();
-        document.getElementById('configFile').onchange = async event => {
-            try {
-                const file = event.target.files[0]; if (!file) return;
-                fillAdministration(validateConfig(JSON.parse(await file.text())));
-                document.getElementById('adminMessage').textContent = 'Настройки прочитаны. Нажмите «Применить и скачать конфиг».';
-            } catch (e) { document.getElementById('adminMessage').textContent = e.message; }
-            event.target.value = '';
-        };
-        try { appConfig = validateConfig(await fetchJson('./config.json')); configLoaded = true; }
-        catch (e) { configError = 'config.json недоступен или содержит ошибку. Использованы начальные настройки.'; }
+        const loaded = await loadDirectory();
         renderLiveCards(); refreshLiveData(); scheduleIndicators();
         document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshLiveData(); });
         window.addEventListener('online', () => refreshLiveData(true));
-        const loaded = await loadDirectory();
         document.getElementById('editBtn').disabled = !loaded;
         if (!loaded) {
             document.getElementById('navMenu').innerHTML = '<li class="info-message">Данные недоступны</li>';

@@ -922,6 +922,11 @@
           "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=21&id=5483&lang=ru&um=00000"
         }
       ]
+    },
+    "aiSearch": {
+      "endpoint": "",
+      "model": "",
+      "apiKey": ""
     }
   }
 }

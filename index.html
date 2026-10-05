@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Справочник БиФК</title>
+    <title>Справочник БиФК · Новая версия</title>
     <meta name="description" content="Справочник документов и ссылок БиФК">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23008c95%27/%3E%3Cpath d=%27M8 8h16v16H8zM12 12h8M12 16h8M12 20h5%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27/%3E%3C/svg%3E">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -405,6 +403,394 @@
         
         .hidden { display: none !important; }
         .clearfix::after { content: ""; clear: both; display: table; }
+        /* V2: компактный интерфейс, нейтральный фон, единый акцент RGB(0,140,149). */
+        :root { --accent:#008c95; --ink:#243746; --muted:#71808b; --line:#e3e9ed; }
+        body { background:#f3f5f7; color:var(--ink); }
+        button, input, select { font:inherit; }
+        button:focus-visible, a:focus-visible { outline:3px solid #72c5ca; outline-offset:3px; }
+        [hidden] { display:none !important; }
+        .app-container { max-width:1600px; padding:22px 28px; }
+        .header-premium { border-radius:18px; padding:18px 24px; margin-bottom:22px; border:1px solid var(--line); box-shadow:0 4px 18px #24374605; gap:24px; }
+        .logo-icon { border-radius:13px; width:44px; height:44px; box-shadow:none; background:var(--accent); }
+        .version-label { display:block; font-size:10px; font-weight:700; color:var(--muted); letter-spacing:1.4px; margin-bottom:3px; }
+        .brand-text h1 { font-size:24px; color:var(--ink); background:none; font-weight:750; }
+        .brand-text p { color:var(--muted); font-size:12px; }
+        .search-premium { max-width:480px; }
+        .search-input-premium { border-radius:12px; padding-top:12px; padding-bottom:12px; }
+        .refresh-premium { border-radius:11px; padding:11px 18px; min-height:44px; }
+        .live-panel { margin:0 0 22px; }
+        .live-heading { margin-bottom:10px; }
+        .live-heading h2 { font-size:13px; color:var(--ink); }
+        .live-grid { grid-template-columns:repeat(var(--card-count,3),minmax(0,1fr)); min-width:0; border-color:var(--line); border-radius:14px; }
+        .live-card { padding:12px 16px; min-height:110px; }
+        .live-card-top { font-size:11px; font-weight:600; }
+        .live-quote { font-size:20px; color:var(--ink); font-weight:700; }
+        .live-quote small { font-size:10px; font-weight:500; }
+        .live-detail { font-size:10px; margin-top:5px; color:var(--muted); }
+        .live-detail a { color:inherit; }
+        .live-rate-link { font-size:17px; color:var(--ink); }
+        .live-weather-place { width:120px; flex-basis:120px; }
+        .live-weather-place a { display:grid; gap:2px; color:var(--ink); text-decoration:none; font-size:10px; }
+        .weather-fallback { padding:14px 0; }
+        .dashboard-premium { grid-template-columns:250px minmax(0,1fr); gap:22px; align-items:start; }
+        .sidebar-premium, .content-premium { border-radius:18px; border:1px solid var(--line); box-shadow:0 4px 18px #24374604; }
+        .sidebar-premium { top:18px; overflow:visible; }
+        .sidebar-header { padding:18px 18px 12px; }
+        .sidebar-header h2 { font-size:12px; color:var(--muted); letter-spacing:1px; }
+        .nav-premium { padding:10px; }
+        .nav-premium a { min-height:44px; padding:11px 12px; border-radius:10px; gap:10px; font-size:13px; font-weight:600; }
+        .nav-premium a i { width:18px; font-size:17px; color:#7e909b; flex-shrink:0; }
+        .nav-premium a:hover { transform:none; }
+        .nav-premium a.active { border-left:none; background:#e8f5f6; color:var(--accent); }
+        .sidebar-bottom { border-top:1px solid var(--line); padding:14px 16px 16px; display:grid; gap:5px; }
+        .sidebar-bottom p { font-size:10px; color:var(--muted); padding:0 4px 6px; }
+        .sidebar-tool { background:none; border:none; cursor:pointer; text-align:left; display:flex; align-items:center; gap:9px; color:var(--ink); min-height:42px; padding:9px 4px; font-size:12px; border-radius:8px; }
+        .sidebar-tool:hover { background:#f3f7f8; }
+        .sidebar-tool.edit-active { color:var(--accent); background:#e8f5f6; }
+        .sidebar-tool:disabled { opacity:.5; cursor:default; }
+        .backup-link { font-size:10px; color:var(--muted); padding:6px 4px 0; text-decoration:none; }
+        .content-premium { min-height:550px; padding:26px 28px; min-width:0; }
+        .content-section h2 { font-size:21px; font-weight:650; margin-bottom:18px; display:flex; gap:10px; align-items:center; }
+        .content-section h2 i { color:var(--accent); font-size:19px; }
+        .content-section h3 { font-size:14px; font-weight:650; margin-bottom:14px; }
+        .quick-links-premium { gap:8px; padding-bottom:18px; margin-bottom:22px; border-bottom:1px solid var(--line); }
+        .pill-premium { padding:8px 14px; border-radius:9px; font-size:12px; min-height:40px; }
+        .pill-premium:hover, .pill-premium.active { transform:none; box-shadow:none; }
+        .table-scroll { overflow:auto; max-width:100%; }
+        .table-premium th { padding:11px 14px; font-size:10px; color:var(--muted); border-bottom:1px solid var(--line); background:#f7f9fa; }
+        .table-premium td { padding:13px 14px; font-size:13px; border-color:#edf1f3; }
+        .table-premium td:first-child { width:43%; }
+        .table-premium td:last-child { width:100px; }
+        .badge-premium { padding:4px 9px; font-size:10px; font-weight:500; color:#687d80; background:#f0f5f5; }
+        .link-wrapper { flex-wrap:nowrap; }
+        .link-wrapper a { font-weight:600; }
+        .copy-link-btn { padding:9px; flex-shrink:0; }
+        .edit-input { min-width:180px; font-size:12px; padding:9px; border:1px solid #b6dce0; background:#f6fcfc; border-radius:7px; }
+        .edit-select { min-width:120px; font-size:12px; border:1px solid #b6dce0; background:#f6fcfc; border-radius:7px; }
+        .edit-mode-row, .edit-mode-row:hover { background:#f6fcfc !important; }
+        .menu-actions { position:static; transform:none; display:flex; justify-content:flex-end; padding:0; box-shadow:none; background:none; }
+        .nav-premium li:hover .menu-actions { display:flex; }
+        .edit-panel { gap:10px; padding:14px 20px; }
+        .edit-panel button { padding:11px 22px; border-radius:10px; font-size:13px; }
+        .btn-cancel-premium { background:#425563; }
+        .footer-premium { margin:22px 0 0; padding:18px 0; font-size:10px; }
+        .modal-content-premium { border-radius:18px; }
+        .info-message { padding:32px; border-radius:12px; }
+        .admin-dialog { margin:auto; width:min(760px,calc(100% - 32px)); max-height:90vh; padding:0; color:var(--ink); border:1px solid var(--line); border-radius:18px; box-shadow:0 25px 80px #162b3b35; }
+        .admin-dialog::backdrop { background:#192c3e55; }
+        .admin-header { display:flex; justify-content:space-between; align-items:center; padding:22px 26px 15px; }
+        .admin-header h2 { font-size:24px; }
+        .close-admin { border:none; background:#f3f5f7; border-radius:10px; width:42px; height:42px; font-size:27px; cursor:pointer; color:var(--muted); }
+        .connection-flow { padding:10px 26px; margin:0; font-size:12px; color:#42676a; background:#edf7f7; }
+        #adminForm { padding:20px 26px 24px; }
+        #adminForm fieldset { border:none; padding:0; margin:0 0 22px; }
+        #adminForm legend { font-size:14px; font-weight:700; margin-bottom:12px; }
+        #adminForm label { display:grid; gap:6px; color:#506674; font-size:12px; margin:0 0 10px; }
+        #adminForm input:not([type=checkbox]) { width:100%; min-width:0; padding:10px 12px; border:1px solid #dce4e9; border-radius:8px; color:var(--ink); background:white; font-size:12px; min-height:42px; }
+        #adminForm input:focus { outline:2px solid #abdce0; border-color:var(--accent); }
+        #adminForm .check-label { display:flex; align-items:center; gap:8px; min-height:40px; }
+        #adminForm input[type=checkbox] { accent-color:var(--accent); width:18px; height:18px; }
+        .form-hint { color:var(--muted); font-size:11px; line-height:1.6; }
+        .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+        .admin-footer { display:grid; gap:12px; border-top:1px solid var(--line); padding-top:16px; }
+        .file-actions { display:flex; gap:10px; flex-wrap:wrap; }
+        .secondary-button { padding:10px 14px; border-radius:8px; background:#f5f7f9; border:1px solid var(--line); color:var(--ink); cursor:pointer; min-height:42px; font-size:12px; }
+        .admin-footer .refresh-premium { width:fit-content; font-size:13px; }
+        .admin-message { margin-bottom:14px; color:#526a76; font-size:12px; line-height:1.6; }
+        @media (max-width:1100px) { .app-container { padding:16px; } .dashboard-premium { grid-template-columns:220px minmax(0,1fr); gap:16px; } .content-premium { padding:22px; } .search-premium { max-width:340px; min-width:200px; } .live-quote { font-size:17px; } .live-card { padding:10px; } }
+        @media (max-width:900px) { .dashboard-premium { grid-template-columns:210px minmax(0,1fr); } .sidebar-premium { display:block; position:sticky; } .mobile-toggle { display:none; } .header-premium { gap:16px; } .search-premium { flex-basis:250px; } .live-grid { min-width:700px; } }
+        @media (max-width:700px) { .dashboard-premium { grid-template-columns:minmax(0,1fr); } .sidebar-premium { display:none; position:static; } .sidebar-premium.mobile-open { display:block; } .mobile-toggle { display:flex; border-radius:10px; font-size:12px; } .header-premium { padding:16px; } .logo-area { width:100%; } .search-premium { flex:1; min-width:0; max-width:none; } .content-premium { padding:18px; min-height:380px; } .table-premium { min-width:540px; } .settings-grid { grid-template-columns:1fr; gap:0; } #adminForm { padding:18px; } .admin-header { padding:18px; } .connection-flow { padding:10px 18px; } }
+
+
+        /* Встроенные SVG-иконки: без загрузки CSS и шрифтов с CDN. */
+        .fa-folder { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%207V5h6l2%202h10v13H3Z%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-folder-open { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%208V5h6l2%202h9v3M3%2010h19l-3%2010H2Z%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-chart-line { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%203v17h17M7%2015l4-5%204%203%206-7%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-chart-bar { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2020h18M6%2017V9M12%2017V4M18%2017v-5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-chart-pie { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M11%203a9%209%200%201%200%2010%2010H11Z%20M14%202v8h8a9%209%200%200%200-8-8Z%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-money-bill-wave { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%225%22%20width%3D%2220%22%20height%3D%2214%22%20rx%3D%222%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%223%22%2F%3E%3Cpath%20d%3D%22M5%208h1M18%2016h1%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-database { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cellipse%20cx%3D%2212%22%20cy%3D%225%22%20rx%3D%228%22%20ry%3D%223%22%2F%3E%3Cpath%20d%3D%22M4%205v14c0%204%2016%204%2016%200V5M4%2012c0%204%2016%204%2016%200%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-calculator { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%225%22%20y%3D%222%22%20width%3D%2214%22%20height%3D%2220%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%206h8M8%2010h1M15%2010h1M8%2014h1M15%2014h1M8%2018h1M15%2018h1%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-book { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%203h15v18H7a3%203%200%200%201%200-6h12M4%2018V6a3%203%200%200%201%203-3M8%207h7M8%2011h7%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-users { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%229%22%20cy%3D%227%22%20r%3D%223%22%2F%3E%3Cpath%20d%3D%22M2%2021v-3a7%207%200%200%201%2014%200v3M16%204a3%203%200%200%201%200%206M18%2013a6%206%200%200%201%204%205v3%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-link { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m10%2014%204-4M8%2015l-2%202a4%204%200%200%201-6-6l5-5a4%204%200%200%201%206%200M16%209l2-2a4%204%200%200%201%206%206l-5%205a4%204%200%200%201-6%200%22%20transform%3D%22translate%281%200%29%20scale%28.9%29%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-search { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2210%22%20cy%3D%2210%22%20r%3D%227%22%2F%3E%3Cpath%20d%3D%22m15%2015%206%206%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-cog { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m9%202-1%203-3%201-2%203%202%203-1%203%203%203%203-1%203%202%203-2%203-1-1-3%202-3-2-3-3-1-1-3Z%22%2F%3E%3Ccircle%20cx%3D%2211%22%20cy%3D%2211%22%20r%3D%223%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-copy { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%2213%22%20height%3D%2213%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M16%208V3H3v13h5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-file-contract { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%202h10l4%204v16H5Z%20M14%202v5h5M8%2011h8M8%2015h8M8%2019h5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-cloud-sun { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2020a4%204%200%201%201%201-8%205%205%200%200%201%209%201%203.5%203.5%200%201%201%203%207Z%20M13%208a4%204%200%201%201%207%204M17%201v2M23%205l-2%201M11%204l1%201%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-pen { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m4%2016%2012-12%204%204L8%2020l-5%201Z%20M14%206l4%204%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-percent { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m5%2020%2014-16%22%2F%3E%3Ccircle%20cx%3D%226%22%20cy%3D%226%22%20r%3D%223%22%2F%3E%3Ccircle%20cx%3D%2218%22%20cy%3D%2218%22%20r%3D%223%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-sync-alt { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2010a9%209%200%200%200-15-6L3%207M3%203v4h4M3%2014a9%209%200%200%200%2015%206l3-3M21%2021v-4h-4%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-compass { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Cpath%20d%3D%22m8%2016%202-6%206-2-2%206Z%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-check { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m4%2012%205%205L20%205%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-times { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m5%205%2014%2014M19%205%205%2019%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-plus { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%203v18M3%2012h18%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-arrow-up { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2021V3M5%2010l7-7%207%207%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-arrow-down { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%203v18M5%2014l7%207%207-7%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-trash { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%205h18M7%205l1-3h8l1%203M5%205l1%2017h12l1-17M10%209v8M14%209v8%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-bars { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%205h18M3%2012h18M3%2019h18%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-chevron-down { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m5%208%207%207%207-7%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-tags { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%203h9l11%2011-8%208L2%2010Z%22%2F%3E%3Ccircle%20cx%3D%227%22%20cy%3D%227%22%20r%3D%221%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-gavel { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%203%208%208M4%205l4-4%209%209-4%204ZM10%2010l-7%208M12%2021h10%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-envelope { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%224%22%20width%3D%2220%22%20height%3D%2216%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22m2%205%2010%208%2010-8%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-star { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m12%202%203%206%207%201-5%205%201%208-6-4-6%204%201-8-5-5%207-1Z%22%2F%3E%3C%2Fsvg%3E"); }
+        .fas { display:inline-flex; width:1.15em; height:1.15em; flex-shrink:0; vertical-align:-.12em; font-style:normal; }
+        .fas::before { content:""; display:block; width:100%; height:100%; background:currentColor; -webkit-mask:var(--icon) center / contain no-repeat; mask:var(--icon) center / contain no-repeat; }
+        .fa-coins { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cellipse%20cx%3D%2212%22%20cy%3D%225%22%20rx%3D%228%22%20ry%3D%223%22%2F%3E%3Cpath%20d%3D%22M4%205v14c0%204%2016%204%2016%200V5M4%2012c0%204%2016%204%2016%200%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-signal { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2020h18M6%2017V9M12%2017V4M18%2017v-5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-edit { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m4%2016%2012-12%204%204L8%2020l-5%201Z%20M14%206l4%204%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-cloud-upload-alt { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2020a4%204%200%201%201%201-8%205%205%200%200%201%209%201%203.5%203.5%200%201%201%203%207Z%20M13%208a4%204%200%201%201%207%204M17%201v2M23%205l-2%201M11%204l1%201%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-hand-holding-usd { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%225%22%20width%3D%2220%22%20height%3D%2214%22%20rx%3D%222%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%223%22%2F%3E%3Cpath%20d%3D%22M5%208h1M18%2016h1%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-file-invoice-dollar { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%202h10l4%204v16H5Z%20M14%202v5h5M8%2011h8M8%2015h8M8%2019h5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-clipboard-list { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%202h10l4%204v16H5Z%20M14%202v5h5M8%2011h8M8%2015h8M8%2019h5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-project-diagram { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2020h18M6%2017V9M12%2017V4M18%2017v-5%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-chalkboard-user { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%229%22%20cy%3D%227%22%20r%3D%223%22%2F%3E%3Cpath%20d%3D%22M2%2021v-3a7%207%200%200%201%2014%200v3M16%204a3%203%200%200%201%200%206M18%2013a6%206%200%200%201%204%205v3%22%2F%3E%3C%2Fsvg%3E"); }
+        .fa-heart { --icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m12%202%203%206%207%201-5%205%201%208-6-4-6%204%201-8-5-5%207-1Z%22%2F%3E%3C%2Fsvg%3E"); }
+        /* Дизайн справочника: навигация Fluent, табличная структура Fiori.
+           Только оформление существующих элементов; сценарии и данные не меняются. */
+        :root { --accent:#008c95; --ink:#223544; --muted:#657b88; --line:#e0e8ed; }
+        body { background:#eef3f5; color:var(--ink); -webkit-font-smoothing:antialiased; }
+        .app-container { max-width:1540px; padding:24px 30px; }
+        .header-premium { position:relative; background:#fff; border:1px solid #dce6ec; border-top:3px solid var(--accent); border-radius:12px; padding:23px 28px; margin-bottom:22px; box-shadow:0 4px 18px #203c4d04; gap:26px; }
+        .logo-area { gap:15px; }
+        .logo-icon { width:50px; height:50px; border-radius:12px; background:#008c95; box-shadow:0 5px 12px #008c951a; }
+        .logo-icon i { width:26px; height:26px; }
+        .version-label { font-size:10px; font-weight:650; letter-spacing:1.8px; color:#6e8490; margin-bottom:5px; }
+        .brand-text h1 { font-size:27px; letter-spacing:-.5px; font-weight:700; line-height:1.2; color:#1e3443; }
+        .brand-text p { font-size:12px; color:#6c7f8b; margin-top:6px; }
+        .search-premium { max-width:490px; min-width:220px; }
+        .search-premium i { color:#69838f; left:17px; font-size:17px; }
+        .search-input-premium { height:48px; font-size:14px; padding-left:44px; border:1px solid #dbe5eb; border-radius:8px; background:#f7f9fb; color:var(--ink); box-shadow:none; }
+        .search-input-premium::placeholder { color:#7b8e9b; }
+        .search-input-premium:focus { border-color:var(--accent); box-shadow:0 0 0 3px #008c9514; }
+        .refresh-premium { font-size:13px; min-height:46px; border-radius:8px; padding:12px 18px; font-weight:600; gap:9px; box-shadow:none; }
+        .refresh-premium:hover { transform:none; background:#00767e; }
+
+        /* Компактная строка показателей: три самостоятельных карточки. */
+        .live-panel { margin:0 0 26px; }
+        .live-heading { margin:0 2px 11px; }
+        .live-heading h2 { font-size:12px; letter-spacing:.2px; color:#405b6b; font-weight:650; display:flex; align-items:center; gap:7px; }
+        .live-update { color:#798c98; font-size:10px; }
+        .live-grid { background:none; border:none; border-radius:0; gap:14px; grid-template-columns:repeat(var(--card-count,3),minmax(0,1fr)); }
+        .live-card { background:#fff; min-height:124px; padding:13px 18px; border:1px solid #dce6eb; border-radius:10px; position:relative; }
+        .live-card + .live-card { border-left:1px solid #dce6eb; }
+        .live-card-top { font-size:11px; color:#657e8d; font-weight:600; margin-bottom:7px; }
+        .live-card-top i { width:14px; height:14px; }
+        .live-quote { font-size:22px; color:#203b4b; font-weight:700; letter-spacing:-.4px; line-height:1.3; }
+        .live-quote small { color:#6e8492; font-size:10px; letter-spacing:.8px; font-weight:600; }
+        .live-quote + .live-quote { border-left-color:#e8eef2; }
+        .live-detail { color:#7b8e99; font-size:10px; line-height:1.5; margin-top:7px; }
+        .live-rate-link { font-size:16px; font-weight:650; color:#2a4758; }
+        .live-weather-place a { gap:3px; font-size:11px; color:#516c7c; }
+        .live-weather-place img { border-radius:5px; filter:saturate(.7); }
+
+        /* Единая рабочая поверхность: навигация слева, документы справа. */
+        .dashboard-premium { grid-template-columns:270px minmax(0,1fr); gap:0; border:1px solid #dce6ec; border-radius:12px; background:#fff; align-items:stretch; box-shadow:0 5px 20px #23404c04; }
+        .sidebar-premium { background:#f8fafb; border:0; border-right:1px solid #e2e9ed; border-radius:12px 0 0 12px; box-shadow:none; position:static; height:auto; display:flex; flex-direction:column; min-width:0; }
+        .sidebar-header { padding:25px 23px 18px; border-bottom:0; }
+        .sidebar-header h2 { color:#6f8591; font-size:10px; font-weight:700; letter-spacing:1.8px; display:flex; align-items:center; gap:8px; }
+        .sidebar-header h2 i { width:14px; height:14px; color:#78929e; }
+        .nav-premium { padding:0 12px 16px; }
+        .nav-premium li { margin:0 0 5px; }
+        .nav-premium a { padding:11px 14px; min-height:46px; color:#506b7b; font-size:13px; line-height:1.4; font-weight:550; border-radius:8px; gap:12px; border:1px solid transparent; transition:background-color .16s,color .16s; }
+        .nav-premium a i { width:18px; height:18px; color:#78919f; flex-shrink:0; }
+        .nav-premium a:hover { background:#edf2f5; color:#1f4858; transform:none; }
+        .nav-premium a.active { background:#008c95; color:#fff; border:1px solid #008c95; box-shadow:0 3px 8px #008c9518; }
+        .nav-premium a.active i { color:#fff; }
+        .sidebar-bottom { margin-top:auto; padding:18px 22px 22px; background:#f5f8fa; border-top:1px solid #e2e9ed; border-radius:0 0 0 12px; gap:5px; }
+        .sidebar-bottom p { color:#698390; font-size:10px; padding:0 0 9px; display:flex; align-items:center; gap:6px; }
+        .sidebar-tool { font-size:12px; color:#4c6979; padding:8px 0; gap:10px; min-height:42px; }
+        .sidebar-tool i { width:16px; height:16px; color:#73909d; }
+        .sidebar-tool:hover { background:#eaf1f4; padding-left:7px; }
+        .sidebar-tool.edit-active { color:var(--accent); background:#e2f2f3; padding-left:7px; }
+        .backup-link { color:#8496a0; font-size:10px; padding:9px 0 0; }
+
+        .content-premium { padding:34px 34px 30px; background:#fff; border:0; border-radius:0 12px 12px 0; box-shadow:none; min-height:650px; }
+        .content-section { animation:none; }
+        .content-section h2 { position:relative; padding-top:23px; margin-bottom:25px; font-size:26px; line-height:1.3; letter-spacing:-.45px; color:#243d4e; font-weight:650; gap:13px; }
+        .content-section h2::before { content:'БИБЛИОТЕКА ДОКУМЕНТОВ'; position:absolute; top:0; left:0; font-size:10px; line-height:1; font-weight:650; letter-spacing:1.7px; color:#81939f; }
+        .content-section h2 > i { width:36px; height:36px; padding:8px; background:#e6f3f4; border-radius:9px; color:var(--accent); }
+        .quick-links-premium { gap:22px; margin-bottom:26px; padding:0; border-bottom:1px solid #e2e9ee; align-items:stretch; }
+        .pill-premium { position:relative; border:0; border-radius:0; background:none; min-height:45px; padding:8px 2px 14px; color:#708591; font-size:13px; font-weight:550; gap:8px; box-shadow:none; }
+        .pill-premium i { width:16px; height:16px; color:#91a3ad; }
+        .pill-premium:hover, .pill-premium.active { background:none; border:0; color:#00767f; transform:none; box-shadow:none; }
+        .pill-premium:hover i, .pill-premium.active i { color:#008c95; }
+        .pill-premium.active::after { content:''; position:absolute; left:0; right:0; bottom:-1px; height:3px; border-radius:3px 3px 0 0; background:#008c95; }
+        .content-section h3 { color:#426071; font-size:14px; font-weight:600; margin-bottom:14px; align-items:center; }
+        .content-section h3 i { color:#7895a1; width:15px; height:15px; }
+        .table-scroll { border:1px solid #e2e9ee; border-radius:9px; background:#fff; }
+        .table-premium { width:100%; border-collapse:separate; border-spacing:0; }
+        .table-premium th { background:#f5f8fa; color:#76909e; font-size:10px; font-weight:650; letter-spacing:.8px; padding:13px 18px; border-bottom:1px solid #e2e9ee; white-space:nowrap; }
+        .table-premium th:first-child { padding-left:22px; }
+        .table-premium td { padding:12px 18px; min-height:60px; border-bottom:1px solid #edf2f5; font-size:13px; color:#657d8c; line-height:1.5; vertical-align:middle; }
+        .table-premium td:first-child { padding-left:22px; width:43%; }
+        .table-premium td:last-child { width:106px; padding-right:22px; }
+        .table-premium tr:last-child td { border-bottom:0; }
+        .table-premium tr:hover td { background:#f7fbfc; }
+        .link-wrapper { gap:9px; flex-wrap:nowrap; }
+        .link-wrapper a { color:#2e5668; font-size:13px; font-weight:600; line-height:1.4; gap:11px; }
+        .link-wrapper a:hover { color:#007e87; text-decoration:none; }
+        .link-wrapper a > i { width:31px; height:31px; padding:8px; background:#f0f6f8; color:#7296a5; border:1px solid #e5eff2; border-radius:7px; }
+        .copy-link-btn { width:38px; height:38px; display:inline-flex; align-items:center; justify-content:center; padding:10px; color:#9ab0bc; border-radius:7px; flex-shrink:0; }
+        .copy-link-btn:hover { color:#007a83; background:#e8f4f5; transform:none; }
+        .badge-premium { background:#edf5f6; border:1px solid #e1eef0; color:#64848b; border-radius:5px; padding:4px 8px; font-size:10px; font-weight:500; white-space:nowrap; }
+        .table-premium:has(.edit-input) { min-width:930px; }
+        .table-premium:has(.edit-input) td:first-child { width:auto; }
+        .table-premium:has(.edit-input) td:last-child { width:auto; padding-right:12px; }
+        .edit-input, .edit-select { border-radius:6px; background:#f8fcfc; border-color:#c7e1e4; padding:10px; font-size:12px; }
+        .row-action-icon { min-width:36px; min-height:38px; padding:9px; border-radius:6px; }
+        .menu-actions { gap:6px; padding:0 9px 5px; justify-content:flex-end; }
+        .menu-actions button { min-height:34px; padding:6px 10px; border-radius:6px; font-size:10px; }
+        .subsection-actions { gap:7px; }
+        .subsection-action-btn { min-height:34px; padding:7px 12px; border-radius:6px; }
+
+        .search-results { gap:10px; margin-top:22px; }
+        .search-result { border:1px solid #e2e9ee; border-radius:9px; background:#fff; padding:18px 20px; gap:6px; }
+        .search-result strong { color:#2e5668; font-size:15px; }
+        .search-result small { color:#008c95; font-size:11px; }
+        .search-result span { color:#6b8594; font-size:12px; }
+        .search-result:hover { background:#f5fafb; }
+        .footer-premium { border-top:0; margin-top:14px; padding:14px 0; color:#8a9ca8; font-size:10px; }
+        .edit-panel { background:#233e4f; border-top:3px solid #008c95; box-shadow:0 -8px 28px #203e5012; }
+        .modal-content-premium { border:1px solid #dce6ec; border-radius:12px; }
+        .admin-dialog { border-radius:12px; border:1px solid #dce6ec; }
+        .admin-header { border-top:3px solid #008c95; padding:24px 28px 18px; }
+        .admin-header h2 { color:#243d4e; font-size:26px; letter-spacing:-.4px; }
+        .connection-flow { background:#eff7f8; color:#527b83; border-top:1px solid #e0eeef; border-bottom:1px solid #e0eeef; }
+        #adminForm { padding:24px 28px 28px; }
+        #adminForm fieldset { margin-bottom:24px; padding-bottom:20px; border-bottom:1px solid #e7edf1; }
+        #adminForm legend { color:#314f62; }
+        .admin-footer { border-top:0; padding-top:0; }
+        .admin-footer .refresh-premium { width:100%; justify-content:center; }
+        .admin-message { background:#f5f8fa; border-radius:7px; padding:10px 12px; }
+        .admin-message:empty { display:none; }
+
+        @media (max-width:1100px) {
+            .app-container { padding:18px; }
+            .header-premium { padding:20px; gap:18px; }
+            .brand-text h1 { font-size:24px; }
+            .dashboard-premium { grid-template-columns:240px minmax(0,1fr); gap:0; }
+            .content-premium { padding:28px 24px; }
+            .content-section h2 { font-size:23px; }
+            .table-premium td { padding:12px 13px; font-size:12px; }
+            .table-premium td:first-child { padding-left:16px; }
+            .table-premium td:last-child { padding-right:16px; }
+            .link-wrapper a { font-size:12px; }
+            .live-card { padding:12px; }
+            .live-quote { font-size:20px; }
+        }
+        @media (max-width:900px) {
+            .dashboard-premium { grid-template-columns:215px minmax(0,1fr); }
+            .sidebar-premium { position:static; display:flex; }
+            .sidebar-header { padding:22px 18px 16px; }
+            .nav-premium { padding:0 8px 14px; }
+            .nav-premium a { padding:11px 10px; font-size:12px; gap:9px; }
+            .sidebar-bottom { padding:16px; }
+            .content-premium { padding:24px 20px; }
+            .live-grid { min-width:740px; }
+            .quick-links-premium { gap:15px; }
+            .pill-premium { font-size:12px; }
+            .table-premium { min-width:540px; }
+        }
+        @media (max-width:700px) {
+            .app-container { padding:12px; }
+            .header-premium { padding:18px; gap:14px; }
+            .logo-area { width:100%; }
+            .logo-icon { width:42px; height:42px; }
+            .brand-text h1 { font-size:23px; }
+            .brand-text p { font-size:11px; }
+            .search-premium { flex:1; min-width:0; max-width:none; }
+            .refresh-premium { padding:11px 14px; }
+            .live-update { position:static; }
+            .live-grid { gap:10px; }
+            .live-panel { margin-bottom:18px; }
+            .dashboard-premium { grid-template-columns:minmax(0,1fr); }
+            .sidebar-premium { display:none; border-radius:12px 12px 0 0; border-right:0; border-bottom:1px solid #e2e9ed; }
+            .sidebar-premium.mobile-open { display:flex; margin-bottom:0; }
+            .sidebar-bottom { border-radius:0; }
+            .mobile-toggle { min-height:44px; margin-bottom:12px; padding:12px 16px; border-radius:8px; font-size:12px; }
+            .content-premium { border-radius:12px; min-height:440px; padding:24px 18px; }
+            .content-section h2 { font-size:22px; gap:10px; }
+            .content-section h2 > i { width:32px; height:32px; padding:7px; }
+            .quick-links-premium { gap:15px; }
+            .admin-header { padding:20px; }
+            #adminForm { padding:20px; }
+        }
+        @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
+
+
+        /* Уточнения оформления и режима редактирования. */
+        .header-premium { margin-bottom:0; }
+        .live-heading { margin:0; padding:16px 2px; }
+        .brand-line { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+        .sibur-wordmark { display:block; width:auto; flex:none; color:var(--accent); font-family:"SiburWordmark",Arial,sans-serif; font-size:27px; font-weight:400; font-style:normal; letter-spacing:0; line-height:1; }
+        .brand-divider { width:1px; height:26px; background:#dbe6e9; }
+        #departmentName { font-size:23px; font-weight:650; letter-spacing:-.4px; }
+        .department-input { font:inherit; font-size:21px; color:var(--ink); min-width:150px; width:240px; max-width:100%; padding:6px 9px; border:1px solid #8dc6c8; border-radius:6px; background:#f4fbfb; }
+        .department-input:focus { outline:2px solid #008c9533; outline-offset:2px; }
+        [hidden] { display:none !important; }
+        .logo-area { flex-shrink:0; }
+        .dashboard-premium { transition:grid-template-columns .32s ease; }
+        .dashboard-premium.editing-directory { grid-template-columns:470px minmax(0,1fr); }
+        .editing-directory .nav-premium li:not(.info-message) { display:flex; align-items:center; gap:4px; }
+        .editing-directory .nav-premium a { flex:1; min-width:0; padding:11px 10px; gap:9px; }
+        .editing-directory .nav-premium a span { white-space:nowrap; }
+        .editing-directory .menu-actions { flex:none; padding:0 4px 0 0; gap:4px; white-space:nowrap; }
+        .editing-directory .menu-actions button { padding:6px 7px; }
+        .editing-directory .sidebar-header { flex-wrap:nowrap; }
+        .weather-card { background:linear-gradient(145deg,#fff 55%,#f0f9f9); }
+        .live-weather-place { background:#f8fcfc; border:1px solid #e0eeee; border-radius:7px; padding:5px 8px; }
+        .live-weather-place img { border-radius:4px; filter:brightness(1.45); mix-blend-mode:multiply; }
+        @media (max-width:1100px) {
+            .dashboard-premium.editing-directory { grid-template-columns:440px minmax(0,1fr); }
+            .editing-directory .nav-premium a { font-size:12px; }
+            .editing-directory .menu-actions button { padding:6px; }
+            .logo-area { flex-shrink:1; }
+        }
+        @media (max-width:900px) {
+            .header-premium { flex-wrap:wrap; }
+            .logo-area { width:100%; }
+            .dashboard-premium.editing-directory { grid-template-columns:420px minmax(0,1fr); }
+            .editing-directory .nav-premium a { font-size:11.5px; }
+        }
+        @media (max-width:700px) {
+            .dashboard-premium.editing-directory { grid-template-columns:minmax(0,1fr); }
+            .editing-directory .nav-premium { overflow-x:auto; }
+            .editing-directory .nav-premium li:not(.info-message) { min-width:390px; }
+            .brand-line { gap:10px; }
+            .sibur-wordmark { font-size:23px; }
+            #departmentName { font-size:20px; }
+            .department-input { font-size:18px; width:185px; }
+        }
+        @media (prefers-reduced-motion:reduce) { .dashboard-premium { transition:none; } }
+
+
+        @font-face { font-family:"SiburWordmark"; src:url("data:font/woff;base64,d09GRgABAAAAAASoAAoAAAAABYwAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABZAAAACwAAABgTtdLFmNtYXAAAAGoAAAARAAAAFAMgwipZ2x5ZgAAAfwAAAHWAAACCGpDwTVoZWFkAAAA9AAAADYAAAA2MPC9rmhoZWEAAAEsAAAAHgAAACQIAgQyaG10eAAAAZAAAAAXAAAAGBaoAABsb2NhAAAB7AAAAA4AAAAOAe0BUG1heHAAAAFMAAAAFwAAACAACQAzbmFtZQAAA9QAAAChAAABKR5ic4Vwb3N0AAAEeAAAAC0AAABWJB8YVQABAAAAAQAA8jfL3l8PPPUAAQPoAAAAAObjPHMAAAAA5uM8c//+AAAEGAPoAAAAAwACAAAAAAAAeJxjYGRgYH7BAAQsugwM//+xSDAwMqACNgBOewM+AAB4nGNgZGBgYGMwZGBiAAEIiQQABfoAPQB4nGNgZj7OOIGBlYGFgSBgQuHZAwEDA4sgizLzCxAfQsIAmKfAwAAA38EFg3icY/zCwMCiBMS6UKwNxLwMDAAfeAG+AHicY2BgYGJgYGAGYhEgyQimWRhsgDQXAwdQjolFkEWCRZFF+f9/BgYwWwHE/v3p9ysGht8PwToYGNjAJCsDIwA23Qs4AAAAAABGAHgAowDYAQQAAHicPZG/b9NAFMfv3dl3dg2G2tQxaUl7MQkOqWhcN75EgURpoAXRoYgmaWHghwRSSTIiZuAvgAWQkJAYy8QfwMCCGLsg/gCWqKwMGRLDJW25N93p9D6f930I/sYIKSrpowJCUKgqIspmPS/gaUqZSRl1nJAvR6KqBpx5dsg46RP5rABORPlRXMqXUwSYYZ40NCDJyMdf16oUVPmFxC27u9S14BMWufrNtWXmVBbTK3Ns68W7ty9b+nw1d61slG5srPo/sPVN4pE8iitdUvJiqoHNiWRP4ITbEyXcJomF9DlLxK0dqPtBkinO/MLcdB72tuPPmUtnKXltrD/cvVPGdOgms5ZR29rZKMQV0k/5pxHC/xkEuQhlPBFeEFwcg8bjexznek7vro6dmWGtTW4nV7IKZlM6w2qjET/dH+w/+j10E+FFq9l5cms62jwyT8iuaWlOPJsXTPUwOyZrnB8LOO75XT9uKpquaxTwjFiCV/ro4AzZzF+nwE6YMkQat0g/LsH3YrvTe9CYmq0tPj4oX9Gbz99/fPNs/cj/1LE/iJCNU7IPd1ScLA9+Oh1ne/SlDXuz8EFcpUDHRMIvn/+D1cEAfg1dKFbq2ur93XsNLSNS6B/kFGhWAAB4nHWKzQqCUBBGjz8YBbWLIFr4ABG4bO8TKOHaP0RUhIsu3PQOvXHj7UYWNIuZM993gA13LOax2Ok9j81Kvhc7HNgbdheOx5aztJa7luTE1bAtzs2ww4XcsLtwPI484joblZ/0quhS1URlNbap0uE7C2tV5kOvpuArJqYmY0Thk9DLLehI5TZElFTStfr/mL9eKI0SN2fQzUTw334C+2gxWgAAAHicY2BiwA/YGBgYmRiZGVkYWRnZ2EvzMg1MjAwhtKEFlIbyjYyhtAEA4TkKqgAAAA==") format("woff"); font-weight:400; font-style:normal; font-display:swap; }
+        /* Компактные показатели: одинаковые отступы вокруг заголовка. */
+        .live-heading { padding:8px 2px; }
+        .live-panel { margin-bottom:14px; }
+        .live-grid { gap:10px; }
+        .live-card { min-height:96px; padding:8px 14px; }
+        .live-card-top { margin-bottom:4px; line-height:1.25; }
+        .live-quote { font-size:20px; line-height:1.2; }
+        .live-quote small { line-height:1.2; }
+        .live-detail { margin-top:4px; line-height:1.3; }
+        .live-weather-place { width:110px; flex-basis:110px; padding:2px 4px; }
+        .live-weather-place a { gap:2px; font-size:10px; line-height:1.2; }
+        .live-weather-place img { width:100px; height:50px; }
+        .app-container { --section-gap:12px; }
+        .live-panel { margin:var(--section-gap) 0; }
+        .indicator-status { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+        @media (max-width:1100px) { .app-container { --section-gap:9px; } }
+        @media (max-width:700px) { .app-container { --section-gap:6px; } }
+
+
+        .brand-edit-field { display:block; width:100%; min-width:0; border:1px solid #8dc6c8; border-radius:5px; padding:4px 8px; background:#f4fbfb; color:var(--ink); font-family:inherit; }
+        .brand-edit-field:focus { outline:2px solid #008c9533; outline-offset:2px; }
+        .header-label-input { font-size:10px; letter-spacing:1px; margin-bottom:5px; }
+        .header-description-input { font-size:12px; margin-top:6px; }
+
     </style>
 </head>
 <body>
@@ -413,20 +799,20 @@
     <div class="header-premium">
         <div class="logo-area">
             <div class="logo-icon"><i class="fas fa-chart-line" style="color: white;"></i></div>
-            <div class="brand-text">
-                <h1>БиФК · НКНХ</h1>
-                <p>Бюджетный и финансовый контроль | СЦ & ПЭ</p>
+            <div class="brand-text"><span id="headerLabel" class="version-label">СПРАВОЧНИК · НОВАЯ ВЕРСИЯ</span><input id="headerLabelInput" class="brand-edit-field header-label-input" aria-label="Верхняя подпись в шапке" maxlength="120" placeholder="Верхняя подпись" hidden>
+                <h1 class="brand-line"><span class="sibur-wordmark">СИБУР</span><span class="brand-divider" aria-hidden="true"></span><span id="departmentName">БиФК НКНХ</span><input id="departmentInput" class="department-input" aria-label="Название подразделения после СИБУР" maxlength="80" value="БиФК НКНХ" hidden></h1>
+                <p id="headerDescription">Бюджетный и финансовый контроль | СЦ &amp; ПЭ</p><input id="headerDescriptionInput" class="brand-edit-field header-description-input" aria-label="Расшифровка названия в шапке" maxlength="240" placeholder="Расшифровка названия" hidden>
             </div>
         </div>
         <div class="search-premium">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" class="search-input-premium" placeholder="Поиск по документам и ссылкам...">
+            <input aria-label="Поиск по справочнику" type="search" id="searchInput" class="search-input-premium" placeholder="Поиск по документам и ссылкам...">
         </div>
         <button id="refreshBtn" class="refresh-premium"><i class="fas fa-sync-alt"></i> Обновить</button>
     </div>
 
     <section class="live-panel" aria-label="Актуальные показатели">
-        <div class="live-heading"><h2><i class="fas fa-signal"></i> Актуальные показатели</h2><span class="live-update" id="liveUpdated" role="status">Загрузка данных…</span></div>
+        <span class="indicator-status" id="liveUpdated" role="status">Загрузка данных…</span>
         <div class="live-scroll"><div class="live-grid" id="liveGrid"></div></div>
     </section>
     
@@ -439,6 +825,7 @@
                 <button id="addSectionBtn" class="add-section-btn hidden"><i class="fas fa-plus"></i> Добавить</button>
             </div>
             <ul class="nav-premium" id="navMenu"><li class="loading">Загрузка...</li></ul>
+            <div class="sidebar-bottom"><p id="connectionStatus" role="status">Подключение…</p><button id="editBtn" class="sidebar-tool"><i class="fas fa-pen"></i> Редактировать справочник</button><button id="adminBtn" class="sidebar-tool"><i class="fas fa-cog"></i> Администрирование</button><a href="../" class="backup-link">Открыть резервную версию ↗</a></div>
         </aside>
         
         <main class="content-premium" id="contentArea"><div class="loading">Загрузка данных...</div></main>
@@ -447,7 +834,6 @@
     <div class="footer-premium"><p>БиФК НКНХ · Система финансового контроля и бюджетирования</p></div>
 </div>
 
-<button id="editBtn" class="edit-trigger"><i class="fas fa-pen"></i> Режим редактирования</button>
 
 <div id="editPanel" class="edit-panel">
     <button id="saveBtn" class="btn-save-premium"><i class="fas fa-check"></i> Сохранить изменения</button>
@@ -488,34 +874,180 @@
     </div>
 </div>
 
+<dialog id="adminDialog" class="admin-dialog" aria-labelledby="adminTitle">
+    <header class="admin-header"><div><span class="version-label">НАСТРОЙКИ ПРИЛОЖЕНИЯ</span><h2 id="adminTitle">Администрирование</h2></div><button id="adminClose" class="close-admin" aria-label="Закрыть администрирование">×</button></header>
+    <p id="adminConnection" class="connection-flow"></p>
+    <form id="adminForm">
+        <fieldset><legend>Источник справочника</legend><label>Путь или ссылка на bifk-data.txt<input name="dataUrl" required autocomplete="off"></label><p class="form-hint">Один файл содержит справочник и настройки. Если меняете его расположение, укажите эту же ссылку в DATA_FILE_URL внутри HTML для следующих запусков.</p></fieldset>
+        <fieldset><legend>Актуальные показатели</legend><div class="settings-grid"><label>Обновление, минут<input name="refreshMinutes" type="number" min="15" max="1440" step="1" required></label><label class="check-label"><input type="checkbox" name="currencyEnabled">Показывать курсы валют</label></div><label>Ссылка на источник курсов<input name="currencySource" type="url" required></label><p class="form-hint">USD, EUR и CNY загружаются с cbr-xml-daily.ru. Дата публикации отображается под курсами.</p></fieldset>
+        <fieldset><legend>Ставка рефинансирования</legend><label class="check-label"><input type="checkbox" name="rateEnabled">Показывать блок ставки</label><label>Официальный источник<input name="rateSource" type="url" required></label><div class="settings-grid"><label>Проверенное значение, %<input name="rateValue" type="text" inputmode="decimal" placeholder="Не задано"></label><label>Дата проверки<input name="rateDate" type="date"></label></div><p class="form-hint">Оставьте значение пустым для перехода на сайт ЦБ. Значение с датой проверки обновляется вручную; ссылка ведёт к актуальной таблице Банка России.</p></fieldset>
+        <fieldset><legend>Погода</legend><label class="check-label"><input type="checkbox" name="weatherEnabled">Показывать прогнозы</label><div class="settings-grid"><div><label>Первый город<input name="city0" required></label><label>Ссылка на прогноз<input name="weatherSource0" type="url" required></label><label>Ссылка на изображение<input name="weatherImage0" type="url" required></label></div><div><label>Второй город<input name="city1" required></label><label>Ссылка на прогноз<input name="weatherSource1" type="url" required></label><label>Ссылка на изображение<input name="weatherImage1" type="url" required></label></div></div><p class="form-hint">Внешние показатели используют HTTPS-источники на доменах .ru.</p></fieldset>
+        <p id="adminMessage" role="status" class="admin-message"></p>
+        <footer class="admin-footer"><button type="submit" class="refresh-premium">Сохранить изменения</button><p class="form-hint">При сохранении изменений скачивается один bifk-data.txt с настройками и справочником. Замените этот файл на SharePoint вручную.</p></footer>
+    </form>
+</dialog>
+
 <script>
-    // ========== КОНФИГУРАЦИЯ ==========
-    const DATA_PATH = './bifk-data.txt';
-    // Только источники .ru. Данные справочника и экспорт в загрузки от этих запросов не зависят.
+    // 2. ПРОВЕРКА ДАННЫХ И КОНФИГА — до изменения текущего состояния.
+    function moscowTime() {
+        return new Intl.DateTimeFormat('ru-RU', {timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit'}).format(new Date()) + ' МСК';
+    }
+    function validateData(data) {
+        if (!data || !Array.isArray(data.menuItems) || !data.subsections || typeof data.subsections !== 'object' || Array.isArray(data.subsections) || !data.contentData || typeof data.contentData !== 'object' || Array.isArray(data.contentData)) throw new Error('В bifk-data.txt нужны menuItems, subsections и contentData.');
+        if (data.branding !== undefined && (!data.branding || typeof data.branding.department !== 'string' || !data.branding.department.trim() || data.branding.department.length > 80)) throw new Error('Название подразделения должно содержать от 1 до 80 символов.');
+        for (const [field, limit] of [['label', 120], ['description', 240]]) {
+            if (data.branding?.[field] !== undefined && (typeof data.branding[field] !== 'string' || data.branding[field].length > limit)) throw new Error(`Проверьте текст шапки: ${field === 'label' ? 'верхняя подпись' : 'расшифровка'}.`);
+        }
+        const sections = new Set();
+        const subs = new Set();
+        for (const section of data.menuItems) {
+            if (!section || typeof section.id !== 'string' || !section.id || typeof section.name !== 'string' || !section.name.trim() || sections.has(section.id)) throw new Error('Проверьте названия и уникальные идентификаторы разделов.');
+            sections.add(section.id);
+            const list = data.subsections[section.id] ?? [];
+            if (!Array.isArray(list)) throw new Error('Подразделы должны быть массивами.');
+            for (const sub of list) {
+                if (!sub || typeof sub.id !== 'string' || !sub.id || typeof sub.name !== 'string' || !sub.name.trim() || subs.has(sub.id)) throw new Error('Проверьте названия и уникальные идентификаторы подразделов.');
+                subs.add(sub.id);
+            }
+        }
+        for (const rows of Object.values(data.contentData)) {
+            if (!Array.isArray(rows) || rows.some(row => !Array.isArray(row) || row.length !== 4 || row.some(field => typeof field !== 'string'))) throw new Error('Каждая запись должна содержать четыре текстовых поля: название, ссылку, описание и статус.');
+        }
+    }
+
+    function ruSource(value, label) {
+        try {
+            const url = new URL(value);
+            if (url.protocol !== 'https:' || !url.hostname.endsWith('.ru') || url.username || url.password) throw new Error();
+            return url.href;
+        } catch (_) { throw new Error(`${label}: укажите HTTPS-ссылку на домен .ru.`); }
+    }
+
+    function validateConfig(raw) {
+        if (!raw || typeof raw !== 'object' || Array.isArray(raw) || raw.schemaVersion !== 1) throw new Error('В настройках bifk-data.txt нужен schemaVersion: 1.');
+        const result = structuredClone(DEFAULT_CONFIG);
+        if (typeof raw.dataUrl !== 'string' || !raw.dataUrl.trim()) throw new Error('Укажите путь к bifk-data.txt.');
+        const source = new URL(raw.dataUrl, location.href);
+        if (source.protocol !== 'https:' || source.username || source.password) throw new Error('Для справочника нужен относительный путь или HTTPS-ссылка.');
+        result.dataUrl = raw.dataUrl.trim();
+        const interval = Number(raw.refreshMinutes);
+        if (!Number.isInteger(interval) || interval < 15 || interval > 1440) throw new Error('Интервал обновления: целое число от 15 до 1440 минут.');
+        result.refreshMinutes = interval;
+        for (const key of ['currency', 'rate', 'weather']) {
+            if (!raw[key] || typeof raw[key].enabled !== 'boolean') throw new Error('Проверьте включение блоков показателей.');
+            result[key].enabled = raw[key].enabled;
+        }
+        result.currency.sourceUrl = ruSource(raw.currency.sourceUrl, 'Источник курсов');
+        result.rate.sourceUrl = ruSource(raw.rate.sourceUrl, 'Источник ставки');
+        if (raw.rate.value !== null && raw.rate.value !== '') {
+            const value = Number(String(raw.rate.value).replace(',', '.'));
+            const day = String(raw.rate.verifiedOn || '');
+            const today = new Intl.DateTimeFormat('sv-SE', {timeZone: 'Europe/Moscow'}).format(new Date());
+            if (!Number.isFinite(value) || value <= 0 || value >= 100) throw new Error('Ставка должна быть больше 0 и меньше 100 %.');
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || Number.isNaN(Date.parse(day)) || new Date(day).toISOString().slice(0, 10) !== day || day > today) throw new Error('Укажите дату проверки ставки, не позднее сегодняшней.');
+            result.rate.value = value; result.rate.verifiedOn = day;
+        } else { result.rate.value = null; result.rate.verifiedOn = ''; }
+        if (!Array.isArray(raw.weather.places) || raw.weather.places.length !== 2) throw new Error('Укажите два города для прогноза.');
+        result.weather.places = raw.weather.places.map(place => {
+            if (typeof place?.name !== 'string' || !place.name.trim()) throw new Error('Укажите названия городов.');
+            return {name: place.name.trim(), sourceUrl: ruSource(place.sourceUrl, 'Ссылка на прогноз'), imageUrl: ruSource(place.imageUrl, 'Изображение прогноза')};
+        });
+        return result;
+    }
+
+    function updateConnection(error = '') {
+        const el = document.getElementById('connectionStatus');
+        el.textContent = error ? 'Не удалось обновить данные' : dataLoaded ? `Подключено · ${menuItems.length} разделов` : 'Ожидание данных';
+        el.title = error || appConfig.dataUrl;
+    }
+
+    function fillAdministration(config) {
+        const form = document.getElementById('adminForm');
+        form.elements.dataUrl.value = config.dataUrl;
+        form.elements.refreshMinutes.value = config.refreshMinutes;
+        form.elements.currencyEnabled.checked = config.currency.enabled;
+        form.elements.currencySource.value = config.currency.sourceUrl;
+        form.elements.rateEnabled.checked = config.rate.enabled;
+        form.elements.rateSource.value = config.rate.sourceUrl;
+        form.elements.rateValue.value = config.rate.value ?? '';
+        form.elements.rateDate.value = config.rate.verifiedOn;
+        form.elements.weatherEnabled.checked = config.weather.enabled;
+        config.weather.places.forEach((place, i) => {
+            form.elements['city' + i].value = place.name;
+            form.elements['weatherSource' + i].value = place.sourceUrl;
+            form.elements['weatherImage' + i].value = place.imageUrl;
+        });
+    }
+
+    function openAdministration() {
+        if (isEditMode) { showToast('Завершите редактирование справочника перед сменой источника.', true); return; }
+        fillAdministration(appConfig);
+        document.getElementById('adminMessage').textContent = configError;
+        const records = Object.values(contentData).reduce((n, rows) => n + rows.length, 0);
+        document.getElementById('adminConnection').textContent = `${dataLoaded ? `bifk-data.txt подключён: ${menuItems.length} разделов, ${records} записей` : 'Файл не подключён'} · ${configLoaded ? 'Настройки из этого же файла' : 'Начальные настройки'}`;
+        document.getElementById('adminDialog').showModal();
+    }
+
+    async function applyAdministration(event) {
+        event.preventDefault();
+        if (configBusy || liveRefreshPending) { document.getElementById('adminMessage').textContent = 'Дождитесь завершения обновления показателей и повторите.'; return; }
+        const form = event.currentTarget;
+        const previous = appConfig;
+        const previousPayload = JSON.stringify(directoryPayload());
+        const message = document.getElementById('adminMessage');
+        try {
+            const draft = validateConfig({
+                schemaVersion: 1,
+                dataUrl: form.elements.dataUrl.value,
+                refreshMinutes: form.elements.refreshMinutes.value,
+                currency: {enabled: form.elements.currencyEnabled.checked, sourceUrl: form.elements.currencySource.value},
+                rate: {enabled: form.elements.rateEnabled.checked, sourceUrl: form.elements.rateSource.value, value: form.elements.rateValue.value, verifiedOn: form.elements.rateDate.value},
+                weather: {enabled: form.elements.weatherEnabled.checked, places: [0, 1].map(i => ({name: form.elements['city' + i].value, sourceUrl: form.elements['weatherSource' + i].value, imageUrl: form.elements['weatherImage' + i].value}))}
+            });
+            const sourceChanged = draft.dataUrl !== previous.dataUrl;
+            configBusy = true;
+            form.querySelectorAll('input, button').forEach(el => el.disabled = true);
+            if (sourceChanged || !dataLoaded) {
+                message.textContent = 'Проверяем подключение к справочнику…';
+                if (!await loadDirectory(draft.dataUrl, draft)) throw new Error('Не удалось загрузить bifk-data.txt. Настройки не применены; проверьте ссылку и доступ.');
+                document.getElementById('searchInput').value = '';
+                activeSection = menuItems[0]?.id; activeSub = subsections[activeSection]?.[0]?.id;
+                renderMenu(); renderContent();
+            } else { appConfig = draft; }
+            if (!sourceChanged && JSON.stringify(directoryPayload()) === previousPayload) {
+                message.textContent = 'Изменений нет — файл не скачивается.';
+                return;
+            }
+            configLoaded = true; configError = '';
+            updateConnection(); renderLiveCards(); scheduleIndicators();
+            document.getElementById('editBtn').disabled = false;
+            saveToDownloads();
+            message.textContent = 'Изменения сохранены в скачанный bifk-data.txt. Замените этот файл на SharePoint вручную.';
+            refreshLiveData(true);
+        } catch (e) { appConfig = previous; updateConnection(); message.textContent = e.message; }
+        finally { configBusy = false; form.querySelectorAll('input, button').forEach(el => el.disabled = false); }
+    }
+
+
+    // 1. КОНФИГУРАЦИЯ. Изменения живут только в текущей странице и экспортируются в файл.
+    // Единственная ссылка для SharePoint. Если файлы рядом, менять её не нужно.
+    const DATA_FILE_URL = './bifk-data.txt';
+    const DEFAULT_CONFIG = {"schemaVersion": 1, "refreshMinutes": 60, "currency": {"enabled": true, "sourceUrl": "https://www.cbr.ru/currency_base/daily/"}, "rate": {"enabled": true, "sourceUrl": "https://www.cbr.ru/hd_base/KeyRate/", "value": 14, "verifiedOn": "2026-09-30"}, "weather": {"enabled": true, "places": [{"name": "Нижнекамск", "sourceUrl": "https://rp5.ru/5770/ru", "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=21&id=5770&lang=ru&um=00000"}, {"name": "Москва", "sourceUrl": "https://rp5.ru/5483/ru", "imageUrl": "https://rp5.ru/informer/120x60x2.php?f=21&id=5483&lang=ru&um=00000"}]}};
+    DEFAULT_CONFIG.dataUrl = DATA_FILE_URL;
+    let appConfig = structuredClone(DEFAULT_CONFIG);
+    let configLoaded = false;
+    let configError = '';
+    let dataLoaded = false;
+    let dataLoadedAt = null;
+    let configBusy = false;
+    let liveTimer;
     const CURRENCY_API = 'https://www.cbr-xml-daily.ru/daily_json.js';
     const CURRENCY_JSONP = 'https://www.cbr-xml-daily.ru/daily_jsonp.js';
-    const RATE_API = 'https://kurs-rublya.ru/api/v1/key-rates/cbr/';
-    const LIVE_REFRESH_MS = 60 * 60 * 1000;
-    const LIVE_SOURCES = {
-        currency: 'https://www.cbr.ru/currency_base/daily/',
-        rate: 'https://www.cbr.ru/statistics/idkp_br/refinancing_rates1/',
-        nizhnekamsk: 'https://rp5.ru/5770/ru',
-        moscow: 'https://rp5.ru/5483/ru'
-    };
     const CURRENCY_CODES = ['USD', 'EUR', 'CNY'];
     const liveState = {};
-    // Датированный снимок используется только в день проверки; устаревшую ставку не выдаём за текущую.
-    const RATE_SNAPSHOT = { value: '14,00 %', day: '2026-09-24' };
     let liveRefreshPending = false;
     let lastLiveRefresh = 0;
-    
-    const isSharePoint = (() => {
-        if (typeof window._spPageContextInfo !== 'undefined') return true;
-        const url = window.location.href.toLowerCase();
-        if (url.includes('sharepoint') || url.includes('_layouts') || url.includes('sites/')) return true;
-        return false;
-    })();
-    
+
     // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
     let menuItems = [];
     let subsections = {};
@@ -523,6 +1055,13 @@
     let originalMenu = [];
     let originalSubs = {};
     let originalContent = {};
+    let departmentName = 'БиФК НКНХ';
+    let originalDepartmentName = departmentName;
+    let headerLabel = 'СПРАВОЧНИК · НОВАЯ ВЕРСИЯ';
+    let headerDescription = 'Бюджетный и финансовый контроль | СЦ & ПЭ';
+    let originalHeaderLabel = headerLabel;
+    let originalHeaderDescription = headerDescription;
+    let originalEditPayload = '';
     let isEditMode = false;
     let activeSection = null;
     let activeSub = null;
@@ -576,6 +1115,7 @@
     function safeLink(value) {
         try {
             const raw = String(value || '').trim();
+            if (!raw) return '';
             // Внутренние UNC- и файловые пути остаются доступными для копирования.
             if (/^(?:\\\\|[a-z]:[\\/]|file:)/i.test(raw) || raw === '#') return '';
             const url = new URL(raw, window.location.href);
@@ -625,89 +1165,73 @@
         }).catch(() => fetchJson(CURRENCY_API));
     }
 
-    function parseRate(payload) {
-        const raw = payload?.ratePercent ?? payload?.currentRate?.ratePercent ?? payload?.current?.ratePercent ??
-            payload?.rate ?? payload?.currentRate?.rate ?? payload?.current?.rate;
-        const value = typeof raw === 'string' ? Number(raw.replace(',', '.')) : Number(raw);
-        const date = payload?.effectiveDate ?? payload?.currentRate?.effectiveDate ?? payload?.current?.effectiveDate ?? payload?.dateIso ?? payload?.date;
-        if (!Number.isFinite(value) || value <= 0 || value >= 100) throw new Error('Неверный формат ставки');
-        return { value: `${new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value)} %`,
-            meta: `Данные ЦБ${shortDate(String(date || '').slice(0, 10)) ? ` · с ${shortDate(String(date).slice(0, 10))}` : ''}` };
-    }
-
+    // 3. ПОКАЗАТЕЛИ. Курсы и информеры .ru; ставка — проверенный снимок с прямой ссылкой на ЦБ.
     function renderLiveCards() {
-        // Инициализируем компактные карточки один раз, затем обновляем значения.
         const grid = document.getElementById('liveGrid');
-        if (!grid.children.length) grid.innerHTML = `
-            <article class="live-card"><div class="live-card-top"><i class="fas fa-coins"></i> Курсы ЦБ · ₽ за 1 <a href="https://www.cbr-xml-daily.ru/" target="_blank" rel="noopener noreferrer" title="Поставщик данных">Курсы валют, API ↗</a></div><div class="live-currencies" id="liveCurrencies"></div></article>
-            <article class="live-card"><div class="live-card-top"><i class="fas fa-percent"></i> Ставка рефинансирования <a href="https://kurs-rublya.ru/kluchevaya-stavka/cbr/" target="_blank" rel="noopener noreferrer" title="Поставщик данных">источник ↗</a></div>
-                <div id="liveRate"></div></article>
-            <article class="live-card"><div class="live-card-top"><i class="fas fa-cloud-sun"></i> Прогноз погоды · <a href="https://rp5.ru/" target="_blank" rel="noopener noreferrer">rp5.ru ↗</a></div>
-                <div class="live-weather-widgets">
-                    <div class="live-weather-place"><a href="https://rp5.ru/5770/ru"><img border=0 width=120 height=60 src="https://rp5.ru/informer/120x60x2.php?f=16&id=5770&lang=ru&um=00000"></a></div>
-                    <div class="live-weather-place"><a href="https://rp5.ru/5483/ru"><img border=0 width=120 height=60 src="https://rp5.ru/informer/120x60x2.php?f=16&id=5483&lang=ru&um=00000"></a></div>
-                </div></article>`;
-        const container = document.getElementById('liveCurrencies');
-        container.innerHTML = CURRENCY_CODES.map(code => {
-            const item = liveState[code];
-            const title = item ? `${code}: ${item.meta}${item.stale ? ' · обновление недоступно' : ''}` : `${code}: курс недоступен`;
-            return `<a class="live-quote ${item?.stale ? 'live-stale' : ''}" href="${LIVE_SOURCES.currency}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(title)}"><small>${code}</small><span>${item ? escapeHtml(item.value) : '—'}</span></a>`;
-        }).join('');
-        const rate = liveState.rate;
-        const moscowDate = new Intl.DateTimeFormat('en', { timeZone: 'Europe/Moscow', year: 'numeric', month: '2-digit', day: '2-digit' });
-        const parts = Object.fromEntries(moscowDate.formatToParts(new Date()).map(part => [part.type, part.value]));
-        const snapshotIsToday = `${parts.year}-${parts.month}-${parts.day}` === RATE_SNAPSHOT.day;
-        const shown = rate || (snapshotIsToday ? { value: RATE_SNAPSHOT.value, meta: `На ${shortDate(RATE_SNAPSHOT.day)} · онлайн проверка недоступна`, stale: true } : null);
-        document.getElementById('liveRate').innerHTML = `<a class="live-rate-link ${shown?.stale ? 'live-stale' : ''}" href="${LIVE_SOURCES.rate}" target="_blank" rel="noopener noreferrer" title="Ставка рефинансирования на сайте Банка России">${shown ? escapeHtml(shown.value) : 'Открыть ЦБ ↗'}</a>
-            <div class="live-detail">${shown ? escapeHtml(shown.meta + (shown.stale && rate ? ' · проверить на ЦБ' : '')) : 'Онлайн проверка недоступна'}</div>`;
+        const cards = [];
+        if (appConfig.currency.enabled) {
+            cards.push(`<article class="live-card"><div class="live-card-top"><i class="fas fa-coins"></i> Курсы ЦБ · ₽ за 1</div><div class="live-currencies">${CURRENCY_CODES.map(code => {
+                const item = liveState[code];
+                return `<a class="live-quote ${item?.stale ? 'live-stale' : ''}" href="${escapeHtml(appConfig.currency.sourceUrl)}" target="_blank" rel="noopener noreferrer"><small>${code}</small><span>${item ? escapeHtml(item.value) : '—'}</span></a>`;
+            }).join('')}</div><div class="live-detail">${escapeHtml(liveState.currencyMeta || 'Ожидание курсов')} · <a href="https://www.cbr-xml-daily.ru/" target="_blank" rel="noopener noreferrer">источник ↗</a></div></article>`);
+        }
+        if (appConfig.rate.enabled) {
+            const rate = appConfig.rate;
+            const value = rate.value === null ? 'Проверить на сайте ЦБ ↗' : `${rubles.format(rate.value)} %`;
+            cards.push(`<article class="live-card"><div class="live-card-top"><i class="fas fa-percent"></i> Ставка рефинансирования</div><a class="live-rate-link" href="${escapeHtml(rate.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(value)}</a><div class="live-detail">${rate.value === null ? 'Официальный источник' : `Проверено на ${shortDate(rate.verifiedOn)} · вручную`} · <a href="${escapeHtml(rate.sourceUrl)}" target="_blank" rel="noopener noreferrer">Ставка на сайте ЦБ ↗</a></div></article>`);
+        }
+        if (appConfig.weather.enabled) {
+            cards.push(`<article class="live-card weather-card"><div class="live-card-top"><i class="fas fa-cloud-sun"></i> Погода · rp5.ru</div><div class="live-weather-widgets">${appConfig.weather.places.map(place => `<div class="live-weather-place"><a href="${escapeHtml(place.sourceUrl)}" target="_blank" rel="noopener noreferrer"><span>${escapeHtml(place.name)}</span><img width="120" height="60" alt="Прогноз: ${escapeHtml(place.name)}" src="${escapeHtml(place.imageUrl)}"><span class="weather-fallback" hidden>Открыть прогноз ↗</span></a></div>`).join('')}</div></article>`);
+        }
+        grid.innerHTML = cards.join('');
+        grid.style.setProperty('--card-count', String(cards.length || 1));
+        document.querySelector('.live-panel').hidden = !cards.length;
+        grid.querySelectorAll('.live-weather-place img').forEach(img => {
+            img.addEventListener('error', () => { img.hidden = true; img.nextElementSibling.hidden = false; }, {once: true});
+        });
     }
 
-    async function refreshLiveData() {
-        if (liveRefreshPending || Date.now() - lastLiveRefresh < LIVE_REFRESH_MS) return;
+    async function refreshLiveData(force = false) {
+        if (liveRefreshPending || (!force && Date.now() - lastLiveRefresh < appConfig.refreshMinutes * 60000)) return;
+        if (!appConfig.currency.enabled) {
+            document.getElementById('liveUpdated').textContent = 'Источники доступны по ссылкам';
+            return;
+        }
         liveRefreshPending = true;
         lastLiveRefresh = Date.now();
         const status = document.getElementById('liveUpdated');
-        status.textContent = 'Обновление…';
+        status.textContent = 'Обновление курсов…';
         try {
-        const [currencyResult, rateResult] = await Promise.allSettled([fetchCurrencyData(), fetchJson(RATE_API)]);
-        if (currencyResult.status === 'fulfilled') {
-            const currency = currencyResult.value;
+            const currency = await fetchCurrencyData();
             let errors = 0;
             for (const code of CURRENCY_CODES) {
                 const row = currency?.Valute?.[code];
-                if (row && Number.isFinite(Number(row.Value)) && Number(row.Value) > 0 && Number(row.Nominal) > 0) {
-                    liveState[code] = { value: `${rubles.format(Number(row.Value) / Number(row.Nominal))} ₽`,
-                        meta: `Курс ЦБ на ${shortDate(String(currency.Date || '').slice(0, 10)) || 'дату публикации'}` };
+                if (row && Number(row.Value) > 0 && Number(row.Nominal) > 0 && Number.isFinite(Number(row.Value))) {
+                    liveState[code] = {value: `${rubles.format(Number(row.Value) / Number(row.Nominal))} ₽`, stale: false};
                 } else {
                     errors++;
                     if (liveState[code]) liveState[code].stale = true;
                 }
             }
-            if (errors) console.warn('Часть курсов отсутствует в ответе источника');
-        } else {
+            liveState.currencyMeta = `На ${shortDate(String(currency.Date || '').slice(0, 10)) || 'дату публикации'}`;
+            status.textContent = errors ? 'Часть курсов недоступна' : `Курсы обновлены · ${moscowTime()}`;
+        } catch (error) {
             for (const code of CURRENCY_CODES) if (liveState[code]) liveState[code].stale = true;
-            console.warn('Не удалось обновить курсы ЦБ:', currencyResult.reason);
+            liveState.currencyMeta = 'Обновление недоступно';
+            status.textContent = 'Курсы недоступны · источники по ссылкам';
+        } finally {
+            liveRefreshPending = false;
+            renderLiveCards();
         }
-        try {
-            if (rateResult.status === 'rejected') throw rateResult.reason;
-            liveState.rate = parseRate(rateResult.value);
-        } catch (error) {
-            if (liveState.rate) liveState.rate.stale = true;
-            console.warn('Не удалось обновить ставку ЦБ:', error);
-        }
-        const fxOk = currencyResult.status === 'fulfilled';
-        const rateOk = rateResult.status === 'fulfilled' && liveState.rate && !liveState.rate.stale;
-        const time = new Intl.DateTimeFormat('ru-RU', { timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit' }).format(new Date());
-        status.textContent = fxOk && rateOk ? `Проверено · ${time} МСК` : `Данные частично недоступны · ${time} МСК`;
-        renderLiveCards();
-        // Повторно запрашиваем готовые изображения прогноза при очередной проверке через час.
-        document.querySelectorAll('.live-weather-place img').forEach(img => { img.src = img.getAttribute('src'); });
-        } catch (error) {
-            status.textContent = 'Показатели временно недоступны';
-            console.warn('Не удалось обновить показатели:', error);
-        } finally { liveRefreshPending = false; }
     }
-    
+
+    function scheduleIndicators() {
+        clearInterval(liveTimer);
+        liveTimer = setInterval(() => {
+            if (document.visibilityState !== 'hidden') { renderLiveCards(); refreshLiveData(); }
+        }, appConfig.refreshMinutes * 60000);
+    }
+
     function closeModal(id) {
         document.getElementById(id).classList.remove('active');
         // Закрываем все открытые кастомные селекты
@@ -769,9 +1293,7 @@
         });
         
         // Закрытие при клике вне
-        document.addEventListener('click', () => {
-            container.classList.remove('open');
-        });
+
         
         return selectedIcon.class;
     }
@@ -814,6 +1336,11 @@
     
     // ========== РАБОТА С ДАННЫМИ ==========
     function loadFromJSON(data) {
+        validateData(data);
+        departmentName = data.branding?.department.trim() || 'БиФК НКНХ';
+        headerLabel = data.branding?.label ?? 'СПРАВОЧНИК · НОВАЯ ВЕРСИЯ';
+        headerDescription = data.branding?.description ?? 'Бюджетный и финансовый контроль | СЦ & ПЭ';
+        renderBrand();
         menuItems = JSON.parse(JSON.stringify(data.menuItems || []));
         subsections = JSON.parse(JSON.stringify(data.subsections || {}));
         contentData = JSON.parse(JSON.stringify(data.contentData || {}));
@@ -827,48 +1354,60 @@
         }
     }
     
-    async function loadFromSharePoint() {
+    async function loadDirectory(source = appConfig.dataUrl, settingsOverride = null) {
         const controller = new AbortController();
         let timeout;
         try {
-            let url = DATA_PATH + '?t=' + Date.now();
-            let text = await Promise.race([
+            const url = new URL(source, location.href);
+            url.searchParams.set('_updated', String(Date.now()));
+            const text = await Promise.race([
                 (async () => {
                     const resp = await fetch(url, { headers: { 'Accept': 'text/plain' }, cache: 'no-store', signal: controller.signal });
                     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
                     return resp.text();
                 })(),
-                new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new Error('Время ожидания файла данных истекло')); }, 10000); })
+                new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new Error('Время ожидания bifk-data.txt истекло')); }, 10000); })
             ]);
-            let json = JSON.parse(text);
+            const json = JSON.parse(text);
+            // Проверяем настройки и базу до изменения текущей страницы.
+            const nextConfig = validateConfig({... (settingsOverride || (json.config === undefined ? DEFAULT_CONFIG : json.config)), dataUrl: source});
             loadFromJSON(json);
+            appConfig = nextConfig;
+            configLoaded = !!settingsOverride || json.config !== undefined;
+            configError = '';
+            dataLoaded = true;
+            dataLoadedAt = new Date();
+            updateConnection();
             originalMenu = JSON.parse(JSON.stringify(menuItems));
             originalSubs = JSON.parse(JSON.stringify(subsections));
             originalContent = JSON.parse(JSON.stringify(contentData));
             return true;
         } catch(e) {
             console.error('Ошибка загрузки:', e);
+            updateConnection(e.message);
             return false;
         } finally { clearTimeout(timeout); }
     }
     
     // Сохранение выполняется только через скачивание файла пользователем.
-    function saveToDownloads() {
-        const exportData = { menuItems, subsections, contentData };
-        const jsonStr = JSON.stringify(exportData, null, 2);
-        const blob = new Blob([jsonStr], { type: 'text/plain;charset=utf-8' });
-        const link = document.createElement('a');
+    function downloadJSON(value, filename) {
+        const blob = new Blob([JSON.stringify(value, null, 2)], {type: 'text/plain;charset=utf-8'});
         const url = URL.createObjectURL(blob);
-        link.href = url;
-        link.download = 'bifk-data.txt';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        showToast('✅ Данные сохранены в файл bifk-data.txt (папка Загрузки)');
+        const link = document.createElement('a');
+        link.href = url; link.download = filename;
+        document.body.appendChild(link); link.click(); link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
-    
-    // ========== ОТОБРАЖЕНИЕ ==========
+    function directoryPayload() {
+        const config = structuredClone(appConfig);
+        delete config.dataUrl;
+        return {menuItems, subsections, contentData, branding: {department: departmentName, label: headerLabel, description: headerDescription}, config};
+    }
+    function saveToDownloads() {
+        downloadJSON(directoryPayload(), 'bifk-data.txt');
+        showToast('Файл скачан. Разместите его на SharePoint вручную.');
+    }
+
     function renderMenu() {
         let container = document.getElementById('navMenu');
         if (!menuItems.length) { container.innerHTML = '<li class="info-message">Нет разделов</li>'; return; }
@@ -884,9 +1423,9 @@
     
     function renderContent() {
         let container = document.getElementById('contentArea');
-        if (!menuItems.length) { container.innerHTML = '<div class="info-message"><h2>Рабочий справочник не подключён</h2><p>Документы и ссылки загружаются из файла bifk-data.txt на SharePoint. Эта страница позволяет посмотреть текущий интерфейс приложения.</p></div>'; return; }
+        if (!menuItems.length) { container.innerHTML = '<div class="info-message"><h2>Справочник пока пуст</h2><p>Добавьте раздел и документы в режиме редактирования.</p></div>'; return; }
         let html = '';
-        for (let section of menuItems) {
+        for (let section of menuItems.filter(item => item.id === (activeSection || menuItems[0]?.id))) {
             let subs = subsections[section.id] || [];
             let activeSubId = activeSub && subs.find(s => s.id === activeSub) ? activeSub : (subs[0]?.id);
             let pills = '<div class="quick-links-premium">';
@@ -894,12 +1433,12 @@
             if (isEditMode) pills += `<button class="add-subsection-btn" data-action="add-subsection" data-section="${escapeHtml(section.id)}"><i class="fas fa-plus"></i> Добавить подраздел</button>`;
             pills += '</div>';
             let subsHtml = '';
-            for (let sub of subs) {
+            for (let sub of subs.filter(item => item.id === activeSubId)) {
                 let rows = contentData[sub.id] || [];
                 let display = activeSubId === sub.id ? 'block' : 'none';
                 let tableRows = '';
                 if (isEditMode) {
-                    tableRows = rows.map((row, idx) => `<tr class="edit-mode-row"><td><input type="text" class="edit-input" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" data-field="name" value="${escapeHtml(row[0])}"></td><td><input type="text" class="edit-input" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" data-field="link" value="${escapeHtml(row[1])}"></td><td><input type="text" class="edit-input" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" data-field="desc" value="${escapeHtml(row[2])}"></td><td><select class="edit-select" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" data-field="status"><option ${row[3]==='Активно'?'selected':''}>Активно</option><option ${row[3]==='Отсутствует'?'selected':''}>Отсутствует</option><option ${row[3]==='Остановлено'?'selected':''}>Остановлено</option></select></td><td><div class="row-actions"><button data-action="move-up" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" class="row-action-icon up" aria-label="Поднять строку"><i class="fas fa-arrow-up"></i></button><button data-action="move-down" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" class="row-action-icon down" aria-label="Опустить строку"><i class="fas fa-arrow-down"></i></button><button data-action="delete-row" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" class="row-action-icon delete" aria-label="Удалить строку"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
+                    tableRows = rows.map((row, idx) => `<tr class="edit-mode-row"><td><input type="text" class="edit-input" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" aria-label="Наименование" data-field="name" value="${escapeHtml(row[0])}"></td><td><input type="text" class="edit-input" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" aria-label="Ссылка" data-field="link" value="${escapeHtml(row[1])}"></td><td><input type="text" class="edit-input" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" aria-label="Описание" data-field="desc" value="${escapeHtml(row[2])}"></td><td><select class="edit-select" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" aria-label="Статус" data-field="status"><option ${row[3]==='Активно'?'selected':''}>Активно</option><option ${row[3]==='Отсутствует'?'selected':''}>Отсутствует</option><option ${row[3]==='Остановлено'?'selected':''}>Остановлено</option></select></td><td><div class="row-actions"><button data-action="move-up" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" class="row-action-icon up" aria-label="Поднять строку"><i class="fas fa-arrow-up"></i></button><button data-action="move-down" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" class="row-action-icon down" aria-label="Опустить строку"><i class="fas fa-arrow-down"></i></button><button data-action="delete-row" data-sub="${escapeHtml(sub.id)}" data-row="${idx}" class="row-action-icon delete" aria-label="Удалить строку"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
                     tableRows += `<tr><td colspan="5"><button data-action="add-row" data-sub="${escapeHtml(sub.id)}" class="add-row-btn"><i class="fas fa-plus"></i> Добавить строку</button></td></tr>`;
                 } else {
                     tableRows = rows.map(row => {
@@ -908,13 +1447,13 @@
                         return `<tr><td><div class="link-wrapper">${title}${row[1] ? `<button class="copy-link-btn" data-copy="${escapeHtml(row[1])}" aria-label="Скопировать ссылку"><i class="fas fa-copy"></i></button>` : ''}</div></td><td>${escapeHtml(row[2])}</td><td><span class="badge-premium">${escapeHtml(row[3] || 'Активно')}</span></td></tr>`;
                     }).join('');
                 }
-                subsHtml += `<div id="sub_${escapeHtml(sub.id)}" data-parent="${escapeHtml(section.id)}" style="display:${display}"><div class="clearfix"><h3 style="display:inline-flex; gap:10px;"><i class="${safeIcon(sub.icon)}"></i> ${escapeHtml(sub.name)}</h3>${isEditMode?`<div class="subsection-actions"><button data-action="edit-subsection" data-section="${escapeHtml(section.id)}" data-sub="${escapeHtml(sub.id)}" class="subsection-action-btn edit">Ред.</button><button data-action="delete-subsection" data-section="${escapeHtml(section.id)}" data-sub="${escapeHtml(sub.id)}" class="subsection-action-btn delete">Уд.</button></div>`:''}</div><table class="table-premium"><thead><tr><th>Наименование</th><th>Описание</th><th>Статус</th>${isEditMode?'<th>Действия</th>':''}</tr></thead><tbody>${tableRows}</tbody></table></div>`;
+                subsHtml += `<div id="sub_${escapeHtml(sub.id)}" data-parent="${escapeHtml(section.id)}" style="display:${display}"><div class="clearfix"><h3 style="display:inline-flex; gap:10px;"><i class="${safeIcon(sub.icon)}"></i> ${escapeHtml(sub.name)}</h3>${isEditMode?`<div class="subsection-actions"><button data-action="edit-subsection" data-section="${escapeHtml(section.id)}" data-sub="${escapeHtml(sub.id)}" class="subsection-action-btn edit">Ред.</button><button data-action="delete-subsection" data-section="${escapeHtml(section.id)}" data-sub="${escapeHtml(sub.id)}" class="subsection-action-btn delete">Уд.</button></div>`:''}</div><div class="table-scroll"><table class="table-premium"><thead><tr><th>Наименование</th>${isEditMode?'<th>Ссылка</th>':''}<th>Описание</th><th>Статус</th>${isEditMode?'<th>Действия</th>':''}</tr></thead><tbody>${tableRows}</tbody></table></div></div>`;
             }
             html += `<div id="section_${escapeHtml(section.id)}" class="content-section ${activeSection === section.id ? 'active' : ''}"><h2><i class="${safeIcon(section.icon)}"></i> ${escapeHtml(section.name)}</h2>${pills}${subsHtml}</div>`;
         }
         container.innerHTML = html;
         document.querySelectorAll('.pill-premium').forEach(pill => pill.addEventListener('click', (e) => { e.preventDefault(); activateSubsection(pill.dataset.section, pill.dataset.sub); }));
-        if (isEditMode) document.querySelectorAll('.edit-input, .edit-select').forEach(inp => inp.addEventListener('change', function() { let row = contentData[this.dataset.sub]?.[parseInt(this.dataset.row)]; if(row) row[this.dataset.field === 'name'?0:this.dataset.field === 'link'?1:this.dataset.field === 'desc'?2:3] = this.value; }));
+        if (isEditMode) document.querySelectorAll('.edit-input, .edit-select').forEach(inp => inp.addEventListener('input', function() { let row = contentData[this.dataset.sub]?.[parseInt(this.dataset.row)]; if(row) row[this.dataset.field === 'name'?0:this.dataset.field === 'link'?1:this.dataset.field === 'desc'?2:3] = this.value; }));
         if (document.getElementById('searchInput').value.trim()) renderSearchResults();
     }
 
@@ -939,7 +1478,7 @@
     }
     
     function activateSection(sectionId) { activeSection = sectionId; activeSub = (subsections[sectionId] || [])[0]?.id; renderMenu(); renderContent(); }
-    function activateSubsection(sectionId, subId) { activeSub = subId; renderContent(); }
+    function activateSubsection(sectionId, subId) { activeSection = sectionId; activeSub = subId; renderContent(); }
     
     window.moveRowUp = (subId, idx) => { if(idx>0) { let rows = contentData[subId]; [rows[idx-1], rows[idx]] = [rows[idx], rows[idx-1]]; renderContent(); } };
     window.moveRowDown = (subId, idx) => { let rows = contentData[subId]; if(idx<rows.length-1) { [rows[idx+1], rows[idx]] = [rows[idx], rows[idx+1]]; renderContent(); } };
@@ -952,42 +1491,86 @@
     window.openAddSubsection = (sectionId) => { editingSubParent = sectionId; editingSubId = null; document.getElementById('subsectionNameInput').value = ''; createCustomSelect('subsectionIconSelect', 'subsectionIconPreview', 'fas fa-folder-open', (val)=>{}); showModal('subsectionModal'); };
     window.openEditSubsection = (sectionId, subId, name, icon) => { editingSubParent = sectionId; editingSubId = subId; document.getElementById('subsectionNameInput').value = name; createCustomSelect('subsectionIconSelect', 'subsectionIconPreview', icon, (val)=>{}); showModal('subsectionModal'); };
     
-    function enableEditMode() { isEditMode = true; document.getElementById('editPanel').classList.add('active'); document.getElementById('editBtn').classList.add('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-times"></i> Выйти'; document.getElementById('addSectionBtn').classList.remove('hidden'); renderMenu(); renderContent(); showToast('Режим редактирования включён'); }
-    function disableEditMode(cancel=false) { if(cancel) { menuItems = JSON.parse(JSON.stringify(originalMenu)); subsections = JSON.parse(JSON.stringify(originalSubs)); contentData = JSON.parse(JSON.stringify(originalContent)); showToast('Изменения отменены'); } isEditMode = false; document.getElementById('editPanel').classList.remove('active'); document.getElementById('editBtn').classList.remove('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-pen"></i> Режим редактирования'; document.getElementById('addSectionBtn').classList.add('hidden'); renderMenu(); renderContent(); if(activeSection) activateSection(activeSection); }
+    function renderBrand() {
+        document.getElementById('departmentName').textContent = departmentName;
+        document.getElementById('departmentName').hidden = isEditMode;
+        const input = document.getElementById('departmentInput');
+        input.hidden = !isEditMode;
+        input.value = departmentName;
+        for (const [id, value] of [['headerLabel', headerLabel], ['headerDescription', headerDescription]]) {
+            const text = document.getElementById(id);
+            text.textContent = value;
+            text.hidden = isEditMode || !value.trim();
+            const field = document.getElementById(id + 'Input');
+            field.hidden = !isEditMode;
+            field.value = value;
+        }
+        document.querySelector('.dashboard-premium').classList.toggle('editing-directory', isEditMode);
+    }
+
+    function enableEditMode() { originalEditPayload = JSON.stringify(directoryPayload()); originalDepartmentName = departmentName; originalHeaderLabel = headerLabel; originalHeaderDescription = headerDescription; originalMenu = structuredClone(menuItems); originalSubs = structuredClone(subsections); originalContent = structuredClone(contentData); document.getElementById('searchInput').value = ''; isEditMode = true; renderBrand(); document.getElementById('editPanel').classList.add('active'); document.getElementById('editBtn').classList.add('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-check"></i> Завершить редактирование'; document.getElementById('addSectionBtn').classList.remove('hidden'); renderMenu(); renderContent(); showToast('Режим редактирования включён'); }
+    function disableEditMode(cancel=false) { if(cancel) { departmentName = originalDepartmentName; headerLabel = originalHeaderLabel; headerDescription = originalHeaderDescription; menuItems = JSON.parse(JSON.stringify(originalMenu)); subsections = JSON.parse(JSON.stringify(originalSubs)); contentData = JSON.parse(JSON.stringify(originalContent)); showToast('Изменения отменены'); } isEditMode = false; renderBrand(); document.getElementById('editPanel').classList.remove('active'); document.getElementById('editBtn').classList.remove('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-pen"></i> Редактировать справочник'; document.getElementById('addSectionBtn').classList.add('hidden'); renderMenu(); renderContent(); if(activeSection) activateSection(activeSection); }
     
     // Кнопка сохранения запускает скачивание текстового файла.
     async function saveChanges() {
-        saveToDownloads();
+        const input = document.getElementById('departmentInput');
+        if (!input.value.trim()) { showToast('Укажите название подразделения.', true); input.focus(); return; }
+        departmentName = input.value.trim();
+        headerLabel = document.getElementById('headerLabelInput').value.trim();
+        headerDescription = document.getElementById('headerDescriptionInput').value.trim();
+        if (JSON.stringify(directoryPayload()) !== originalEditPayload) saveToDownloads();
+        else showToast('Изменений нет — файл не скачивается.');
+        disableEditMode(false);
     }
     
+    // 6. ЗАПУСК: один bifk-data.txt → настройки и данные → показатели.
     async function init() {
-        renderLiveCards();
-        refreshLiveData();
-        setInterval(() => { if (document.visibilityState !== 'hidden') refreshLiveData(); }, LIVE_REFRESH_MS);
-        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshLiveData(); });
-        window.addEventListener('online', refreshLiveData);
-        let loaded = await loadFromSharePoint();
-        if (!loaded) {
-            document.getElementById('navMenu').innerHTML = '<li class="info-message">Данные недоступны</li>';
-            document.getElementById('contentArea').innerHTML = `<div class="info-message"><h2>Не удалось загрузить справочник</h2><p>Проверьте доступ к <a href="${DATA_PATH}" target="_blank" rel="noopener noreferrer">файлу bifk-data.txt</a> и попробуйте ещё раз.</p><button type="button" id="retryDataBtn" class="refresh-premium">Повторить загрузку</button></div>`;
-            document.getElementById('retryDataBtn').onclick = () => location.reload();
-            document.getElementById('refreshBtn').onclick = () => location.reload();
-            document.getElementById('editBtn').disabled = true;
-            return;
-        }
-        if(!loaded || menuItems.length===0) {
-            menuItems = [];
-            subsections = {};
-            contentData = {};
-        }
-        renderMenu(); renderContent();
-        if(menuItems.length) activateSection(menuItems[0].id);
-        document.getElementById('refreshBtn').onclick = async () => { location.reload(); };
+        document.getElementById('refreshBtn').onclick = async () => {
+            if (configBusy) return;
+            if (isEditMode) { showToast('Сначала завершите редактирование или скачайте изменения.', true); return; }
+            const btn = document.getElementById('refreshBtn'); btn.disabled = true;
+            try {
+                const ok = await loadDirectory();
+                if (ok) { activeSection = menuItems.some(x => x.id === activeSection) ? activeSection : menuItems[0]?.id; renderMenu(); renderContent(); renderLiveCards(); scheduleIndicators(); }
+                else showToast('Не удалось обновить справочник. Последние загруженные данные сохранены на странице.', true);
+                refreshLiveData(true);
+            } finally { btn.disabled = false; }
+        };
         document.getElementById('searchInput').addEventListener('input', () => {
             if (isEditMode) return;
             if (document.getElementById('searchInput').value.trim()) renderSearchResults();
             else renderContent();
         });
+        document.getElementById('adminBtn').onclick = openAdministration;
+        const adminDialog = document.getElementById('adminDialog');
+        const closeAdministration = () => adminDialog.close();
+        document.getElementById('adminClose').onclick = closeAdministration;
+        // Закрытие только за границами окна; клики и перетаскивание внутри полей его не закрывают.
+        const outsideAdministration = event => {
+            const box = adminDialog.getBoundingClientRect();
+            return event.target === adminDialog && (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom);
+        };
+        let backdropPointer = null;
+        adminDialog.addEventListener('pointerdown', event => { backdropPointer = outsideAdministration(event) ? event.pointerId : null; });
+        adminDialog.addEventListener('pointerup', event => {
+            if (backdropPointer === event.pointerId && outsideAdministration(event)) closeAdministration();
+            backdropPointer = null;
+        });
+        adminDialog.addEventListener('pointercancel', () => { backdropPointer = null; });
+        document.getElementById('departmentInput').addEventListener('input', event => { if (isEditMode) departmentName = event.target.value; });
+        document.getElementById('headerLabelInput').addEventListener('input', event => { if (isEditMode) headerLabel = event.target.value; });
+        document.getElementById('headerDescriptionInput').addEventListener('input', event => { if (isEditMode) headerDescription = event.target.value; });
+        document.getElementById('adminForm').onsubmit = applyAdministration;
+        const loaded = await loadDirectory();
+        renderLiveCards(); refreshLiveData(); scheduleIndicators();
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshLiveData(); });
+        window.addEventListener('online', () => refreshLiveData(true));
+        document.getElementById('editBtn').disabled = !loaded;
+        if (!loaded) {
+            document.getElementById('navMenu').innerHTML = '<li class="info-message">Данные недоступны</li>';
+            document.getElementById('contentArea').innerHTML = '<div class="info-message"><h2>Подключите справочник</h2><p>Откройте «Администрирование» и проверьте путь к bifk-data.txt.</p><button class="refresh-premium" id="connectDataBtn">Настроить подключение</button></div>';
+            document.getElementById('connectDataBtn').onclick = openAdministration;
+        } else { activeSection = menuItems[0]?.id; activeSub = subsections[activeSection]?.[0]?.id; renderMenu(); renderContent(); }
     }
 
     document.getElementById('contentArea').addEventListener('click', event => {
@@ -1011,7 +1594,7 @@
         if (action === 'add-row') addRow(sub);
     });
     
-    document.getElementById('editBtn').onclick = () => isEditMode ? disableEditMode(true) : (confirm('Включить редактирование?') && enableEditMode());
+    document.getElementById('editBtn').onclick = () => isEditMode ? saveChanges() : enableEditMode();
     document.getElementById('saveBtn').onclick = saveChanges;
     document.getElementById('cancelBtn').onclick = () => disableEditMode(true);
     document.getElementById('addSectionBtn').onclick = () => { if(!isEditMode) { alert('Включите режим редактирования'); return; } editingSection = null; document.getElementById('sectionNameInput').value = ''; createCustomSelect('sectionIconSelect', 'sectionIconPreview', 'fas fa-folder', ()=>{}); showModal('sectionModal'); };
@@ -1031,6 +1614,7 @@
         else if(editingSubParent) { let newId = editingSubParent+'_sub_'+Date.now(); subsections[editingSubParent] = subsections[editingSubParent] || []; subsections[editingSubParent].push({ id:newId, name:name, icon:icon }); if(!contentData[newId]) contentData[newId]=[]; }
         closeModal('subsectionModal'); renderContent();
     };
+    document.addEventListener('click', event => { if (!event.target.closest('.custom-select')) document.querySelectorAll('.custom-select.open').forEach(el => el.classList.remove('open')); });
     document.getElementById('mobileToggle').onclick = () => document.getElementById('sidebar').classList.toggle('mobile-open');
     window.onscroll = () => document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 300);
     document.getElementById('scrollTop').onclick = () => window.scrollTo({ top:0, behavior:'smooth' });

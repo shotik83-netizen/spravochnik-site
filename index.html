@@ -802,6 +802,36 @@
         .header-label-input { font-size:10px; letter-spacing:1px; margin-bottom:5px; }
         .header-description-input { font-size:12px; margin-top:6px; }
 
+        .ai-agent-trigger { flex:none; display:inline-flex; align-items:center; gap:7px; min-height:40px; padding:0 15px; border:1px solid #b9dade; border-radius:60px; background:#e8f5f6; color:#006D74; font:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+        .ai-agent-trigger:hover, .ai-agent-trigger:focus-visible { background:#d9eff1; }
+        .ai-agent-backdrop { display:none; position:fixed; inset:0; background:rgba(24,45,51,.35); z-index:118; }
+        .ai-agent-panel { position:fixed; top:0; right:0; bottom:0; width:min(390px,100vw); z-index:119; display:flex; flex-direction:column; background:#fff; border-left:1px solid #d8e9eb; box-shadow:-14px 0 36px rgba(24,45,51,.12); transform:translateX(105%); visibility:hidden; transition:transform .22s ease,visibility .22s ease; }
+        body.ai-agent-open .ai-agent-panel { transform:translateX(0); visibility:visible; }
+        .ai-agent-head { padding:17px 19px; display:flex; align-items:center; justify-content:space-between; gap:12px; border-bottom:1px solid #e0edee; }
+        .ai-agent-head strong { color:#17494D; font-size:16px; }
+        .ai-agent-head p { color:#667982; font-size:11px; margin-top:3px; }
+        .ai-agent-actions { display:flex; gap:6px; }
+        .ai-agent-actions button { width:31px; height:31px; border-radius:8px; border:1px solid #d8e9eb; background:#fff; color:#17494D; font-size:18px; cursor:pointer; }
+        .ai-agent-messages { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; }
+        .ai-agent-message { max-width:100%; padding:11px 13px; border-radius:12px; line-height:1.4; font-size:13px; overflow-wrap:anywhere; }
+        .ai-agent-message.user { align-self:flex-end; max-width:90%; background:#e8f5f6; color:#17494D; }
+        .ai-agent-message.assistant { align-self:stretch; background:#f7fafb; color:#243849; border:1px solid #e0edee; }
+        .ai-agent-message.error { color:#a33333; background:#fff5f5; border-color:#f3c6c6; }
+        .ai-agent-message p { margin:0 0 6px; }
+        .ai-agent-message p:last-child { margin-bottom:0; }
+        .ai-agent-result { padding:9px 0; border-top:1px solid #e0edee; }
+        .ai-agent-result strong { display:block; font-size:13px; }
+        .ai-agent-result small { color:#667982; }
+        .ai-agent-result a, .ai-agent-more, .ai-agent-result button { color:#006D74; font:inherit; font-weight:700; }
+        .ai-agent-result button, .ai-agent-more { border:0; background:none; padding:4px 0; cursor:pointer; text-align:left; }
+        .ai-agent-form { padding:13px 16px 16px; border-top:1px solid #e0edee; display:flex; gap:8px; align-items:flex-end; }
+        .ai-agent-form textarea { min-height:44px; max-height:120px; flex:1; resize:vertical; border:1px solid #cbdce0; border-radius:10px; padding:10px; font:inherit; font-size:13px; }
+        .ai-agent-form textarea:focus { outline:2px solid #008C95; outline-offset:1px; }
+        .ai-agent-form button { min-height:44px; border:none; border-radius:10px; padding:0 13px; background:#008C95; color:white; font:inherit; font-weight:700; cursor:pointer; }
+        .ai-agent-form button:disabled { opacity:.5; cursor:default; }
+        @media (min-width:1101px) { body.ai-agent-open .app-container { max-width:none; margin-right:390px; } }
+        @media (max-width:1100px) { body.ai-agent-open .ai-agent-backdrop { display:block; } }
+        @media (max-width:700px) { .ai-agent-trigger { padding:0 10px; } .ai-agent-trigger span { display:none; } }
     </style>
 </head>
 <body>
@@ -825,6 +855,7 @@
             </button>
             <button class="ai-run-premium hidden" id="aiSearchRun" type="button" aria-label="Найти через ИИ" title="Найти через ИИ"><i class="fas fa-arrow-right" aria-hidden="true"></i></button>
         </div>
+        <button id="aiAgentOpen" class="ai-agent-trigger" type="button" aria-haspopup="dialog" aria-controls="aiAgentPanel" title="Открыть ИИ-агента"><i class="fas fa-comments" aria-hidden="true"></i><span>ИИ-агент</span></button>
         <button id="refreshBtn" class="refresh-premium"><i class="fas fa-sync-alt"></i> Обновить</button>
     </div>
     <div id="aiSearchStatus" class="ai-search-status hidden" role="status" aria-live="polite"></div>
@@ -859,6 +890,13 @@
 </div>
 
 <div id="scrollTop" class="scroll-top"><i class="fas fa-arrow-up"></i></div>
+
+<div id="aiAgentBackdrop" class="ai-agent-backdrop" aria-hidden="true"></div>
+<aside id="aiAgentPanel" class="ai-agent-panel" role="dialog" aria-modal="false" aria-label="ИИ-агент Справочника" aria-hidden="true">
+    <header class="ai-agent-head"><div><strong>ИИ-агент Справочника</strong><p>Поиск по загруженным документам и ссылкам</p></div><div class="ai-agent-actions"><button id="aiAgentClear" type="button" title="Очистить диалог" aria-label="Очистить диалог">↺</button><button id="aiAgentClose" type="button" title="Закрыть" aria-label="Закрыть ИИ-агента">×</button></div></header>
+    <div id="aiAgentMessages" class="ai-agent-messages" role="log" aria-live="polite"></div>
+    <form id="aiAgentForm" class="ai-agent-form"><textarea id="aiAgentInput" aria-label="Вопрос ИИ-агенту" placeholder="Например: где находятся активные бюджетные документы?" maxlength="2000" rows="2"></textarea><button id="aiAgentSend" type="submit" aria-label="Отправить вопрос">➤</button></form>
+</aside>
 
 <!-- Модалка для раздела -->
 <div id="sectionModal" class="modal-premium">
@@ -900,7 +938,7 @@
         <fieldset><legend>Актуальные показатели</legend><div class="settings-grid"><label>Обновление, минут<input name="refreshMinutes" type="number" min="15" max="1440" step="1" required></label><label class="check-label"><input type="checkbox" name="currencyEnabled">Показывать курсы валют</label></div><label>Ссылка на источник курсов<input name="currencySource" type="url" required></label><p class="form-hint">USD, EUR и CNY загружаются с cbr-xml-daily.ru. Дата публикации отображается под курсами.</p></fieldset>
         <fieldset><legend>Ставка рефинансирования</legend><label class="check-label"><input type="checkbox" name="rateEnabled">Показывать блок ставки</label><label>Официальный источник<input name="rateSource" type="url" required></label><div class="settings-grid"><label>Проверенное значение, %<input name="rateValue" type="text" inputmode="decimal" placeholder="Не задано"></label><label>Дата проверки<input name="rateDate" type="date"></label></div><p class="form-hint">Оставьте значение пустым для перехода на сайт ЦБ. Значение с датой проверки обновляется вручную; ссылка ведёт к актуальной таблице Банка России.</p></fieldset>
         <fieldset><legend>Погода</legend><label class="check-label"><input type="checkbox" name="weatherEnabled">Показывать прогнозы</label><div class="settings-grid"><div><label>Первый город<input name="city0" required></label><label>Ссылка на прогноз<input name="weatherSource0" type="url" required></label><label>Ссылка на изображение<input name="weatherImage0" type="url" required></label></div><div><label>Второй город<input name="city1" required></label><label>Ссылка на прогноз<input name="weatherSource1" type="url" required></label><label>Ссылка на изображение<input name="weatherImage1" type="url" required></label></div></div><p class="form-hint">Внешние показатели используют HTTPS-источники на доменах .ru.</p></fieldset>
-        <fieldset><legend>Умный поиск (ИИ)</legend><p class="form-hint">Запрос переводится моделью в условия отбора по названию, описанию, статусу, разделу и подразделу. В модель передаются только текст запроса и списки известных статусов, разделов и подразделов — сами записи и ссылки ей не передаются.</p><div class="settings-grid"><label>Адрес API<input id="aiEndpoint" type="url" autocomplete="off" placeholder="https://open.bigmodel.cn/api/paas/v4/chat/completions"></label><label>Модель<input id="aiModel" autocomplete="off" placeholder="glm-4-flash"></label></div><label>API-ключ (сохраняется только в bifk-data.txt)<input id="aiKey" type="password" autocomplete="off" placeholder="Введите ключ"></label><div class="settings-grid"><button type="button" class="refresh-premium" id="aiConnect">Подключить</button><button type="button" class="refresh-premium" id="aiForget">Забыть ключ</button></div><p class="form-hint" id="aiConnectionStatus"></p></fieldset>
+        <fieldset><legend>ИИ-поиск и агент</legend><p class="form-hint">Параметры подключения такие же, как в «Баланс-дашборде»: HTTPS-адрес API, модель и ключ Bearer либо прокси на том же сайте. Модели передаются вопрос и названия разделов, подразделов и статусов; сами записи и ссылки отбираются в браузере.</p><div class="settings-grid"><label>Адрес API<input id="aiEndpoint" type="url" autocomplete="off" placeholder="https://open.bigmodel.cn/api/paas/v4/chat/completions"></label><label>Модель<input id="aiModel" autocomplete="off" placeholder="glm-4-flash"></label></div><label>API-ключ Bearer (при прямом API)<input id="aiKey" type="password" autocomplete="off" placeholder="Введите ключ"></label><div class="settings-grid"><button type="button" class="refresh-premium" id="aiConnect">Подключить</button><button type="button" class="refresh-premium" id="aiForget">Забыть ключ</button></div><p class="form-hint" id="aiConnectionStatus"></p><p class="form-hint">Не размещайте файл с действующим ключом в публичном репозитории. Для SharePoint скачанный bifk-data.txt размещает пользователь вручную.</p></fieldset>
         <p id="adminMessage" role="status" class="admin-message"></p>
         <footer class="admin-footer"><button type="submit" class="refresh-premium">Сохранить изменения</button><p class="form-hint">При сохранении изменений скачивается один bifk-data.txt с настройками и справочником. Замените этот файл на SharePoint вручную.</p></footer>
     </form>
@@ -1024,7 +1062,7 @@
         document.getElementById('aiEndpoint').value = appConfig.aiSearch.endpoint;
         document.getElementById('aiModel').value = appConfig.aiSearch.model;
         document.getElementById('aiKey').value = appConfig.aiSearch.apiKey;
-        document.getElementById('aiConnectionStatus').textContent = appConfig.aiSearch.apiKey ? 'Ключ задан в настройках' : 'Для прямого API требуется ключ; для прокси — его серверная настройка';
+        document.getElementById('aiConnectionStatus').textContent = appConfig.aiSearch.apiKey ? 'Ключ задан в настройках' : 'Для прямого API нужен ключ; прокси на этом же сайте может работать без него';
     }
 
     function openAdministration() {
@@ -1062,7 +1100,7 @@
                 if (!await loadDirectory(draft.dataUrl, draft)) throw new Error('Не удалось загрузить bifk-data.txt. Настройки не применены; проверьте ссылку и доступ.');
                 document.getElementById('searchInput').value = '';
                 activeSection = menuItems[0]?.id; activeSub = subsections[activeSection]?.[0]?.id;
-                renderMenu(); renderContent();
+                renderMenu(); renderContent(); clearAgent();
             } else { appConfig = draft; }
             if (!sourceChanged && JSON.stringify(directoryPayload()) === previousPayload) {
                 message.textContent = 'Изменений нет — файл не скачивается.';
@@ -1116,6 +1154,7 @@
     let activeSection = null;
     let activeSub = null;
     let aiMode = true, aiPlan = null, aiBusy = false, aiMessage = '', aiError = false, aiController = null, aiGeneration = 0;
+    let agentMessages = [], agentBusy = false, agentController = null, agentGeneration = 0;
     const AI_FIELDS = {name: 'Название', description: 'Описание', status: 'Статус', section: 'Раздел', sub: 'Подраздел'};
     let editingSection = null;
     let editingSubParent = null;
@@ -1638,14 +1677,29 @@
         return validateAiPlan(p);
     }
 
+    // Оба инструмента ИИ используют подключение из bifk-data.txt и один проверяемый формат ответа.
+    async function requestAiPlan(query, signal) {
+        const {endpoint, model, apiKey} = appConfig.aiSearch;
+        if (!endpoint || !model) throw Error('Укажите адрес API и модель в администрировании → Умный поиск (ИИ).');
+        const sameOrigin = new URL(endpoint).origin === location.origin;
+        if (!apiKey && !sameOrigin) throw Error('Укажите API-ключ или корпоративный прокси на том же сайте в администрировании.');
+        const headers = {'Content-Type': 'application/json'};
+        if (apiKey) headers.Authorization = 'Bearer ' + apiKey;
+        const resp = await fetch(endpoint, {method: 'POST', headers, body: JSON.stringify(aiRequestBody(query)), signal, credentials: 'same-origin', cache: 'no-store'});
+        if (!resp.ok) throw Error(resp.status === 401 || resp.status === 403 ? 'Сервис ИИ отклонил ключ или доступ к модели. Проверьте настройки.' : resp.status === 429 ? 'Сервис ИИ ограничил запросы. Повторите позже.' : 'Сервис ИИ вернул HTTP ' + resp.status + '. Проверьте подключение и баланс API.');
+        const text = await resp.text();
+        if (text.length > 100000) throw Error('Слишком большой ответ ИИ.');
+        return parseAiResponse(JSON.parse(text));
+    }
+
     async function runAiSearch() {
         const input = document.getElementById('searchInput');
         const query = clean(input.value);
         if (!aiMode || !query || aiBusy || !menuItems.length) return;
         if (query.length > 2000) { showToast('Запрос слишком длинный: максимум 2000 символов.', true); return; }
         const endpoint = appConfig.aiSearch.endpoint, apiKey = appConfig.aiSearch.apiKey;
-        if (!endpoint || !appConfig.aiSearch.model || !apiKey) {
-            aiMessage = 'Введите адрес API, модель и ключ в администрировании → Умный поиск (ИИ).';
+        if (!endpoint || !appConfig.aiSearch.model || (!apiKey && new URL(endpoint).origin !== location.origin)) {
+            aiMessage = 'Введите адрес API, модель и ключ либо адрес корпоративного прокси в администрировании → Умный поиск (ИИ).';
             aiError = true;
             renderAiStatusBar();
             openAdministration();
@@ -1657,13 +1711,7 @@
         renderAiStatusBar();
         const timer = setTimeout(() => ac.abort(), 45000);
         try {
-            const headers = {'Content-Type': 'application/json'};
-            if (apiKey) headers.Authorization = 'Bearer ' + apiKey;
-            const resp = await fetch(endpoint, {method: 'POST', headers, body: JSON.stringify(aiRequestBody(query)), signal: ac.signal, credentials: 'omit', cache: 'no-store'});
-            if (!resp.ok) throw Error(resp.status === 401 || resp.status === 403 ? 'Сервис ИИ отклонил ключ или доступ к модели. Проверьте ключ и название модели.' : resp.status === 429 ? 'Сервис ИИ ограничил запросы. Повторите позже.' : 'Сервис ИИ вернул HTTP ' + resp.status + '. Проверьте подключение и баланс API.');
-            const text = await resp.text();
-            if (text.length > 100000) throw Error('Слишком большой ответ ИИ.');
-            const p = parseAiResponse(JSON.parse(text));
+            const p = await requestAiPlan(query, ac.signal);
             if (generation !== aiGeneration || clean(input.value) !== query || !aiMode) return;
             aiPlan = p; aiMessage = 'ИИ-поиск: ' + p.summary + ' · найдена ' + countFound(); aiError = false;
             renderAiStatusBar();
@@ -1684,6 +1732,77 @@
         if (!aiPlan) return 'ничего';
         const n = allEntries().filter(e => aiMatches(e, aiPlan)).length;
         return n + ' записей';
+    }
+
+    function renderAgentMessages() {
+        const log = document.getElementById('aiAgentMessages');
+        if (!agentMessages.length) {
+            log.innerHTML = '<div class="ai-agent-message assistant"><p>Спросите, где найти документ, или опишите нужные записи. Агент проверит результат по загруженному справочнику.</p></div>';
+        } else {
+            log.innerHTML = agentMessages.map((m, index) => {
+                if (m.type === 'user') return `<div class="ai-agent-message user">${escapeHtml(m.text)}</div>`;
+                const results = (m.matches || []).map(e => {
+                    const link = safeLink(e.row[1]);
+                    return `<div class="ai-agent-result"><strong>${escapeHtml(e.row[0])}</strong><small>${escapeHtml(e.section.name)} · ${escapeHtml(e.sub.name)} · ${escapeHtml(e.row[3] || 'Активно')}</small>${e.row[2] ? `<p>${escapeHtml(e.row[2])}</p>` : ''}${link ? `<a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">Открыть документ ↗</a>` : `<button type="button" data-agent-section="${escapeHtml(e.section.id)}" data-agent-sub="${escapeHtml(e.sub.id)}">Открыть раздел →</button>`}</div>`;
+                }).join('');
+                const more = m.count > m.matches?.length ? `<button class="ai-agent-more" type="button" data-agent-more="${index}">Показать все ${m.count} записей в справочнике →</button>` : '';
+                const settings = m.settings ? '<button class="ai-agent-more" type="button" data-agent-settings>Открыть настройки ИИ →</button>' : '';
+                return `<div class="ai-agent-message assistant${m.error ? ' error' : ''}"><p>${escapeHtml(m.text)}</p>${results}${more}${settings}</div>`;
+            }).join('');
+        }
+        log.scrollTop = log.scrollHeight;
+        document.getElementById('aiAgentSend').disabled = agentBusy;
+    }
+
+    function openAgent() {
+        if (isEditMode) { showToast('Завершите редактирование перед обращением к ИИ.', true); return; }
+        document.body.classList.add('ai-agent-open');
+        document.getElementById('aiAgentPanel').setAttribute('aria-hidden', 'false');
+        renderAgentMessages();
+        document.getElementById('aiAgentInput').focus();
+    }
+    function closeAgent() {
+        if (agentBusy) {
+            agentGeneration++;
+            agentController?.abort(); agentController = null; agentBusy = false;
+            const pending = agentMessages.at(-1);
+            if (pending?.text === 'Ищу в справочнике…') agentMessages[agentMessages.length - 1] = {type: 'assistant', text: 'Запрос остановлен.'};
+            renderAgentMessages();
+        }
+        document.body.classList.remove('ai-agent-open');
+        document.getElementById('aiAgentPanel').setAttribute('aria-hidden', 'true');
+        document.getElementById('aiAgentOpen').focus();
+    }
+    function clearAgent() {
+        agentGeneration++;
+        agentController?.abort(); agentController = null; agentBusy = false;
+        agentMessages = [];
+        renderAgentMessages();
+    }
+    async function askAgent(event) {
+        event.preventDefault();
+        const input = document.getElementById('aiAgentInput');
+        const query = clean(input.value);
+        if (!query || agentBusy) return;
+        if (!dataLoaded) { agentMessages.push({type: 'assistant', text: 'Справочник ещё не загружен. Проверьте источник данных.', error: true}); renderAgentMessages(); return; }
+        input.value = '';
+        agentMessages.push({type: 'user', text: query}, {type: 'assistant', text: 'Ищу в справочнике…'});
+        const responseIndex = agentMessages.length - 1;
+        const ac = new AbortController(), generation = ++agentGeneration;
+        agentController = ac; agentBusy = true; renderAgentMessages();
+        const timer = setTimeout(() => ac.abort(), 45000);
+        try {
+            const p = await requestAiPlan(query, ac.signal);
+            if (generation !== agentGeneration) return;
+            const matches = allEntries().filter(e => aiMatches(e, p));
+            agentMessages[responseIndex] = {type: 'assistant', text: matches.length ? `Найдено ${matches.length} записей. ${p.summary}` : 'По этим условиям записей не найдено. Уточните запрос.', matches: matches.slice(0, 10), count: matches.length, query, plan: p};
+        } catch (e) {
+            if (generation !== agentGeneration) return;
+            agentMessages[responseIndex] = {type: 'assistant', text: e.name === 'AbortError' ? 'ИИ не ответил за 45 секунд. Повторите запрос.' : e instanceof TypeError ? 'Нет связи с ИИ. Проверьте корпоративный адрес API и доступ из браузера.' : e.message, error: true, settings: !appConfig.aiSearch.endpoint || !appConfig.aiSearch.model || (!appConfig.aiSearch.apiKey && new URL(appConfig.aiSearch.endpoint).origin !== location.origin)};
+        } finally {
+            clearTimeout(timer);
+            if (generation === agentGeneration) { agentController = null; agentBusy = false; renderAgentMessages(); }
+        }
     }
     
     function activateSection(sectionId) { activeSection = sectionId; activeSub = (subsections[sectionId] || [])[0]?.id; renderMenu(); renderContent(); }
@@ -1717,7 +1836,7 @@
         document.querySelector('.dashboard-premium').classList.toggle('editing-directory', isEditMode);
     }
 
-    function enableEditMode() { originalEditPayload = JSON.stringify(directoryPayload()); originalDepartmentName = departmentName; originalHeaderLabel = headerLabel; originalHeaderDescription = headerDescription; originalMenu = structuredClone(menuItems); originalSubs = structuredClone(subsections); originalContent = structuredClone(contentData); document.getElementById('searchInput').value = ''; cancelAiSearch(); aiPlan = null; renderAiStatusBar(); isEditMode = true; renderBrand(); document.getElementById('editPanel').classList.add('active'); document.getElementById('editBtn').classList.add('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-check"></i> Завершить редактирование'; document.getElementById('addSectionBtn').classList.remove('hidden'); renderMenu(); renderContent(); showToast('Режим редактирования включён'); }
+    function enableEditMode() { if (document.body.classList.contains('ai-agent-open')) closeAgent(); originalEditPayload = JSON.stringify(directoryPayload()); originalDepartmentName = departmentName; originalHeaderLabel = headerLabel; originalHeaderDescription = headerDescription; originalMenu = structuredClone(menuItems); originalSubs = structuredClone(subsections); originalContent = structuredClone(contentData); document.getElementById('searchInput').value = ''; cancelAiSearch(); aiPlan = null; renderAiStatusBar(); isEditMode = true; renderBrand(); document.getElementById('editPanel').classList.add('active'); document.getElementById('editBtn').classList.add('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-check"></i> Завершить редактирование'; document.getElementById('addSectionBtn').classList.remove('hidden'); renderMenu(); renderContent(); showToast('Режим редактирования включён'); }
     function disableEditMode(cancel=false) { if(cancel) { departmentName = originalDepartmentName; headerLabel = originalHeaderLabel; headerDescription = originalHeaderDescription; menuItems = JSON.parse(JSON.stringify(originalMenu)); subsections = JSON.parse(JSON.stringify(originalSubs)); contentData = JSON.parse(JSON.stringify(originalContent)); showToast('Изменения отменены'); } isEditMode = false; renderBrand(); document.getElementById('editPanel').classList.remove('active'); document.getElementById('editBtn').classList.remove('edit-active'); document.getElementById('editBtn').innerHTML = '<i class="fas fa-pen"></i> Редактировать справочник'; document.getElementById('addSectionBtn').classList.add('hidden'); renderMenu(); renderContent(); if(activeSection) activateSection(activeSection); }
     
     // Кнопка сохранения запускает скачивание текстового файла.
@@ -1740,7 +1859,7 @@
             const btn = document.getElementById('refreshBtn'); btn.disabled = true;
             try {
                 const ok = await loadDirectory();
-                if (ok) { activeSection = menuItems.some(x => x.id === activeSection) ? activeSection : menuItems[0]?.id; renderMenu(); renderContent(); renderLiveCards(); scheduleIndicators(); }
+                if (ok) { clearAgent(); activeSection = menuItems.some(x => x.id === activeSection) ? activeSection : menuItems[0]?.id; renderMenu(); renderContent(); renderLiveCards(); scheduleIndicators(); }
                 else showToast('Не удалось обновить справочник. Последние загруженные данные сохранены на странице.', true);
                 refreshLiveData(true);
             } finally { btn.disabled = false; }
@@ -1757,20 +1876,46 @@
         });
         document.getElementById('aiSearchToggle').onclick = () => setAiMode(!aiMode);
         document.getElementById('aiSearchRun').onclick = runAiSearch;
+        document.getElementById('aiAgentOpen').onclick = openAgent;
+        document.getElementById('aiAgentClose').onclick = closeAgent;
+        document.getElementById('aiAgentBackdrop').onclick = closeAgent;
+        document.getElementById('aiAgentClear').onclick = clearAgent;
+        document.getElementById('aiAgentForm').onsubmit = askAgent;
+        document.getElementById('aiAgentInput').onkeydown = event => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); document.getElementById('aiAgentForm').requestSubmit(); } };
+        document.getElementById('aiAgentMessages').onclick = event => {
+            if (event.target.closest('[data-agent-settings]')) { closeAgent(); openAdministration(); return; }
+            const result = event.target.closest('[data-agent-section]');
+            if (result) { activateSubsection(result.dataset.agentSection, result.dataset.agentSub); closeAgent(); return; }
+            const more = event.target.closest('[data-agent-more]');
+            if (!more) return;
+            const message = agentMessages[Number(more.dataset.agentMore)];
+            if (!message?.plan) return;
+            setAiMode(true);
+            document.getElementById('searchInput').value = message.query;
+            aiPlan = message.plan; aiMessage = 'ИИ-поиск: ' + message.plan.summary + ' · найдена ' + message.count + ' записей'; aiError = false;
+            renderAiStatusBar(); renderSearchResults(); closeAgent();
+        };
+        document.addEventListener('keydown', event => { if (event.key === 'Escape' && document.body.classList.contains('ai-agent-open') && !document.getElementById('adminDialog').open) closeAgent(); });
         document.getElementById('aiConnect').onclick = () => {
             try {
-                appConfig.aiSearch = readAiConnection();
+                const next = readAiConnection();
+                if (JSON.stringify(next) === JSON.stringify(appConfig.aiSearch)) { document.getElementById('adminMessage').textContent = 'Настройки ИИ не изменились — файл не скачивается.'; return; }
+                appConfig.aiSearch = next;
                 cancelAiSearch(); aiPlan = null;
+                clearAgent();
                 renderAiSettings();
                 saveToDownloads();
-                showToast('Подключение применено. bifk-data.txt с ключом скачан.');
+                showToast('Подключение применено. bifk-data.txt скачан.');
             } catch (e) { document.getElementById('adminMessage').textContent = e.message; }
         };
         document.getElementById('aiForget').onclick = () => {
+            const hadKey = !!appConfig.aiSearch.apiKey;
             appConfig.aiSearch.apiKey = '';
             document.getElementById('aiKey').value = '';
             cancelAiSearch(); aiPlan = null;
+            clearAgent();
             renderAiSettings();
+            if (hadKey) saveToDownloads();
         };
         document.getElementById('adminBtn').onclick = openAdministration;
         const adminDialog = document.getElementById('adminDialog');
